@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OilRight – Dashboard</title>
+<style>
+  :root {
+    --orange: #F5B400;
+    --orange-light: #FFF3E0;
+    --dark: #1a1a1a;
+    --gray: #555;
+    --border: #ddd;
+    --ok: #2E7D32;
+    --warn: #E65100;
+    --section-bg: #FAFAFA;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, 'Helvetica Neue', Arial, sans-serif; background: #e8e8e8; color: var(--dark); font-size: 15px; }
+
+  /* HEADER */
+  .header { background: var(--dark); padding: 16px 24px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 12px rgba(0,0,0,0.3); }
+  .header-left { display: flex; align-items: center; gap: 12px; }
+  .brand { font-size: 22px; font-weight: 700; color: var(--orange); }
+  .brand-sub { font-size: 11px; color: #888; margin-top: 2px; }
+  .header-right { font-size: 12px; color: #888; text-align: right; }
+
+  /* MAIN */
+  .main { max-width: 860px; margin: 0 auto; padding: 24px 16px 80px; }
+
+  /* FILTER BAR */
+  .filter-bar { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; align-items: center; }
+  .filter-btn { border: 2px solid var(--border); border-radius: 20px; padding: 6px 16px; font-size: 12px; font-weight: 700; font-family: inherit; background: white; color: var(--gray); cursor: pointer; transition: all 0.15s; }
+  .filter-btn.active { border-color: var(--orange); background: var(--orange); color: white; }
+  .filter-search { flex: 1; min-width: 180px; border: 2px solid var(--border); border-radius: 20px; padding: 6px 16px; font-size: 13px; font-family: inherit; outline: none; background: white; }
+  .filter-search:focus { border-color: var(--orange); }
+
+  /* DATE GROUP */
+  .date-group { margin-bottom: 24px; }
+  .date-heading { font-size: 11px; font-weight: 700; color: var(--gray); text-transform: uppercase; letter-spacing: 0.6px; padding: 6px 4px; border-bottom: 2px solid var(--border); margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
+  .date-tag { background: var(--orange); color: white; border-radius: 4px; padding: 2px 8px; font-size: 10px; }
+
+  /* APPOINTMENT CARD */
+  .appt-card { background: white; border: 1px solid var(--border); border-radius: 10px; padding: 14px 16px; margin-bottom: 10px; display: flex; align-items: center; gap: 16px; box-shadow: 0 1px 4px rgba(0,0,0,0.06); transition: box-shadow 0.15s; }
+  .appt-card:hover { box-shadow: 0 3px 12px rgba(0,0,0,0.12); }
+  .appt-card.has-report { border-left: 4px solid var(--orange); }
+
+  .appt-time { font-size: 11px; font-weight: 700; color: var(--gray); text-transform: uppercase; width: 52px; flex-shrink: 0; text-align: center; }
+  .appt-time .slot { font-size: 18px; }
+
+  .appt-info { flex: 1; }
+  .appt-name { font-size: 15px; font-weight: 700; color: var(--dark); }
+  .appt-vehicle { font-size: 12px; color: var(--gray); margin-top: 2px; }
+  .appt-meta { display: flex; gap: 10px; margin-top: 6px; flex-wrap: wrap; }
+  .appt-badge { font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 10px; border: 1.5px solid; }
+  .badge-confirmed { color: var(--ok); border-color: var(--ok); background: #f0faf0; }
+  .badge-pending { color: #B06000; border-color: #F5B400; background: #FFFDE7; }
+  .badge-onsite { color: #1565C0; border-color: #1565C0; background: #E3F2FD; }
+  .badge-partner { color: #6A1B9A; border-color: #6A1B9A; background: #F3E5F5; }
+
+  .appt-actions { display: flex; flex-direction: column; gap: 6px; align-items: flex-end; flex-shrink: 0; }
+  .btn-report { background: var(--orange); color: white; border: none; border-radius: 8px; padding: 10px 18px; font-size: 13px; font-weight: 700; font-family: inherit; cursor: pointer; white-space: nowrap; text-decoration: none; display: inline-block; text-align: center; }
+  .btn-report.existing { background: var(--dark); }
+  .btn-report:hover { opacity: 0.9; }
+  .report-status { font-size: 10px; color: var(--gray); text-align: right; }
+  .report-status.saved { color: var(--ok); font-weight: 700; }
+
+  /* EMPTY STATE */
+  .empty { text-align: center; padding: 60px 20px; color: var(--gray); }
+  .empty-icon { font-size: 48px; margin-bottom: 12px; }
+  .empty-text { font-size: 15px; }
+
+  /* LOADING */
+  .loading { text-align: center; padding: 60px; color: var(--gray); font-size: 14px; }
+  .spinner { width: 32px; height: 32px; border: 3px solid var(--border); border-top-color: var(--orange); border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto 16px; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* STATS BAR */
+  .stats-bar { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-bottom: 20px; }
+  .stat-card { background: white; border: 1px solid var(--border); border-radius: 8px; padding: 12px 16px; text-align: center; }
+  .stat-num { font-size: 28px; font-weight: 700; color: var(--orange); }
+  .stat-lbl { font-size: 10px; color: var(--gray); text-transform: uppercase; letter-spacing: 0.4px; margin-top: 2px; }
+
+  @media (max-width: 600px) {
+    .appt-card { flex-wrap: wrap; }
+    .stats-bar { grid-template-columns: 1fr 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-left">
+    <svg width="32" height="40" viewBox="0 0 44 54" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M22 2 C22 2 4 22 4 34 C4 44.5 12.1 52 22 52 C31.9 52 40 44.5 40 34 C40 22 22 2 22 2Z" fill="#F5B400"/>
+      <path d="M22 14 C22 14 10 28 10 36 C10 42.6 15.4 48 22 48 C28.6 48 34 42.6 34 36 C34 28 22 14 22 14Z" fill="rgba(255,255,255,0.25)"/>
+    </svg>
+    <div>
+      <div class="brand">OilRight</div>
+      <div class="brand-sub">Service Dashboard</div>
+    </div>
+  </div>
+  <div class="header-right" id="lastRefresh">Loading…</div>
+</div>
+
+<div class="main">
+
+  <div class="stats-bar" id="statsBar">
+    <div class="stat-card"><div class="stat-num" id="statTotal">–</div><div class="stat-lbl">Total Appointments</div></div>
+    <div class="stat-card"><div class="stat-num" id="statUpcoming">–</div><div class="stat-lbl">Upcoming (7 days)</div></div>
+    <div class="stat-card"><div class="stat-num" id="statReports">–</div><div class="stat-lbl">Reports Started</div></div>
+  </div>
+
+  <div class="filter-bar">
+    <button class="filter-btn active" data-filter="upcoming" onclick="setFilter('upcoming', this)">Upcoming</button>
+    <button class="filter-btn" data-filter="all" onclick="setFilter('all', this)">All</button>
+    <button class="filter-btn" data-filter="today" onclick="setFilter('today', this)">Today</button>
+    <button class="filter-btn" data-filter="reports" onclick="setFilter('reports', this)">Has Report</button>
+    <input class="filter-search" type="text" placeholder="Search client or vehicle…" oninput="setSearch(this.value)">
+  </div>
+
+  <div id="appointmentList">
+    <div class="loading"><div class="spinner"></div>Loading appointments…</div>
+  </div>
+
+</div>
+
+<script type="module">
+  import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+  import { getDatabase, ref, get, onValue } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js';
+
+  const app = initializeApp({
+    apiKey: "AIzaSyBbmCXZDyocrXlmnqB9sbaWpuZWGsCcOlk",
+    authDomain: "oilright.firebaseapp.com",
+    databaseURL: "https://oilright-default-rtdb.firebaseio.com",
+    projectId: "oilright",
+    storageBucket: "oilright.firebasestorage.app",
+    messagingSenderId: "256978778968",
+    appId: "1:256978778968:web:f35cbc6ed1cb20a0b4432d"
+  });
+  const db = getDatabase(app);
+
+  let allAppointments = [];
+  let allReports = {};
+  let currentFilter = 'upcoming';
+  let currentSearch = '';
+
+  const SLOT_EMOJI = { morning: '🌅', afternoon: '☀️', evening: '🌆' };
+  const SLOT_LABEL = { morning: 'AM', afternoon: 'PM', evening: 'EVE' };
+
+  function today() { return new Date().toISOString().slice(0,10); }
+  function addDays(d, n) {
+    const dt = new Date(d); dt.setDate(dt.getDate() + n);
+    return dt.toISOString().slice(0,10);
+  }
+  function formatDateHeading(dateStr) {
+    const t = today();
+    if (dateStr === t) return '📅 Today — ' + dateStr;
+    if (dateStr === addDays(t, 1)) return '📅 Tomorrow — ' + dateStr;
+    if (dateStr === addDays(t, -1)) return '📅 Yesterday — ' + dateStr;
+    const d = new Date(dateStr + 'T12:00:00');
+    return '📅 ' + d.toLocaleDateString('en-CA', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' });
+  }
+  function isUpcoming(dateStr) { return dateStr >= addDays(today(), -1); }
+  function isToday(dateStr) { return dateStr === today(); }
+  function isWithin7(dateStr) { return dateStr >= today() && dateStr <= addDays(today(), 7); }
+
+  function applyFilters(appointments) {
+    let list = appointments;
+    if (currentFilter === 'upcoming') list = list.filter(a => isUpcoming(a.date));
+    else if (currentFilter === 'today') list = list.filter(a => isToday(a.date));
+    else if (currentFilter === 'reports') list = list.filter(a => allReports[a.id]);
+    if (currentSearch) {
+      const q = currentSearch.toLowerCase();
+      list = list.filter(a =>
+        a.customerName?.toLowerCase().includes(q) ||
+        a.vehicle?.make?.toLowerCase().includes(q) ||
+        a.vehicle?.model?.toLowerCase().includes(q) ||
+        a.partnerName?.toLowerCase().includes(q)
+      );
+    }
+    return list;
+  }
+
+  function render() {
+    const list = applyFilters(allAppointments);
+    const container = document.getElementById('appointmentList');
+    if (!list.length) {
+      container.innerHTML = '<div class="empty"><div class="empty-icon">📋</div><div class="empty-text">No appointments found.</div></div>';
+      return;
+    }
+
+    // Group by date
+    const groups = {};
+    list.forEach(a => {
+      if (!groups[a.date]) groups[a.date] = [];
+      groups[a.date].push(a);
+    });
+
+    const sortedDates = Object.keys(groups).sort();
+    let html = '';
+    sortedDates.forEach(date => {
+      const isToday2 = date === today();
+      html += `<div class="date-group">
+        <div class="date-heading">
+          ${formatDateHeading(date)}
+          ${isToday2 ? '<span class="date-tag">TODAY</span>' : ''}
+        </div>`;
+      groups[date].forEach(a => {
+        const hasReport = !!allReports[a.id];
+        const reportUrl = `report.html?id=${a.id}`;
+        const lastSaved = allReports[a.id]?.lastSaved
+          ? 'Last saved: ' + new Date(allReports[a.id].lastSaved).toLocaleString('en-CA', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })
+          : '';
+        const vehicle = [a.vehicle?.year, a.vehicle?.make, a.vehicle?.model].filter(Boolean).join(' ') || 'Vehicle not specified';
+        const slotEmoji = SLOT_EMOJI[a.timeSlot] || '🕐';
+        const slotLabel = SLOT_LABEL[a.timeSlot] || a.timeSlot || '–';
+
+        html += `<div class="appt-card ${hasReport ? 'has-report' : ''}">
+          <div class="appt-time"><div class="slot">${slotEmoji}</div>${slotLabel}</div>
+          <div class="appt-info">
+            <div class="appt-name">${a.customerName || 'Unknown'}</div>
+            <div class="appt-vehicle">${vehicle}</div>
+            <div class="appt-meta">
+              ${a.status ? `<span class="appt-badge badge-${a.status}">${a.status}</span>` : ''}
+              ${a.serviceType === 'onsite' ? '<span class="appt-badge badge-onsite">On-site</span>' : ''}
+              ${a.partnerName ? `<span class="appt-badge badge-partner">Partner: ${a.partnerName}</span>` : ''}
+            </div>
+          </div>
+          <div class="appt-actions">
+            <a class="btn-report ${hasReport ? 'existing' : ''}" href="${reportUrl}">
+              ${hasReport ? '📋 Open Report' : '+ New Report'}
+            </a>
+            ${lastSaved ? `<div class="report-status saved">${lastSaved}</div>` : '<div class="report-status">No report yet</div>'}
+          </div>
+        </div>`;
+      });
+      html += '</div>';
+    });
+
+    container.innerHTML = html;
+  }
+
+  function updateStats() {
+    document.getElementById('statTotal').textContent = allAppointments.length;
+    document.getElementById('statUpcoming').textContent = allAppointments.filter(a => isWithin7(a.date)).length;
+    document.getElementById('statReports').textContent = Object.keys(allReports).length;
+    document.getElementById('lastRefresh').textContent = 'Updated ' + new Date().toLocaleTimeString('en-CA', { hour: '2-digit', minute: '2-digit' });
+  }
+
+  window.setFilter = function(f, btn) {
+    currentFilter = f;
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    render();
+  };
+
+  window.setSearch = function(q) {
+    currentSearch = q;
+    render();
+  };
+
+  // Load appointments
+  onValue(ref(db, 'appointments'), snap => {
+    allAppointments = [];
+    if (snap.exists()) {
+      snap.forEach(child => {
+        allAppointments.push({ id: child.key, ...child.val() });
+      });
+      allAppointments.sort((a, b) => a.date.localeCompare(b.date) || (a.timeSlot || '').localeCompare(b.timeSlot || ''));
+    }
+    updateStats();
+    render();
+  });
+
+  // Load service reports (for status)
+  onValue(ref(db, 'serviceReports'), snap => {
+    allReports = {};
+    if (snap.exists()) snap.forEach(child => { allReports[child.key] = child.val(); });
+    updateStats();
+    render();
+  });
+</script>
+</body>
+</html>
