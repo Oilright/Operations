@@ -50654,7 +50654,7 @@
                 const data = await response.json();
                 
                 makeSelect.innerHTML = '<option value="">' + t('selectMake') + '</option>';
-                data.Results.forEach(make => {
+                data.Results.sort((a, b) => a.MakeName.localeCompare(b.MakeName)).forEach(make => {
                     const option = document.createElement('option');
                     option.value = make.MakeName;
                     option.textContent = make.MakeName;
@@ -50682,7 +50682,7 @@
                 const data = await response.json();
                 
                 modelSelect.innerHTML = '<option value="">' + t('selectModel') + '</option>';
-                data.Results.forEach(model => {
+                data.Results.sort((a, b) => a.Model_Name.localeCompare(b.Model_Name)).forEach(model => {
                     const option = document.createElement('option');
                     option.value = model.Model_Name;
                     option.textContent = model.Model_Name;
@@ -51436,6 +51436,7 @@
             dayAppointments.forEach(apt => {
                 container.appendChild(createAppointmentCard(apt, true));
             });
+            container.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
         
         function renderPartnerAppointments() {
@@ -51953,7 +51954,7 @@
                 const data = await response.json();
                 
                 makeSelect.innerHTML = '<option value="">' + t('selectMake') + '</option>';
-                data.Results.forEach(make => {
+                data.Results.sort((a, b) => a.MakeName.localeCompare(b.MakeName)).forEach(make => {
                     makeSelect.innerHTML += `<option value="${make.MakeName}">${make.MakeName}</option>`;
                 });
                 makeSelect.disabled = false;
@@ -51978,7 +51979,7 @@
                 const data = await response.json();
                 
                 modelSelect.innerHTML = '<option value="">' + t('selectModel') + '</option>';
-                data.Results.forEach(model => {
+                data.Results.sort((a, b) => a.Model_Name.localeCompare(b.Model_Name)).forEach(model => {
                     modelSelect.innerHTML += `<option value="${model.Model_Name}">${model.Model_Name}</option>`;
                 });
                 modelSelect.disabled = false;
@@ -52337,7 +52338,7 @@
                 const data = await response.json();
                 
                 makeSelect.innerHTML = '<option value="">' + t('selectMake') + '</option>';
-                data.Results.forEach(make => {
+                data.Results.sort((a, b) => a.MakeName.localeCompare(b.MakeName)).forEach(make => {
                     makeSelect.innerHTML += `<option value="${make.MakeName}">${make.MakeName}</option>`;
                 });
                 makeSelect.disabled = false;
@@ -52362,7 +52363,7 @@
                 const data = await response.json();
                 
                 modelSelect.innerHTML = '<option value="">' + t('selectModel') + '</option>';
-                data.Results.forEach(model => {
+                data.Results.sort((a, b) => a.Model_Name.localeCompare(b.Model_Name)).forEach(model => {
                     modelSelect.innerHTML += `<option value="${model.Model_Name}">${model.Model_Name}</option>`;
                 });
                 modelSelect.disabled = false;
