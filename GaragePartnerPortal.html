@@ -301,6 +301,7 @@
             position: relative;
             background: #ffffff;
             color: #1a1a1a;
+            overflow: hidden;
         }
 
         /* Clickable dates have darker border */
@@ -50733,7 +50734,6 @@
             for (let i = 1; i <= daysInMonth; i++) {
                 const day = document.createElement('div');
                 day.className = 'calendar-day';
-                day.textContent = i;
                 
                 // CRITICAL: Create date string using local year/month/day
                 const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(i).padStart(2, '0')}`;
@@ -50747,26 +50747,55 @@
                 const selectedPartner = document.getElementById('partnerName').value;
                 const isMobile = document.querySelector('input[name="serviceType"]:checked')?.value === 'mobile';
                 
-                let hasAvailability = false;
+                let slotMorning = false, slotAfternoon = false, slotEvening = false;
                 if (isMobile) {
-                    hasAvailability = dateAvailability.morningMobile === true || dateAvailability.afternoonMobile === true || dateAvailability.eveningMobile === true;
+                    slotMorning = dateAvailability.morningMobile === true;
+                    slotAfternoon = dateAvailability.afternoonMobile === true;
+                    slotEvening = dateAvailability.eveningMobile === true;
                 } else if (selectedPartner) {
-                    // Check if selected partner is available
-                    const partnerInMorning = Array.isArray(dateAvailability.morning) && dateAvailability.morning.includes(selectedPartner);
-                    const partnerInAfternoon = Array.isArray(dateAvailability.afternoon) && dateAvailability.afternoon.includes(selectedPartner);
-                    const partnerInEvening = Array.isArray(dateAvailability.evening) && dateAvailability.evening.includes(selectedPartner);
-                    hasAvailability = partnerInMorning || partnerInAfternoon || partnerInEvening;
+                    slotMorning = Array.isArray(dateAvailability.morning) && dateAvailability.morning.includes(selectedPartner);
+                    slotAfternoon = Array.isArray(dateAvailability.afternoon) && dateAvailability.afternoon.includes(selectedPartner);
+                    slotEvening = Array.isArray(dateAvailability.evening) && dateAvailability.evening.includes(selectedPartner);
                 } else {
-                    // No partner selected - show any availability
-                    hasAvailability = dateAvailability.morning || dateAvailability.afternoon || dateAvailability.evening;
+                    slotMorning = !!dateAvailability.morning;
+                    slotAfternoon = !!dateAvailability.afternoon;
+                    slotEvening = !!dateAvailability.evening;
                 }
+                
+                const hasAvailability = slotMorning || slotAfternoon || slotEvening;
                 
                 // BLOCK TODAY + NEXT 2 DAYS
                 const isBlocked = isWithinBlockedDays(dateStr);
                 
                 if (isBlocked || !hasAvailability) {
                     day.classList.add('disabled');
+                    day.innerHTML = `<span style="position:absolute;top:3px;right:5px;font-size:11px;font-weight:600;">${i}</span>`;
                 } else {
+                    day.style.padding = '0';
+                    day.style.overflow = 'hidden';
+                    day.style.flexDirection = 'column';
+                    day.style.alignItems = 'stretch';
+                    day.style.justifyContent = 'flex-start';
+                    day.style.border = '1px solid #e0e0e0';
+                    const isSelected = selectedDate === dateStr;
+                    const activeBg = isSelected ? '#F5B400' : '#ffffff';
+                    const shadeBg = 'rgba(0,0,0,0.07)';
+                    const activeLabel = isSelected ? 'color:#000;' : 'color:#1a1a1a;';
+                    const mBorder = slotMorning ? 'border:2px solid #1a1a1a; border-bottom:none; border-radius:6px 6px 0 0;' : '';
+                    const aBorder = slotAfternoon ? 'border:2px solid #1a1a1a; border-top:none; border-bottom:none;' : '';
+                    const eBorder = slotEvening ? 'border:2px solid #1a1a1a; border-top:none; border-radius:0 0 6px 6px;' : '';
+                    day.innerHTML = `
+                        <div style="flex:1; background:${slotMorning ? activeBg : shadeBg}; ${mBorder} display:flex; align-items:center; justify-content:center;">
+                            ${slotMorning ? `<span style="font-size:9px;font-weight:700;${activeLabel}">AM</span>` : ''}
+                        </div>
+                        <div style="flex:1; background:${slotAfternoon ? activeBg : shadeBg}; ${aBorder} display:flex; align-items:center; justify-content:center;">
+                            ${slotAfternoon ? `<span style="font-size:9px;font-weight:700;${activeLabel}">PM</span>` : ''}
+                        </div>
+                        <div style="flex:1; background:${slotEvening ? activeBg : shadeBg}; ${eBorder} display:flex; align-items:center; justify-content:center;">
+                            ${slotEvening ? `<span style="font-size:9px;font-weight:700;${activeLabel}">Eve</span>` : ''}
+                        </div>
+                        <span style="position:absolute; top:3px; right:5px; font-size:11px; font-weight:700; color:#1a1a1a; z-index:2;">${i}</span>
+                    `;
                     day.onclick = () => selectDate(dateStr, day);
                 }
                 
@@ -50868,10 +50897,7 @@
         function selectDate(dateStr, element) {
             selectedDate = dateStr;
             selectedTimeSlot = null;
-            
-            document.querySelectorAll('.calendar-day').forEach(d => d.classList.remove('selected'));
-            element.classList.add('selected');
-            
+            renderCalendar();
             renderTimeSlots();
         }
 
@@ -51206,9 +51232,32 @@
                 
                 const dateAvail = availability[dateStr] || {};
                 
-                if (dateAvail.morning || dateAvail.afternoon || dateAvail.evening) {
-                    day.style.background = 'rgba(249, 168, 37, 0.2)';
+                const hasMorning = !!(dateAvail.morning && dateAvail.morning.length > 0) || dateAvail.morningMobile === true;
+                const hasAfternoon = !!(dateAvail.afternoon && dateAvail.afternoon.length > 0) || dateAvail.afternoonMobile === true;
+                const hasEvening = !!(dateAvail.evening && dateAvail.evening.length > 0) || dateAvail.eveningMobile === true;
+                const hasAny = hasMorning || hasAfternoon || hasEvening;
+
+                if (hasAny) {
+                    day.style.padding = '0';
+                    day.style.overflow = 'hidden';
+                    day.style.flexDirection = 'column';
+                    day.style.alignItems = 'stretch';
+                    day.style.justifyContent = 'flex-start';
                     day.style.borderColor = '#F5B400';
+                    const yellowBg = 'rgba(245,180,0,0.35)';
+                    const plainBg = '#ffffff';
+                    day.innerHTML = `
+                        <div style="flex:1; background:${hasMorning ? yellowBg : plainBg}; border-bottom:1px solid #e0e0e0; display:flex; align-items:center; justify-content:center;">
+                            ${hasMorning ? '<span style="font-size:9px;font-weight:700;color:#1a1a1a;">AM</span>' : ''}
+                        </div>
+                        <div style="flex:1; background:${hasAfternoon ? yellowBg : plainBg}; border-bottom:1px solid #e0e0e0; display:flex; align-items:center; justify-content:center;">
+                            ${hasAfternoon ? '<span style="font-size:9px;font-weight:700;color:#1a1a1a;">PM</span>' : ''}
+                        </div>
+                        <div style="flex:1; background:${hasEvening ? yellowBg : plainBg}; display:flex; align-items:center; justify-content:center;">
+                            ${hasEvening ? '<span style="font-size:9px;font-weight:700;color:#1a1a1a;">Eve</span>' : ''}
+                        </div>
+                        <span style="position:absolute; top:3px; right:5px; font-size:11px; font-weight:600; color:#1a1a1a; z-index:2;">${i}</span>
+                    `;
                 }
                 
                 day.onclick = () => openAvailabilityModal(dateStr);
@@ -51395,12 +51444,40 @@
                     day.classList.add('has-appointments');
                     day.style.cursor = 'pointer';
                     day.onclick = () => showPartnerDayAppointments(dateStr, dayAppointments);
-                    
+
+                    const hasMorningApt = dayAppointments.some(a => a.timeSlot === 'morning');
+                    const hasAfternoonApt = dayAppointments.some(a => a.timeSlot === 'afternoon');
+                    const hasEveningApt = dayAppointments.some(a => a.timeSlot === 'evening');
+
                     // CHECK IF ALL APPOINTMENTS ARE COMPLETED - ADD GREEN CIRCLE
                     if (areAllAppointmentsCompleted(dateStr)) {
                         day.style.border = '3px solid #4CAF50';
                         day.style.borderRadius = '50%';
                         day.style.background = 'rgba(76, 175, 80, 0.1)';
+                    } else {
+                        day.style.padding = '0';
+                        day.style.overflow = 'hidden';
+                        day.style.flexDirection = 'column';
+                        day.style.alignItems = 'stretch';
+                        day.style.justifyContent = 'flex-start';
+                        day.style.border = '1px solid #e0e0e0';
+                        const aptBg = '#F5B400';
+                        const shadeBg = 'rgba(0,0,0,0.07)';
+                        const mBorder = hasMorningApt ? 'border:2px solid #1a1a1a; border-bottom:none; border-radius:6px 6px 0 0;' : '';
+                        const aBorder = hasAfternoonApt ? 'border:2px solid #1a1a1a; border-top:none; border-bottom:none;' : '';
+                        const eBorder = hasEveningApt ? 'border:2px solid #1a1a1a; border-top:none; border-radius:0 0 6px 6px;' : '';
+                        day.innerHTML = `
+                            <div style="flex:1; background:${hasMorningApt ? aptBg : shadeBg}; ${mBorder} display:flex; align-items:center; justify-content:center;">
+                                ${hasMorningApt ? '<span style="font-size:9px;font-weight:700;color:#000;">AM</span>' : ''}
+                            </div>
+                            <div style="flex:1; background:${hasAfternoonApt ? aptBg : shadeBg}; ${aBorder} display:flex; align-items:center; justify-content:center;">
+                                ${hasAfternoonApt ? '<span style="font-size:9px;font-weight:700;color:#000;">PM</span>' : ''}
+                            </div>
+                            <div style="flex:1; background:${hasEveningApt ? aptBg : shadeBg}; ${eBorder} display:flex; align-items:center; justify-content:center;">
+                                ${hasEveningApt ? '<span style="font-size:9px;font-weight:700;color:#000;">Eve</span>' : ''}
+                            </div>
+                            <span style="position:absolute; top:3px; right:5px; font-size:11px; font-weight:700; color:#1a1a1a; z-index:2;">${i}</span>
+                        `;
                     }
                 } else {
                     day.classList.add('no-appointments');
@@ -51509,6 +51586,33 @@
                         day.style.border = '3px solid #4CAF50';
                         day.style.borderRadius = '50%';
                         day.style.background = 'rgba(76, 175, 80, 0.1)';
+                    } else {
+                        const hasMorningApt = dayAppointments.some(a => a.timeSlot === 'morning');
+                        const hasAfternoonApt = dayAppointments.some(a => a.timeSlot === 'afternoon');
+                        const hasEveningApt = dayAppointments.some(a => a.timeSlot === 'evening');
+                        day.style.padding = '0';
+                        day.style.overflow = 'hidden';
+                        day.style.flexDirection = 'column';
+                        day.style.alignItems = 'stretch';
+                        day.style.justifyContent = 'flex-start';
+                        day.style.border = '1px solid #e0e0e0';
+                        const aptBg = '#F5B400';
+                        const shadeBg = 'rgba(0,0,0,0.07)';
+                        const mBorder = hasMorningApt ? 'border:2px solid #1a1a1a; border-bottom:none; border-radius:6px 6px 0 0;' : '';
+                        const aBorder = hasAfternoonApt ? 'border:2px solid #1a1a1a; border-top:none; border-bottom:none;' : '';
+                        const eBorder = hasEveningApt ? 'border:2px solid #1a1a1a; border-top:none; border-radius:0 0 6px 6px;' : '';
+                        day.innerHTML = `
+                            <div style="flex:1; background:${hasMorningApt ? aptBg : shadeBg}; ${mBorder} display:flex; align-items:center; justify-content:center;">
+                                ${hasMorningApt ? '<span style="font-size:9px;font-weight:700;color:#000;">AM</span>' : ''}
+                            </div>
+                            <div style="flex:1; background:${hasAfternoonApt ? aptBg : shadeBg}; ${aBorder} display:flex; align-items:center; justify-content:center;">
+                                ${hasAfternoonApt ? '<span style="font-size:9px;font-weight:700;color:#000;">PM</span>' : ''}
+                            </div>
+                            <div style="flex:1; background:${hasEveningApt ? aptBg : shadeBg}; ${eBorder} display:flex; align-items:center; justify-content:center;">
+                                ${hasEveningApt ? '<span style="font-size:9px;font-weight:700;color:#000;">Eve</span>' : ''}
+                            </div>
+                            <span style="position:absolute; top:3px; right:5px; font-size:11px; font-weight:700; color:#1a1a1a; z-index:2;">${i}</span>
+                        `;
                     }
                 } else {
                     day.style.cursor = 'default';
@@ -51670,6 +51774,9 @@
             document.getElementById('editAddressStreetPartner').required = isMobile;
             document.getElementById('editAddressCityPartner').required = isMobile;
             document.getElementById('editAddressPostalPartner').required = isMobile;
+            // Re-render calendar and time slots to reflect mobile vs onsite availability
+            editSelectedTimeSlotPartner = null;
+            renderEditCalendarPartner();
         }
 
         function onEditServiceTypeChangeAdmin() {
@@ -51681,6 +51788,9 @@
             document.getElementById('editAddressStreetAdmin').required = isMobile;
             document.getElementById('editAddressCityAdmin').required = isMobile;
             document.getElementById('editAddressPostalAdmin').required = isMobile;
+            // Re-render calendar and time slots to reflect mobile vs onsite availability
+            editSelectedTimeSlot = null;
+            renderEditCalendar();
         }
 
         // ===========================
@@ -51817,16 +51927,50 @@
                 }
                 
                 const dateAvailability = availability[dateStr] || {};
-                const partnerInMorning = Array.isArray(dateAvailability.morning) && dateAvailability.morning.includes(apt.partnerName);
-                const partnerInAfternoon = Array.isArray(dateAvailability.afternoon) && dateAvailability.afternoon.includes(apt.partnerName);
-                const partnerInEvening = Array.isArray(dateAvailability.evening) && dateAvailability.evening.includes(apt.partnerName);
-                const hasAvailability = partnerInMorning || partnerInAfternoon || partnerInEvening;
+                const currentEditServiceType = document.querySelector('input[name="editServiceTypePartner"]:checked')?.value || 'onsite';
+                let slotM = false, slotA = false, slotE = false;
+                if (currentEditServiceType === 'mobile') {
+                    slotM = dateAvailability.morningMobile === true;
+                    slotA = dateAvailability.afternoonMobile === true;
+                    slotE = dateAvailability.eveningMobile === true;
+                } else {
+                    slotM = Array.isArray(dateAvailability.morning) && dateAvailability.morning.includes(apt.partnerName);
+                    slotA = Array.isArray(dateAvailability.afternoon) && dateAvailability.afternoon.includes(apt.partnerName);
+                    slotE = Array.isArray(dateAvailability.evening) && dateAvailability.evening.includes(apt.partnerName);
+                }
+                const hasAvailability = slotM || slotA || slotE;
                 
                 const isBlocked = isWithinBlockedDays(dateStr);
                 
                 if (isBlocked || !hasAvailability) {
                     day.classList.add('disabled');
+                    day.innerHTML = `<span style="position:absolute;top:3px;right:5px;font-size:11px;font-weight:600;">${i}</span>`;
                 } else {
+                    day.style.padding = '0';
+                    day.style.overflow = 'hidden';
+                    day.style.flexDirection = 'column';
+                    day.style.alignItems = 'stretch';
+                    day.style.justifyContent = 'flex-start';
+                    day.style.border = '1px solid #e0e0e0';
+                    const isSelected = editSelectedDatePartner === dateStr;
+                    const activeBg = isSelected ? '#F5B400' : '#ffffff';
+                    const shadeBg = 'rgba(0,0,0,0.07)';
+                    const activeLabel = isSelected ? 'color:#000;' : 'color:#1a1a1a;';
+                    const mBorder = slotM ? 'border:2px solid #1a1a1a; border-bottom:none; border-radius:6px 6px 0 0;' : '';
+                    const aBorder = slotA ? 'border:2px solid #1a1a1a; border-top:none; border-bottom:none;' : '';
+                    const eBorder = slotE ? 'border:2px solid #1a1a1a; border-top:none; border-radius:0 0 6px 6px;' : '';
+                    day.innerHTML = `
+                        <div style="flex:1; background:${slotM ? activeBg : shadeBg}; ${mBorder} display:flex; align-items:center; justify-content:center;">
+                            ${slotM ? `<span style="font-size:9px;font-weight:700;${activeLabel}">AM</span>` : ''}
+                        </div>
+                        <div style="flex:1; background:${slotA ? activeBg : shadeBg}; ${aBorder} display:flex; align-items:center; justify-content:center;">
+                            ${slotA ? `<span style="font-size:9px;font-weight:700;${activeLabel}">PM</span>` : ''}
+                        </div>
+                        <div style="flex:1; background:${slotE ? activeBg : shadeBg}; ${eBorder} display:flex; align-items:center; justify-content:center;">
+                            ${slotE ? `<span style="font-size:9px;font-weight:700;${activeLabel}">Eve</span>` : ''}
+                        </div>
+                        <span style="position:absolute; top:3px; right:5px; font-size:11px; font-weight:700; color:#1a1a1a; z-index:2;">${i}</span>
+                    `;
                     day.onclick = () => selectEditDatePartner(dateStr);
                 }
                 
@@ -51868,49 +52012,63 @@
             const dateAvailability = availability[editSelectedDatePartner] || {};
             
             const slots = [
-                { id: 'morning', name: t('morning'), time: `${timeWindows.morning.start} - ${timeWindows.morning.end}`, window: timeWindows.morning },
-                { id: 'afternoon', name: t('afternoon'), time: `${timeWindows.afternoon.start} - ${timeWindows.afternoon.end}`, window: timeWindows.afternoon },
-                { id: 'evening', name: t('evening'), time: `${timeWindows.evening.start} - ${timeWindows.evening.end}`, window: timeWindows.evening }
+                { id: 'morning', name: t('morning'), time: `${timeWindows.morning.start} - ${timeWindows.morning.end}`, window: timeWindows.morning, mobileKey: 'morningMobile' },
+                { id: 'afternoon', name: t('afternoon'), time: `${timeWindows.afternoon.start} - ${timeWindows.afternoon.end}`, window: timeWindows.afternoon, mobileKey: 'afternoonMobile' },
+                { id: 'evening', name: t('evening'), time: `${timeWindows.evening.start} - ${timeWindows.evening.end}`, window: timeWindows.evening, mobileKey: 'eveningMobile' }
             ];
             
+            const currentEditServiceTypePartner = document.querySelector('input[name="editServiceTypePartner"]:checked')?.value || 'onsite';
+            const dateAppointmentsPartner = appointments.filter(a => a.date === editSelectedDatePartner);
+
             slots.forEach(slot => {
                 const slotDiv = document.createElement('div');
                 slotDiv.className = 'time-slot';
-                
-                const availablePartners = dateAvailability[slot.id] || [];
-                const isAvailable = Array.isArray(availablePartners) && availablePartners.includes(partnerName);
-                
-                const bookedCount = appointments.filter(a => 
-                    a.date === editSelectedDatePartner && 
-                    a.timeSlot === slot.id && 
-                    a.partnerName === partnerName &&
-                    a.id !== currentEditingAppointmentIdPartner
-                ).length;
-                
-                const remainingSpots = slot.window.capacity - bookedCount;
-                
+
+                let isAvailable, bookedCount, capacity;
+
+                if (currentEditServiceTypePartner === 'mobile') {
+                    isAvailable = dateAvailability[slot.mobileKey] === true;
+                    capacity = slot.window.mobileCapacity || 3;
+                    bookedCount = dateAppointmentsPartner.filter(a =>
+                        a.timeSlot === slot.id &&
+                        a.serviceType === 'mobile' &&
+                        a.id !== currentEditingAppointmentIdPartner
+                    ).length;
+                } else {
+                    const availablePartners = dateAvailability[slot.id] || [];
+                    isAvailable = Array.isArray(availablePartners) && availablePartners.includes(partnerName);
+                    capacity = slot.window.capacity;
+                    bookedCount = dateAppointmentsPartner.filter(a =>
+                        a.timeSlot === slot.id &&
+                        a.partnerName === partnerName &&
+                        a.id !== currentEditingAppointmentIdPartner
+                    ).length;
+                }
+
+                const remainingSpots = capacity - bookedCount;
+
                 if (!isAvailable || remainingSpots <= 0) {
                     slotDiv.classList.add('disabled');
                 }
-                
+
                 if (editSelectedTimeSlotPartner === slot.id) {
                     slotDiv.classList.add('selected');
                 }
-                
+
                 slotDiv.innerHTML = `
                     <div>
                         <strong>${slot.name}</strong><br>
                         <small>${slot.time}</small>
                     </div>
                     <div class="time-slot-capacity">
-                        ${isAvailable ? `${remainingSpots}/${slot.window.capacity} ${t('spots')}` : t('notAvailable')}
+                        ${isAvailable ? `${remainingSpots}/${capacity} ${t('spots')}` : t('notAvailable')}
                     </div>
                 `;
-                
+
                 if (isAvailable && remainingSpots > 0) {
                     slotDiv.onclick = () => selectEditTimeSlotPartner(slot.id);
                 }
-                
+
                 timeSlotsElement.appendChild(slotDiv);
             });
         }
@@ -52201,16 +52359,50 @@
                 }
                 
                 const dateAvailability = availability[dateStr] || {};
-                const partnerInMorning = Array.isArray(dateAvailability.morning) && dateAvailability.morning.includes(partnerName);
-                const partnerInAfternoon = Array.isArray(dateAvailability.afternoon) && dateAvailability.afternoon.includes(partnerName);
-                const partnerInEvening = Array.isArray(dateAvailability.evening) && dateAvailability.evening.includes(partnerName);
-                const hasAvailability = partnerInMorning || partnerInAfternoon || partnerInEvening;
+                const currentEditServiceTypeAdmin = document.querySelector('input[name="editServiceTypeAdmin"]:checked')?.value || 'onsite';
+                let slotM = false, slotA = false, slotE = false;
+                if (currentEditServiceTypeAdmin === 'mobile') {
+                    slotM = dateAvailability.morningMobile === true;
+                    slotA = dateAvailability.afternoonMobile === true;
+                    slotE = dateAvailability.eveningMobile === true;
+                } else {
+                    slotM = Array.isArray(dateAvailability.morning) && dateAvailability.morning.includes(partnerName);
+                    slotA = Array.isArray(dateAvailability.afternoon) && dateAvailability.afternoon.includes(partnerName);
+                    slotE = Array.isArray(dateAvailability.evening) && dateAvailability.evening.includes(partnerName);
+                }
+                const hasAvailability = slotM || slotA || slotE;
                 
                 // Admin can book in blocked days - no isWithinBlockedDays check
                 
                 if (!hasAvailability) {
                     day.classList.add('disabled');
+                    day.innerHTML = `<span style="position:absolute;top:3px;right:5px;font-size:11px;font-weight:600;">${i}</span>`;
                 } else {
+                    day.style.padding = '0';
+                    day.style.overflow = 'hidden';
+                    day.style.flexDirection = 'column';
+                    day.style.alignItems = 'stretch';
+                    day.style.justifyContent = 'flex-start';
+                    day.style.border = '1px solid #e0e0e0';
+                    const isSelected = editSelectedDate === dateStr;
+                    const activeBg = isSelected ? '#F5B400' : '#ffffff';
+                    const shadeBg = 'rgba(0,0,0,0.07)';
+                    const activeLabel = isSelected ? 'color:#000;' : 'color:#1a1a1a;';
+                    const mBorder = slotM ? 'border:2px solid #1a1a1a; border-bottom:none; border-radius:6px 6px 0 0;' : '';
+                    const aBorder = slotA ? 'border:2px solid #1a1a1a; border-top:none; border-bottom:none;' : '';
+                    const eBorder = slotE ? 'border:2px solid #1a1a1a; border-top:none; border-radius:0 0 6px 6px;' : '';
+                    day.innerHTML = `
+                        <div style="flex:1; background:${slotM ? activeBg : shadeBg}; ${mBorder} display:flex; align-items:center; justify-content:center;">
+                            ${slotM ? `<span style="font-size:9px;font-weight:700;${activeLabel}">AM</span>` : ''}
+                        </div>
+                        <div style="flex:1; background:${slotA ? activeBg : shadeBg}; ${aBorder} display:flex; align-items:center; justify-content:center;">
+                            ${slotA ? `<span style="font-size:9px;font-weight:700;${activeLabel}">PM</span>` : ''}
+                        </div>
+                        <div style="flex:1; background:${slotE ? activeBg : shadeBg}; ${eBorder} display:flex; align-items:center; justify-content:center;">
+                            ${slotE ? `<span style="font-size:9px;font-weight:700;${activeLabel}">Eve</span>` : ''}
+                        </div>
+                        <span style="position:absolute; top:3px; right:5px; font-size:11px; font-weight:700; color:#1a1a1a; z-index:2;">${i}</span>
+                    `;
                     day.onclick = () => selectEditDate(dateStr);
                 }
                 
@@ -52252,49 +52444,63 @@
             const dateAvailability = availability[editSelectedDate] || {};
             
             const slots = [
-                { id: 'morning', name: t('morning'), time: `${timeWindows.morning.start} - ${timeWindows.morning.end}`, window: timeWindows.morning },
-                { id: 'afternoon', name: t('afternoon'), time: `${timeWindows.afternoon.start} - ${timeWindows.afternoon.end}`, window: timeWindows.afternoon },
-                { id: 'evening', name: t('evening'), time: `${timeWindows.evening.start} - ${timeWindows.evening.end}`, window: timeWindows.evening }
+                { id: 'morning', name: t('morning'), time: `${timeWindows.morning.start} - ${timeWindows.morning.end}`, window: timeWindows.morning, mobileKey: 'morningMobile' },
+                { id: 'afternoon', name: t('afternoon'), time: `${timeWindows.afternoon.start} - ${timeWindows.afternoon.end}`, window: timeWindows.afternoon, mobileKey: 'afternoonMobile' },
+                { id: 'evening', name: t('evening'), time: `${timeWindows.evening.start} - ${timeWindows.evening.end}`, window: timeWindows.evening, mobileKey: 'eveningMobile' }
             ];
-            
+
+            const currentEditServiceTypeAdmin = document.querySelector('input[name="editServiceTypeAdmin"]:checked')?.value || 'onsite';
+            const dateAppointmentsAdmin = appointments.filter(a => a.date === editSelectedDate);
+
             slots.forEach(slot => {
                 const slotDiv = document.createElement('div');
                 slotDiv.className = 'time-slot';
-                
-                const availablePartners = dateAvailability[slot.id] || [];
-                const isAvailable = Array.isArray(availablePartners) && availablePartners.includes(partnerName);
-                
-                const bookedCount = appointments.filter(a => 
-                    a.date === editSelectedDate && 
-                    a.timeSlot === slot.id && 
-                    a.partnerName === partnerName &&
-                    a.id !== currentEditingAppointmentId
-                ).length;
-                
-                const remainingSpots = slot.window.capacity - bookedCount;
-                
+
+                let isAvailable, bookedCount, capacity;
+
+                if (currentEditServiceTypeAdmin === 'mobile') {
+                    isAvailable = dateAvailability[slot.mobileKey] === true;
+                    capacity = slot.window.mobileCapacity || 3;
+                    bookedCount = dateAppointmentsAdmin.filter(a =>
+                        a.timeSlot === slot.id &&
+                        a.serviceType === 'mobile' &&
+                        a.id !== currentEditingAppointmentId
+                    ).length;
+                } else {
+                    const availablePartners = dateAvailability[slot.id] || [];
+                    isAvailable = Array.isArray(availablePartners) && availablePartners.includes(partnerName);
+                    capacity = slot.window.capacity;
+                    bookedCount = dateAppointmentsAdmin.filter(a =>
+                        a.timeSlot === slot.id &&
+                        a.partnerName === partnerName &&
+                        a.id !== currentEditingAppointmentId
+                    ).length;
+                }
+
+                const remainingSpots = capacity - bookedCount;
+
                 if (!isAvailable || remainingSpots <= 0) {
                     slotDiv.classList.add('disabled');
                 }
-                
+
                 if (editSelectedTimeSlot === slot.id) {
                     slotDiv.classList.add('selected');
                 }
-                
+
                 slotDiv.innerHTML = `
                     <div>
                         <strong>${slot.name}</strong><br>
                         <small>${slot.time}</small>
                     </div>
                     <div class="time-slot-capacity">
-                        ${isAvailable ? `${remainingSpots}/${slot.window.capacity} ${t('spots')}` : t('notAvailable')}
+                        ${isAvailable ? `${remainingSpots}/${capacity} ${t('spots')}` : t('notAvailable')}
                     </div>
                 `;
-                
+
                 if (isAvailable && remainingSpots > 0) {
                     slotDiv.onclick = () => selectEditTimeSlot(slot.id);
                 }
-                
+
                 timeSlotsElement.appendChild(slotDiv);
             });
         }
