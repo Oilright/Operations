@@ -346,6 +346,147 @@
             opacity: 0.3;
         }
 
+        /* CAROUSEL */
+        .carousel-wrapper {
+            position: relative;
+            width: 100%;
+            margin-top: 12px;
+        }
+        .carousel-track {
+            display: flex;
+            gap: 12px;
+        }
+        .carousel-wrapper {
+            overflow: hidden;
+        }
+        .carousel-arrow {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: #1a1a1a;
+            color: #fff;
+            border: none;
+            border-radius: 50%;
+            width: 32px;
+            height: 32px;
+            font-size: 16px;
+            cursor: pointer;
+            z-index: 2;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .carousel-arrow:hover { background: #F5B400; color: #000; }
+        .carousel-arrow.left { left: -16px; }
+        .carousel-arrow.right { right: -16px; }
+        .carousel-arrow.hidden { display: none; }
+
+        /* DAY OVERLAY MODAL */
+        .day-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            transition: background 0.3s ease;
+        }
+        .day-overlay.show {
+            display: flex;
+        }
+        .day-overlay.visible {
+            background: rgba(0,0,0,0.6);
+        }
+        .day-overlay-inner {
+            background: #fff;
+            border-radius: 12px;
+            width: 100%;
+            max-width: 900px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 8px 40px rgba(0,0,0,0.25);
+            display: flex;
+            flex-direction: column;
+            transform: scale(0.92) translateY(20px);
+            opacity: 0;
+            transition: transform 0.3s cubic-bezier(0.4,0,0.2,1), opacity 0.3s ease;
+        }
+        .day-overlay.visible .day-overlay-inner {
+            transform: scale(1) translateY(0);
+            opacity: 1;
+        }
+        .day-overlay-expandable {
+            overflow: hidden;
+            max-height: 0;
+            opacity: 0;
+            transition: max-height 0.35s cubic-bezier(0.4,0,0.2,1), opacity 0.3s ease;
+        }
+        .day-overlay-expandable.open {
+            max-height: 1000px;
+            opacity: 1;
+        }
+        .day-overlay-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 18px 24px;
+            border-bottom: 2px solid #F5B400;
+        }
+        .day-overlay-header h2 {
+            color: #F5B400;
+            font-size: 1.2rem;
+            font-weight: 700;
+        }
+        .day-overlay-close {
+            background: #1a1a1a;
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            padding: 8px 16px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+        }
+        .day-overlay-close:hover {
+            background: #F5B400;
+            color: #000;
+        }
+        .day-overlay-slot {
+            display: flex;
+            flex-direction: column;
+            padding: 16px 24px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        .day-overlay-slot.has-apts {
+            background: #F5B400;
+        }
+        .day-overlay-slot.no-apts {
+            background: #f0f0f0;
+        }
+        .day-overlay-slot-label {
+            font-size: 13px;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        .day-overlay-slot.no-apts .day-overlay-slot-label {
+            color: #999;
+        }
+        .day-overlay-cards {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        .day-overlay-cards .appointment-card {
+            flex: 1;
+            min-width: 220px;
+            max-width: 320px;
+        }
+
         .time-slots {
             display: grid;
             grid-template-columns: 1fr;
@@ -50748,14 +50889,25 @@
                 const isMobile = document.querySelector('input[name="serviceType"]:checked')?.value === 'mobile';
                 
                 let slotMorning = false, slotAfternoon = false, slotEvening = false;
+                const dateApts = appointments.filter(a => a.date === dateStr);
                 if (isMobile) {
-                    slotMorning = dateAvailability.morningMobile === true;
-                    slotAfternoon = dateAvailability.afternoonMobile === true;
-                    slotEvening = dateAvailability.eveningMobile === true;
+                    const mCap = timeWindows.morning.mobileCapacity || 3;
+                    const aCap = timeWindows.afternoon.mobileCapacity || 3;
+                    const eCap = timeWindows.evening.mobileCapacity || 3;
+                    const mBooked = dateApts.filter(a => a.timeSlot === 'morning' && a.serviceType === 'mobile').length;
+                    const aBooked = dateApts.filter(a => a.timeSlot === 'afternoon' && a.serviceType === 'mobile').length;
+                    const eBooked = dateApts.filter(a => a.timeSlot === 'evening' && a.serviceType === 'mobile').length;
+                    slotMorning = dateAvailability.morningMobile === true && mBooked < mCap;
+                    slotAfternoon = dateAvailability.afternoonMobile === true && aBooked < aCap;
+                    slotEvening = dateAvailability.eveningMobile === true && eBooked < eCap;
                 } else if (selectedPartner) {
-                    slotMorning = Array.isArray(dateAvailability.morning) && dateAvailability.morning.includes(selectedPartner);
-                    slotAfternoon = Array.isArray(dateAvailability.afternoon) && dateAvailability.afternoon.includes(selectedPartner);
-                    slotEvening = Array.isArray(dateAvailability.evening) && dateAvailability.evening.includes(selectedPartner);
+                    const cap = timeWindows.morning.capacity || 5;
+                    const mBooked = dateApts.filter(a => a.timeSlot === 'morning' && a.partnerName === selectedPartner).length;
+                    const aBooked = dateApts.filter(a => a.timeSlot === 'afternoon' && a.partnerName === selectedPartner).length;
+                    const eBooked = dateApts.filter(a => a.timeSlot === 'evening' && a.partnerName === selectedPartner).length;
+                    slotMorning = Array.isArray(dateAvailability.morning) && dateAvailability.morning.includes(selectedPartner) && mBooked < (timeWindows.morning.capacity || 5);
+                    slotAfternoon = Array.isArray(dateAvailability.afternoon) && dateAvailability.afternoon.includes(selectedPartner) && aBooked < (timeWindows.afternoon.capacity || 5);
+                    slotEvening = Array.isArray(dateAvailability.evening) && dateAvailability.evening.includes(selectedPartner) && eBooked < (timeWindows.evening.capacity || 5);
                 } else {
                     slotMorning = !!dateAvailability.morning;
                     slotAfternoon = !!dateAvailability.afternoon;
@@ -50767,6 +50919,8 @@
                 // BLOCK TODAY + NEXT 2 DAYS
                 const isBlocked = isWithinBlockedDays(dateStr);
                 
+                day.dataset.date = dateStr;
+
                 if (isBlocked || !hasAvailability) {
                     day.classList.add('disabled');
                     day.innerHTML = `<span style="position:absolute;top:3px;right:5px;font-size:11px;font-weight:600;">${i}</span>`;
@@ -50813,6 +50967,10 @@
                 day.className = 'calendar-day other-month';
                 day.textContent = i;
                 grid.appendChild(day);
+            }
+
+            if (selectedDate) {
+                collapseRowsBelow('calendarGrid', selectedDate);
             }
         }
 
@@ -50894,6 +51052,33 @@
             renderTimeSlots();
         }
 
+        function collapseRowsBelow(gridId, selectedDateStr) {
+            const grid = document.getElementById(gridId);
+            if (!grid || !selectedDateStr) return;
+            const cells = Array.from(grid.children);
+            const headerCells = 7; // day name headers
+            const dayCells = cells.slice(headerCells);
+            // Find index of selected date cell
+            let selectedIdx = -1;
+            dayCells.forEach((cell, idx) => {
+                if (cell.dataset && cell.dataset.date === selectedDateStr) selectedIdx = idx;
+            });
+            if (selectedIdx === -1) return;
+            // Row of selected date (0-based)
+            const selectedRow = Math.floor(selectedIdx / 7);
+            // Hide all cells in rows after selectedRow
+            dayCells.forEach((cell, idx) => {
+                const row = Math.floor(idx / 7);
+                cell.style.display = row > selectedRow ? 'none' : '';
+            });
+        }
+
+        function restoreAllRows(gridId) {
+            const grid = document.getElementById(gridId);
+            if (!grid) return;
+            Array.from(grid.children).forEach(cell => cell.style.display = '');
+        }
+
         function selectDate(dateStr, element) {
             selectedDate = dateStr;
             selectedTimeSlot = null;
@@ -50908,6 +51093,16 @@
             if (!selectedDate) {
                 return;
             }
+
+            // See full calendar button
+            const seeFullBtn = document.createElement('button');
+            seeFullBtn.type = 'button';
+            seeFullBtn.textContent = '↕ See full calendar';
+            seeFullBtn.style.cssText = 'background:none; border:1px solid #ccc; border-radius:6px; padding:6px 14px; font-size:12px; cursor:pointer; margin-bottom:12px; color:#666;';
+            seeFullBtn.onmouseover = () => { seeFullBtn.style.borderColor = '#F5B400'; seeFullBtn.style.color = '#1a1a1a'; };
+            seeFullBtn.onmouseout = () => { seeFullBtn.style.borderColor = '#ccc'; seeFullBtn.style.color = '#666'; };
+            seeFullBtn.onclick = () => { restoreAllRows('calendarGrid'); };
+            container.appendChild(seeFullBtn);
             
             const dateAvailability = availability[selectedDate] || {};
             const dateAppointments = appointments.filter(apt => apt.date === selectedDate);
@@ -51500,20 +51695,7 @@
         }
         
         function showPartnerDayAppointments(dateStr, dayAppointments) {
-            const container = document.getElementById('partnerAppointmentsList');
-            const dateFormatted = formatDateForDisplay(dateStr, currentLanguage === 'fr' ? 'fr-FR' : 'en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' });
-            
-            let html = `<h3 style="color: #F5B400; margin-bottom: 20px;">${dateFormatted}</h3>`;
-            
-            container.innerHTML = html;
-            dayAppointments.sort((a, b) => {
-                const order = { morning: 1, afternoon: 2, evening: 3 };
-                return order[a.timeSlot] - order[b.timeSlot];
-            });
-            dayAppointments.forEach(apt => {
-                container.appendChild(createAppointmentCard(apt, true));
-            });
-            container.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            openDayOverlay(dateStr, dayAppointments, true);
         }
         
         function renderPartnerAppointments() {
@@ -51637,19 +51819,146 @@
         }
         
         function showAdminDayAppointments(dateStr, dayAppointments) {
-            const container = document.getElementById('adminAppointments');
+            openDayOverlay(dateStr, dayAppointments, false);
+        }
+
+        function buildCarousel(apts, isPartnerView) {
+            const wrapper = document.createElement('div');
+            wrapper.className = 'carousel-wrapper';
+
+            const track = document.createElement('div');
+            track.className = 'carousel-track';
+            track.style.cssText = 'display:flex; gap:12px; transition:transform 0.35s cubic-bezier(0.4,0,0.2,1); will-change:transform;';
+            apts.forEach(apt => {
+                const card = createAppointmentCard(apt, isPartnerView);
+                card.style.flex = '0 0 calc(50% - 6px)';
+                card.style.minWidth = '0';
+                track.appendChild(card);
+            });
+            wrapper.appendChild(track);
+
+            // Only need arrows if more than 2 cards
+            if (apts.length <= 2) return wrapper;
+
+            let currentIndex = 0;
+            const visible = 2;
+            let animating = false;
+
+            const leftBtn = document.createElement('button');
+            leftBtn.className = 'carousel-arrow left hidden';
+            leftBtn.innerHTML = '&#8592;';
+
+            const rightBtn = document.createElement('button');
+            rightBtn.className = 'carousel-arrow right';
+            rightBtn.innerHTML = '&#8594;';
+
+            function updateCarousel() {
+                // Each card is 50% of wrapper minus half the gap
+                const cardWidth = (wrapper.offsetWidth - 12) / 2;
+                const offset = currentIndex * (cardWidth + 12);
+                track.style.transform = `translateX(-${offset}px)`;
+                leftBtn.classList.toggle('hidden', currentIndex === 0);
+                rightBtn.classList.toggle('hidden', currentIndex + visible >= apts.length);
+            }
+
+            leftBtn.onclick = () => {
+                if (animating || currentIndex === 0) return;
+                animating = true;
+                currentIndex--;
+                updateCarousel();
+                setTimeout(() => { animating = false; }, 370);
+            };
+
+            rightBtn.onclick = () => {
+                if (animating || currentIndex + visible >= apts.length) return;
+                animating = true;
+                currentIndex++;
+                updateCarousel();
+                setTimeout(() => { animating = false; }, 370);
+            };
+
+            // Update on first render after DOM insertion
+            setTimeout(() => updateCarousel(), 0);
+
+            wrapper.appendChild(leftBtn);
+            wrapper.appendChild(rightBtn);
+            return wrapper;
+        }
+
+        function openDayOverlay(dateStr, dayAppointments, isPartnerView) {
             const dateFormatted = formatDateForDisplay(dateStr, currentLanguage === 'fr' ? 'fr-FR' : 'en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' });
-            
-            let html = `<h3 style="color: #F5B400; margin-bottom: 20px;">${dateFormatted}</h3>`;
-            
-            container.innerHTML = html;
-            dayAppointments.sort((a, b) => {
-                const order = { morning: 1, afternoon: 2, evening: 3 };
-                return order[a.timeSlot] - order[b.timeSlot];
+            document.getElementById('dayOverlayTitle').textContent = dateFormatted;
+
+            const content = document.getElementById('dayOverlayContent');
+            content.innerHTML = '';
+
+            const slots = [
+                { id: 'morning', label: 'AM — ' + t('morning') },
+                { id: 'afternoon', label: 'PM — ' + t('afternoon') },
+                { id: 'evening', label: 'Eve — ' + t('evening') }
+            ];
+
+            // Count how many slots have appointments
+            const slotsWithApts = slots.filter(s => dayAppointments.some(a => a.timeSlot === s.id));
+            const multipleSlots = slotsWithApts.length > 1;
+
+            slots.forEach(slot => {
+                const slotApts = dayAppointments.filter(a => a.timeSlot === slot.id);
+                const hasApts = slotApts.length > 0;
+
+                const slotDiv = document.createElement('div');
+                slotDiv.className = 'day-overlay-slot ' + (hasApts ? 'has-apts' : 'no-apts');
+
+                const header = document.createElement('div');
+                header.style.cssText = 'display:flex; align-items:center; justify-content:space-between;';
+
+                const label = document.createElement('div');
+                label.className = 'day-overlay-slot-label';
+                label.style.marginBottom = '0';
+                label.textContent = slot.label;
+                header.appendChild(label);
+
+                if (hasApts && multipleSlots) {
+                    const seeBtn = document.createElement('button');
+                    seeBtn.textContent = 'See appointments';
+                    seeBtn.style.cssText = 'background:#1a1a1a; color:#fff; border:none; border-radius:6px; padding:6px 12px; font-size:12px; font-weight:600; cursor:pointer;';
+                    const expandable = document.createElement('div');
+                    expandable.className = 'day-overlay-expandable';
+                    const carousel = buildCarousel(slotApts, isPartnerView);
+                    expandable.appendChild(carousel);
+                    seeBtn.onclick = () => {
+                        const expanded = expandable.classList.contains('open');
+                        expandable.classList.toggle('open', !expanded);
+                        seeBtn.textContent = expanded ? 'See appointments' : 'Hide';
+                    };
+                    header.appendChild(seeBtn);
+                    slotDiv.appendChild(header);
+                    slotDiv.appendChild(expandable);
+                } else if (hasApts && !multipleSlots) {
+                    // Only one slot with appointments — expand immediately
+                    slotDiv.appendChild(header);
+                    const carousel = buildCarousel(slotApts, isPartnerView);
+                    slotDiv.appendChild(carousel);
+                } else {
+                    slotDiv.appendChild(header);
+                }
+
+                content.appendChild(slotDiv);
             });
-            dayAppointments.forEach(apt => {
-                container.appendChild(createAppointmentCard(apt, false));
+
+            const modal = document.getElementById('dayOverlayModal');
+            modal.classList.add('show');
+            requestAnimationFrame(() => {
+                requestAnimationFrame(() => {
+                    modal.classList.add('visible');
+                });
             });
+        }
+
+        function closeDayOverlay() {
+            const modal = document.getElementById('dayOverlayModal');
+            modal.classList.remove('visible');
+            setTimeout(() => modal.classList.remove('show'), 300);
         }
 
         function renderAppointmentHistory() {
@@ -51929,19 +52238,28 @@
                 const dateAvailability = availability[dateStr] || {};
                 const currentEditServiceType = document.querySelector('input[name="editServiceTypePartner"]:checked')?.value || 'onsite';
                 let slotM = false, slotA = false, slotE = false;
+                const dateAptsP = appointments.filter(a => a.date === dateStr);
                 if (currentEditServiceType === 'mobile') {
-                    slotM = dateAvailability.morningMobile === true;
-                    slotA = dateAvailability.afternoonMobile === true;
-                    slotE = dateAvailability.eveningMobile === true;
+                    const mBooked = dateAptsP.filter(a => a.timeSlot === 'morning' && a.serviceType === 'mobile' && a.id !== currentEditingAppointmentIdPartner).length;
+                    const aBooked = dateAptsP.filter(a => a.timeSlot === 'afternoon' && a.serviceType === 'mobile' && a.id !== currentEditingAppointmentIdPartner).length;
+                    const eBooked = dateAptsP.filter(a => a.timeSlot === 'evening' && a.serviceType === 'mobile' && a.id !== currentEditingAppointmentIdPartner).length;
+                    slotM = dateAvailability.morningMobile === true && mBooked < (timeWindows.morning.mobileCapacity || 3);
+                    slotA = dateAvailability.afternoonMobile === true && aBooked < (timeWindows.afternoon.mobileCapacity || 3);
+                    slotE = dateAvailability.eveningMobile === true && eBooked < (timeWindows.evening.mobileCapacity || 3);
                 } else {
-                    slotM = Array.isArray(dateAvailability.morning) && dateAvailability.morning.includes(apt.partnerName);
-                    slotA = Array.isArray(dateAvailability.afternoon) && dateAvailability.afternoon.includes(apt.partnerName);
-                    slotE = Array.isArray(dateAvailability.evening) && dateAvailability.evening.includes(apt.partnerName);
+                    const mBooked = dateAptsP.filter(a => a.timeSlot === 'morning' && a.partnerName === apt.partnerName && a.id !== currentEditingAppointmentIdPartner).length;
+                    const aBooked = dateAptsP.filter(a => a.timeSlot === 'afternoon' && a.partnerName === apt.partnerName && a.id !== currentEditingAppointmentIdPartner).length;
+                    const eBooked = dateAptsP.filter(a => a.timeSlot === 'evening' && a.partnerName === apt.partnerName && a.id !== currentEditingAppointmentIdPartner).length;
+                    slotM = Array.isArray(dateAvailability.morning) && dateAvailability.morning.includes(apt.partnerName) && mBooked < (timeWindows.morning.capacity || 5);
+                    slotA = Array.isArray(dateAvailability.afternoon) && dateAvailability.afternoon.includes(apt.partnerName) && aBooked < (timeWindows.afternoon.capacity || 5);
+                    slotE = Array.isArray(dateAvailability.evening) && dateAvailability.evening.includes(apt.partnerName) && eBooked < (timeWindows.evening.capacity || 5);
                 }
                 const hasAvailability = slotM || slotA || slotE;
                 
                 const isBlocked = isWithinBlockedDays(dateStr);
                 
+                day.dataset.date = dateStr;
+
                 if (isBlocked || !hasAvailability) {
                     day.classList.add('disabled');
                     day.innerHTML = `<span style="position:absolute;top:3px;right:5px;font-size:11px;font-weight:600;">${i}</span>`;
@@ -51991,6 +52309,7 @@
             }
             
             if (editSelectedDatePartner) {
+                collapseRowsBelow('editCalendarGridPartner', editSelectedDatePartner);
                 renderEditTimeSlotsPartner(apt.partnerName);
             } else {
                 timeSlotsElement.innerHTML = '';
@@ -52008,6 +52327,15 @@
             if (!timeSlotsElement || !editSelectedDatePartner) return;
             
             timeSlotsElement.innerHTML = '';
+
+            const seeFullBtn = document.createElement('button');
+            seeFullBtn.type = 'button';
+            seeFullBtn.textContent = '↕ See full calendar';
+            seeFullBtn.style.cssText = 'background:none; border:1px solid #ccc; border-radius:6px; padding:6px 14px; font-size:12px; cursor:pointer; margin-bottom:12px; color:#666;';
+            seeFullBtn.onmouseover = () => { seeFullBtn.style.borderColor = '#F5B400'; seeFullBtn.style.color = '#1a1a1a'; };
+            seeFullBtn.onmouseout = () => { seeFullBtn.style.borderColor = '#ccc'; seeFullBtn.style.color = '#666'; };
+            seeFullBtn.onclick = () => { restoreAllRows('editCalendarGridPartner'); };
+            timeSlotsElement.appendChild(seeFullBtn);
             
             const dateAvailability = availability[editSelectedDatePartner] || {};
             
@@ -52178,8 +52506,10 @@
             const editServiceTypePartner = document.querySelector('input[name="editServiceTypePartner"]:checked')?.value || 'onsite';
 
             const originalApt = appointments.find(a => a.id === currentEditingAppointmentIdPartner);
+            const year = document.getElementById('editVehicleYearPartner').value;
 
             const updatedAppointment = {
+                partnerName: originalApt.partnerName,
                 serviceType: editServiceTypePartner,
                 customerName: document.getElementById('editCustomerNamePartner').value,
                 customerPhone: document.getElementById('editCustomerPhonePartner').value,
@@ -52361,19 +52691,28 @@
                 const dateAvailability = availability[dateStr] || {};
                 const currentEditServiceTypeAdmin = document.querySelector('input[name="editServiceTypeAdmin"]:checked')?.value || 'onsite';
                 let slotM = false, slotA = false, slotE = false;
+                const dateAptsA = appointments.filter(a => a.date === dateStr);
                 if (currentEditServiceTypeAdmin === 'mobile') {
-                    slotM = dateAvailability.morningMobile === true;
-                    slotA = dateAvailability.afternoonMobile === true;
-                    slotE = dateAvailability.eveningMobile === true;
+                    const mBooked = dateAptsA.filter(a => a.timeSlot === 'morning' && a.serviceType === 'mobile' && a.id !== currentEditingAppointmentId).length;
+                    const aBooked = dateAptsA.filter(a => a.timeSlot === 'afternoon' && a.serviceType === 'mobile' && a.id !== currentEditingAppointmentId).length;
+                    const eBooked = dateAptsA.filter(a => a.timeSlot === 'evening' && a.serviceType === 'mobile' && a.id !== currentEditingAppointmentId).length;
+                    slotM = dateAvailability.morningMobile === true && mBooked < (timeWindows.morning.mobileCapacity || 3);
+                    slotA = dateAvailability.afternoonMobile === true && aBooked < (timeWindows.afternoon.mobileCapacity || 3);
+                    slotE = dateAvailability.eveningMobile === true && eBooked < (timeWindows.evening.mobileCapacity || 3);
                 } else {
-                    slotM = Array.isArray(dateAvailability.morning) && dateAvailability.morning.includes(partnerName);
-                    slotA = Array.isArray(dateAvailability.afternoon) && dateAvailability.afternoon.includes(partnerName);
-                    slotE = Array.isArray(dateAvailability.evening) && dateAvailability.evening.includes(partnerName);
+                    const mBooked = dateAptsA.filter(a => a.timeSlot === 'morning' && a.partnerName === partnerName && a.id !== currentEditingAppointmentId).length;
+                    const aBooked = dateAptsA.filter(a => a.timeSlot === 'afternoon' && a.partnerName === partnerName && a.id !== currentEditingAppointmentId).length;
+                    const eBooked = dateAptsA.filter(a => a.timeSlot === 'evening' && a.partnerName === partnerName && a.id !== currentEditingAppointmentId).length;
+                    slotM = Array.isArray(dateAvailability.morning) && dateAvailability.morning.includes(partnerName) && mBooked < (timeWindows.morning.capacity || 5);
+                    slotA = Array.isArray(dateAvailability.afternoon) && dateAvailability.afternoon.includes(partnerName) && aBooked < (timeWindows.afternoon.capacity || 5);
+                    slotE = Array.isArray(dateAvailability.evening) && dateAvailability.evening.includes(partnerName) && eBooked < (timeWindows.evening.capacity || 5);
                 }
                 const hasAvailability = slotM || slotA || slotE;
                 
                 // Admin can book in blocked days - no isWithinBlockedDays check
                 
+                day.dataset.date = dateStr;
+
                 if (!hasAvailability) {
                     day.classList.add('disabled');
                     day.innerHTML = `<span style="position:absolute;top:3px;right:5px;font-size:11px;font-weight:600;">${i}</span>`;
@@ -52423,6 +52762,7 @@
             }
             
             if (editSelectedDate) {
+                collapseRowsBelow('editCalendarGrid', editSelectedDate);
                 renderEditTimeSlots(partnerName);
             } else {
                 timeSlotsElement.innerHTML = '';
@@ -52438,8 +52778,17 @@
         function renderEditTimeSlots(partnerName) {
             const timeSlotsElement = document.getElementById('editTimeSlots');
             if (!timeSlotsElement || !editSelectedDate) return;
-            
+
             timeSlotsElement.innerHTML = '';
+
+            const seeFullBtn = document.createElement('button');
+            seeFullBtn.type = 'button';
+            seeFullBtn.textContent = '↕ See full calendar';
+            seeFullBtn.style.cssText = 'background:none; border:1px solid #ccc; border-radius:6px; padding:6px 14px; font-size:12px; cursor:pointer; margin-bottom:12px; color:#666;';
+            seeFullBtn.onmouseover = () => { seeFullBtn.style.borderColor = '#F5B400'; seeFullBtn.style.color = '#1a1a1a'; };
+            seeFullBtn.onmouseout = () => { seeFullBtn.style.borderColor = '#ccc'; seeFullBtn.style.color = '#666'; };
+            seeFullBtn.onclick = () => { restoreAllRows('editCalendarGrid'); };
+            timeSlotsElement.appendChild(seeFullBtn);
             
             const dateAvailability = availability[editSelectedDate] || {};
             
@@ -52608,6 +52957,7 @@
             }
 
             const editServiceTypeAdmin = document.querySelector('input[name="editServiceTypeAdmin"]:checked')?.value || 'onsite';
+            const year = document.getElementById('editVehicleYear').value;
 
             const updatedAppointment = {
                 partnerName: document.getElementById('editPartnerName').value,
@@ -52838,5 +53188,16 @@
             });
         });
     </script>
+    <!-- DAY OVERLAY MODAL -->
+    <div class="day-overlay" id="dayOverlayModal" onclick="if(event.target===this)closeDayOverlay()">
+        <div class="day-overlay-inner">
+            <div class="day-overlay-header">
+                <h2 id="dayOverlayTitle"></h2>
+                <button class="day-overlay-close" onclick="closeDayOverlay()">✕ Close</button>
+            </div>
+            <div id="dayOverlayContent"></div>
+        </div>
+    </div>
+
 </body>
 </html>
