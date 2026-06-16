@@ -346,6 +346,26 @@
             opacity: 0.3;
         }
 
+        /* BAND LABELS & DAY NUMBER */
+        .band-label {
+            font-size: 11px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            width: 100%;
+        }
+        .day-num-label {
+            position: absolute;
+            top: 3px;
+            right: 5px;
+            font-size: 11px;
+            font-weight: 700;
+            color: #1a1a1a;
+            z-index: 2;
+        }
+
         /* CAROUSEL */
         .carousel-wrapper {
             position: relative;
@@ -904,6 +924,17 @@
             /* CALENDAR BANDS */
             .calendar-day {
                 font-size: 10px;
+            }
+            .band-label {
+                font-size: 8px;
+                align-items: flex-end;
+                justify-content: flex-start;
+                padding: 0 0 2px 3px;
+            }
+            .day-num-label {
+                font-size: 9px;
+                top: 2px;
+                right: 3px;
             }
 
             .nav {
@@ -50986,16 +51017,16 @@
                     const aBorder = slotAfternoon ? 'border:2px solid #1a1a1a; border-top:none; border-bottom:none;' : '';
                     const eBorder = slotEvening ? 'border:2px solid #1a1a1a; border-top:none; border-radius:0 0 6px 6px;' : '';
                     day.innerHTML = `
-                        <div style="flex:1; position:relative; background:${slotMorning ? activeBg : shadeBg}; ${mBorder}">
-                            ${slotMorning ? `<span style="font-size:8px;font-weight:700;${activeLabel};position:absolute;bottom:2px;left:3px;">AM</span>` : ''}
+                        <div style="flex:1; position:relative; display:flex; background:${slotMorning ? activeBg : shadeBg}; ${mBorder}">
+                            ${slotMorning ? `<span class="band-label">AM</span>` : ''}
                         </div>
-                        <div style="flex:1; position:relative; background:${slotAfternoon ? activeBg : shadeBg}; ${aBorder}">
-                            ${slotAfternoon ? `<span style="font-size:8px;font-weight:700;${activeLabel};position:absolute;bottom:2px;left:3px;">PM</span>` : ''}
+                        <div style="flex:1; position:relative; display:flex; background:${slotAfternoon ? activeBg : shadeBg}; ${aBorder}">
+                            ${slotAfternoon ? `<span class="band-label">PM</span>` : ''}
                         </div>
-                        <div style="flex:1; position:relative; background:${slotEvening ? activeBg : shadeBg}; ${eBorder}">
-                            ${slotEvening ? `<span style="font-size:8px;font-weight:700;${activeLabel};position:absolute;bottom:2px;left:3px;">Eve</span>` : ''}
+                        <div style="flex:1; position:relative; display:flex; background:${slotEvening ? activeBg : shadeBg}; ${eBorder}">
+                            ${slotEvening ? `<span class="band-label">Eve</span>` : ''}
                         </div>
-                        <span style="position:absolute; top:2px; right:4px; font-size:9px; font-weight:700; color:#1a1a1a; z-index:2;">${i}</span>
+                        <span class="day-num-label">${i}</span>
                     `;
                     day.onclick = () => selectDate(dateStr, day);
                 }
@@ -51490,16 +51521,16 @@
                     const yellowBg = 'rgba(245,180,0,0.35)';
                     const plainBg = '#ffffff';
                     day.innerHTML = `
-                        <div style="flex:1; position:relative; background:${hasMorning ? yellowBg : plainBg}; border-bottom:1px solid #e0e0e0;">
-                            ${hasMorning ? '<span style="font-size:8px;font-weight:700;color:#1a1a1a;position:absolute;bottom:2px;left:3px;">AM</span>' : ''}
+                        <div style="flex:1; position:relative; display:flex; background:${hasMorning ? yellowBg : plainBg}; border-bottom:1px solid #e0e0e0;">
+                            ${hasMorning ? '<span class="band-label" style="color:#1a1a1a;">AM</span>' : ''}
                         </div>
-                        <div style="flex:1; position:relative; background:${hasAfternoon ? yellowBg : plainBg}; border-bottom:1px solid #e0e0e0;">
-                            ${hasAfternoon ? '<span style="font-size:8px;font-weight:700;color:#1a1a1a;position:absolute;bottom:2px;left:3px;">PM</span>' : ''}
+                        <div style="flex:1; position:relative; display:flex; background:${hasAfternoon ? yellowBg : plainBg}; border-bottom:1px solid #e0e0e0;">
+                            ${hasAfternoon ? '<span class="band-label" style="color:#1a1a1a;">PM</span>' : ''}
                         </div>
-                        <div style="flex:1; position:relative; background:${hasEvening ? yellowBg : plainBg};">
-                            ${hasEvening ? '<span style="font-size:8px;font-weight:700;color:#1a1a1a;position:absolute;bottom:2px;left:3px;">Eve</span>' : ''}
+                        <div style="flex:1; position:relative; display:flex; background:${hasEvening ? yellowBg : plainBg};">
+                            ${hasEvening ? '<span class="band-label" style="color:#1a1a1a;">Eve</span>' : ''}
                         </div>
-                        <span style="position:absolute; top:2px; right:4px; font-size:9px; font-weight:700; color:#1a1a1a; z-index:2;">${i}</span>
+                        <span class="day-num-label">${i}</span>
                     `;
                 }
                 
@@ -51710,16 +51741,16 @@
                         const aBorder = hasAfternoonApt ? 'border:2px solid #1a1a1a; border-top:none; border-bottom:none;' : '';
                         const eBorder = hasEveningApt ? 'border:2px solid #1a1a1a; border-top:none; border-radius:0 0 6px 6px;' : '';
                         day.innerHTML = `
-                            <div style="flex:1; position:relative; background:${hasMorningApt ? aptBg : shadeBg}; ${mBorder}">
-                                ${hasMorningApt ? '<span style="font-size:8px;font-weight:700;color:#000;position:absolute;bottom:2px;left:3px;">AM</span>' : ''}
+                            <div style="flex:1; position:relative; display:flex; background:${hasMorningApt ? aptBg : shadeBg}; ${mBorder}">
+                                ${hasMorningApt ? '<span class="band-label" style="color:#000;">AM</span>' : ''}
                             </div>
-                            <div style="flex:1; position:relative; background:${hasAfternoonApt ? aptBg : shadeBg}; ${aBorder}">
-                                ${hasAfternoonApt ? '<span style="font-size:8px;font-weight:700;color:#000;position:absolute;bottom:2px;left:3px;">PM</span>' : ''}
+                            <div style="flex:1; position:relative; display:flex; background:${hasAfternoonApt ? aptBg : shadeBg}; ${aBorder}">
+                                ${hasAfternoonApt ? '<span class="band-label" style="color:#000;">PM</span>' : ''}
                             </div>
-                            <div style="flex:1; position:relative; background:${hasEveningApt ? aptBg : shadeBg}; ${eBorder}">
-                                ${hasEveningApt ? '<span style="font-size:8px;font-weight:700;color:#000;position:absolute;bottom:2px;left:3px;">Eve</span>' : ''}
+                            <div style="flex:1; position:relative; display:flex; background:${hasEveningApt ? aptBg : shadeBg}; ${eBorder}">
+                                ${hasEveningApt ? '<span class="band-label" style="color:#000;">Eve</span>' : ''}
                             </div>
-                            <span style="position:absolute; top:2px; right:4px; font-size:9px; font-weight:700; color:#1a1a1a; z-index:2;">${i}</span>
+                            <span class="day-num-label">${i}</span>
                         `;
                     }
                 } else {
@@ -51832,16 +51863,16 @@
                         const aBorder = hasAfternoonApt ? 'border:2px solid #1a1a1a; border-top:none; border-bottom:none;' : '';
                         const eBorder = hasEveningApt ? 'border:2px solid #1a1a1a; border-top:none; border-radius:0 0 6px 6px;' : '';
                         day.innerHTML = `
-                            <div style="flex:1; position:relative; background:${hasMorningApt ? aptBg : shadeBg}; ${mBorder}">
-                                ${hasMorningApt ? '<span style="font-size:8px;font-weight:700;color:#000;position:absolute;bottom:2px;left:3px;">AM</span>' : ''}
+                            <div style="flex:1; position:relative; display:flex; background:${hasMorningApt ? aptBg : shadeBg}; ${mBorder}">
+                                ${hasMorningApt ? '<span class="band-label" style="color:#000;">AM</span>' : ''}
                             </div>
-                            <div style="flex:1; position:relative; background:${hasAfternoonApt ? aptBg : shadeBg}; ${aBorder}">
-                                ${hasAfternoonApt ? '<span style="font-size:8px;font-weight:700;color:#000;position:absolute;bottom:2px;left:3px;">PM</span>' : ''}
+                            <div style="flex:1; position:relative; display:flex; background:${hasAfternoonApt ? aptBg : shadeBg}; ${aBorder}">
+                                ${hasAfternoonApt ? '<span class="band-label" style="color:#000;">PM</span>' : ''}
                             </div>
-                            <div style="flex:1; position:relative; background:${hasEveningApt ? aptBg : shadeBg}; ${eBorder}">
-                                ${hasEveningApt ? '<span style="font-size:8px;font-weight:700;color:#000;position:absolute;bottom:2px;left:3px;">Eve</span>' : ''}
+                            <div style="flex:1; position:relative; display:flex; background:${hasEveningApt ? aptBg : shadeBg}; ${eBorder}">
+                                ${hasEveningApt ? '<span class="band-label" style="color:#000;">Eve</span>' : ''}
                             </div>
-                            <span style="position:absolute; top:2px; right:4px; font-size:9px; font-weight:700; color:#1a1a1a; z-index:2;">${i}</span>
+                            <span class="day-num-label">${i}</span>
                         `;
                     }
                 } else {
@@ -52411,16 +52442,16 @@ ${body}`;
                     const aBorder = slotA ? 'border:2px solid #1a1a1a; border-top:none; border-bottom:none;' : '';
                     const eBorder = slotE ? 'border:2px solid #1a1a1a; border-top:none; border-radius:0 0 6px 6px;' : '';
                     day.innerHTML = `
-                        <div style="flex:1; position:relative; background:${slotM ? activeBg : shadeBg}; ${mBorder}">
-                            ${slotM ? `<span style="font-size:8px;font-weight:700;${activeLabel};position:absolute;bottom:2px;left:3px;">AM</span>` : ''}
+                        <div style="flex:1; position:relative; display:flex; background:${slotM ? activeBg : shadeBg}; ${mBorder}">
+                            ${slotM ? `<span class="band-label">AM</span>` : ''}
                         </div>
-                        <div style="flex:1; position:relative; background:${slotA ? activeBg : shadeBg}; ${aBorder}">
-                            ${slotA ? `<span style="font-size:8px;font-weight:700;${activeLabel};position:absolute;bottom:2px;left:3px;">PM</span>` : ''}
+                        <div style="flex:1; position:relative; display:flex; background:${slotA ? activeBg : shadeBg}; ${aBorder}">
+                            ${slotA ? `<span class="band-label">PM</span>` : ''}
                         </div>
-                        <div style="flex:1; position:relative; background:${slotE ? activeBg : shadeBg}; ${eBorder}">
-                            ${slotE ? `<span style="font-size:8px;font-weight:700;${activeLabel};position:absolute;bottom:2px;left:3px;">Eve</span>` : ''}
+                        <div style="flex:1; position:relative; display:flex; background:${slotE ? activeBg : shadeBg}; ${eBorder}">
+                            ${slotE ? `<span class="band-label">Eve</span>` : ''}
                         </div>
-                        <span style="position:absolute; top:2px; right:4px; font-size:9px; font-weight:700; color:#1a1a1a; z-index:2;">${i}</span>
+                        <span class="day-num-label">${i}</span>
                     `;
                     day.onclick = () => selectEditDatePartner(dateStr);
                 }
@@ -52866,16 +52897,16 @@ ${body}`;
                     const aBorder = slotA ? 'border:2px solid #1a1a1a; border-top:none; border-bottom:none;' : '';
                     const eBorder = slotE ? 'border:2px solid #1a1a1a; border-top:none; border-radius:0 0 6px 6px;' : '';
                     day.innerHTML = `
-                        <div style="flex:1; position:relative; background:${slotM ? activeBg : shadeBg}; ${mBorder}">
-                            ${slotM ? `<span style="font-size:8px;font-weight:700;${activeLabel};position:absolute;bottom:2px;left:3px;">AM</span>` : ''}
+                        <div style="flex:1; position:relative; display:flex; background:${slotM ? activeBg : shadeBg}; ${mBorder}">
+                            ${slotM ? `<span class="band-label">AM</span>` : ''}
                         </div>
-                        <div style="flex:1; position:relative; background:${slotA ? activeBg : shadeBg}; ${aBorder}">
-                            ${slotA ? `<span style="font-size:8px;font-weight:700;${activeLabel};position:absolute;bottom:2px;left:3px;">PM</span>` : ''}
+                        <div style="flex:1; position:relative; display:flex; background:${slotA ? activeBg : shadeBg}; ${aBorder}">
+                            ${slotA ? `<span class="band-label">PM</span>` : ''}
                         </div>
-                        <div style="flex:1; position:relative; background:${slotE ? activeBg : shadeBg}; ${eBorder}">
-                            ${slotE ? `<span style="font-size:8px;font-weight:700;${activeLabel};position:absolute;bottom:2px;left:3px;">Eve</span>` : ''}
+                        <div style="flex:1; position:relative; display:flex; background:${slotE ? activeBg : shadeBg}; ${eBorder}">
+                            ${slotE ? `<span class="band-label">Eve</span>` : ''}
                         </div>
-                        <span style="position:absolute; top:2px; right:4px; font-size:9px; font-weight:700; color:#1a1a1a; z-index:2;">${i}</span>
+                        <span class="day-num-label">${i}</span>
                     `;
                     day.onclick = () => selectEditDate(dateStr);
                 }
