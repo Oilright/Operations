@@ -859,6 +859,53 @@
 
         /* Responsive */
         @media (max-width: 768px) {
+
+            /* DAY OVERLAY */
+            .day-overlay {
+                padding: 10px;
+                align-items: flex-end;
+            }
+            .day-overlay-inner {
+                max-height: 85vh;
+                border-radius: 12px 12px 0 0;
+            }
+            .day-overlay-header {
+                padding: 14px 16px;
+            }
+            .day-overlay-header h2 {
+                font-size: 1rem;
+            }
+            .day-overlay-slot {
+                padding: 12px 16px;
+            }
+            .day-overlay-cards {
+                flex-direction: column;
+            }
+            .day-overlay-cards .appointment-card {
+                min-width: 0;
+                max-width: 100%;
+                flex: none;
+                width: 100%;
+            }
+
+            /* CAROUSEL */
+            .carousel-wrapper {
+                padding: 0 8px;
+            }
+            .carousel-arrow.left { left: -8px; }
+            .carousel-arrow.right { right: -8px; }
+
+            /* EMAIL POPUP */
+            #emailConfirmationText {
+                height: 220px;
+                font-size: 12px;
+            }
+
+            /* CALENDAR BANDS */
+            .calendar-day {
+                font-size: 10px;
+            }
+
             .nav {
                 padding: 10px;
             }
@@ -51914,7 +51961,7 @@ ${body}`;
             track.style.cssText = 'display:flex; gap:12px; transition:transform 0.35s cubic-bezier(0.4,0,0.2,1); will-change:transform;';
             apts.forEach(apt => {
                 const card = createAppointmentCard(apt, isPartnerView);
-                card.style.flex = '0 0 calc(50% - 6px)';
+                card.style.flex = window.innerWidth <= 768 ? '0 0 100%' : '0 0 calc(50% - 6px)';
                 card.style.minWidth = '0';
                 track.appendChild(card);
             });
@@ -51924,7 +51971,7 @@ ${body}`;
             if (apts.length <= 2) return wrapper;
 
             let currentIndex = 0;
-            const visible = 2;
+            const visible = window.innerWidth <= 768 ? 1 : 2;
             let animating = false;
 
             const leftBtn = document.createElement('button');
