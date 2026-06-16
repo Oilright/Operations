@@ -200,12 +200,32 @@
   .tech-notes { width: 100%; border: none; border-bottom: 2px solid var(--line); background: transparent; font-size: 14px; font-family: inherit; color: var(--dark); padding: 4px 2px; outline: none; resize: none; line-height: 1.5; }
   .tech-notes:focus { border-bottom-color: #3a3a3a; }
 
+  /* PREP CHECKLIST (internal, no-print) */
+  .prep-section { border: 1px solid #b0b0b0; border-radius: 8px; margin-bottom: 14px; overflow: hidden; background: #F2F2F2; }
+  .prep-hdr { background: #3a3a3a; color: white; padding: 8px 14px; display: flex; align-items: center; gap: 10px; }
+  .prep-body { padding: 14px 16px; }
+  .prep-step { margin-bottom: 4px; }
+  .prep-step:last-of-type { margin-bottom: 0; }
+  .prep-step-check { width: 18px; height: 18px; margin-right: 8px; vertical-align: middle; accent-color: #3a3a3a; cursor: pointer; }
+  .prep-step-title { font-size: 12px; font-weight: 700; color: #3a3a3a; cursor: pointer; vertical-align: middle; }
+  .prep-step-check:checked ~ .prep-step-title { text-decoration: line-through; color: #999; }
+  .prep-details { padding-left: 26px; margin-top: 6px; }
+  .prep-step-check:checked ~ .prep-details { display: none; }
+  .prep-substep { font-size: 10.5px; font-weight: 700; color: #777; text-transform: uppercase; letter-spacing: 0.3px; margin: 6px 0 3px; }
+  .prep-list { list-style: disc; padding-left: 18px; }
+  .prep-list li { font-size: 13px; padding: 2px 0; }
+  .prep-list li.photo { font-weight: 700; color: var(--warn); list-style: none; margin-left: -18px; }
+  .prep-divider { border: none; border-top: 1px dashed #bbb; margin: 8px 0; }
+  .prep-body.prep-collapsed { display: none; }
+
   @media print {
+    * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
     body { background: white; }
     .page { margin: 0; box-shadow: none; padding: 20px 24px; }
     .fabs, .sig-bar { display: none; }
     .sig-hint { display: none; }
     .no-print { display: none !important; }
+    .prep-section { display: none !important; }
     input[type="text"], input[type="date"], textarea {
       overflow: visible !important;
       white-space: normal !important;
@@ -265,6 +285,205 @@
         <label style="font-size:10px;font-weight:700;color:var(--gray);text-transform:uppercase;letter-spacing:0.5px;">Ref. No.</label>
         <input type="text" placeholder="#" autocomplete="off" style="border:none;border-bottom:1.5px solid var(--line);background:transparent;font-size:14px;font-family:inherit;color:var(--dark);padding:2px 4px;outline:none;width:120px;text-align:right;border-radius:0;-webkit-appearance:none;">
       </div>
+    </div>
+  </div>
+
+  <!-- PRE-WORK CHECKLIST (internal, no-print) -->
+  <div class="prep-section">
+    <div class="prep-hdr" onclick="document.getElementById('prepBody').classList.toggle('prep-collapsed')" style="cursor:pointer;">
+      <span class="tech-badge">Internal</span>
+      <span class="sec-title">Pré-Travail — À faire avant de toucher au char</span>
+    </div>
+    <div class="prep-body prep-collapsed" id="prepBody">
+
+      <div class="prep-step">
+        <input type="checkbox" class="prep-step-check" id="prep-step-1">
+        <label class="prep-step-title" for="prep-step-1">Étape 1 — Préparation engine bay</label>
+        <div class="prep-details">
+          <div class="prep-substep">Partie 1 — Avant d'ouvrir</div>
+          <ul class="prep-list">
+            <li>Mettre les gants</li>
+            <li>Ouvrir le hood</li>
+            <li>Apporter le bouchon moteur d'huile</li>
+          </ul>
+          <div class="prep-substep">Partie 2 — Équipement engine bay</div>
+          <ul class="prep-list">
+            <li>Pogner adapteur aspirateur</li>
+            <li>Pressure regulator</li>
+            <li>Balayeuse</li>
+            <li>Engine bay covers</li>
+          </ul>
+        </div>
+      </div>
+
+      <hr class="prep-divider">
+
+      <div class="prep-step">
+        <input type="checkbox" class="prep-step-check" id="prep-step-2">
+        <label class="prep-step-title" for="prep-step-2">Étape 2 — Jacker le char</label>
+        <div class="prep-details">
+          <ul class="prep-list">
+            <li>Mettre les stoppers de roue</li>
+            <li>Sortir le jack et le jack rod</li>
+            <li class="photo">📸 PHOTO — Work Area Before</li>
+          </ul>
+        </div>
+      </div>
+
+      <hr class="prep-divider">
+
+      <div class="prep-step">
+        <input type="checkbox" class="prep-step-check" id="prep-step-3">
+        <label class="prep-step-title" for="prep-step-3">Étape 3 — En dessous de la voiture</label>
+        <div class="prep-details">
+          <ul class="prep-list">
+            <li>Tapis</li>
+          </ul>
+          <div class="prep-substep">Si plastic cover</div>
+          <ul class="prep-list">
+            <li>Drill + adapteur drill + socket plastic cover</li>
+          </ul>
+          <div class="prep-substep">Filtre à huile</div>
+          <ul class="prep-list">
+            <li>Ratchet + rallonge</li>
+            <li>Désserreur filtreur</li>
+            <li>Nouveau filtre</li>
+          </ul>
+          <div class="prep-substep">Drainage</div>
+          <ul class="prep-list">
+            <li>Torque wrench</li>
+            <li>Socket drain plug</li>
+            <li>Breaker bar</li>
+            <li>Panne à huile</li>
+            <li>Scott</li>
+            <li>Brake cleaner</li>
+            <li>Sac plastique pour vieux filtre</li>
+            <li>Poubelle</li>
+            <li class="photo">📸 PHOTO — Drain Plug Before</li>
+          </ul>
+        </div>
+      </div>
+
+      <hr class="prep-divider">
+
+      <div class="prep-step">
+        <input type="checkbox" class="prep-step-check" id="prep-step-4">
+        <label class="prep-step-title" for="prep-step-4">Étape 4 — Changer le washer seal du drain plug</label>
+        <div class="prep-details">
+          <ul class="prep-list">
+            <li>Remplacer le crush washer</li>
+            <li class="photo">📸 PHOTO — Drain Plug After — mettre un mot de rappel dans le kit de crush washer</li>
+          </ul>
+        </div>
+      </div>
+
+      <hr class="prep-divider">
+
+      <div class="prep-step">
+        <input type="checkbox" class="prep-step-check" id="prep-step-5">
+        <label class="prep-step-title" for="prep-step-5">Étape 5 — Nettoyage en dessous</label>
+        <div class="prep-details">
+          <ul class="prep-list">
+            <li>Ramasser le pressure regulator</li>
+            <li>Ramasser la balayeuse</li>
+            <li>Vérifier plus rien en dessous de la voiture</li>
+          </ul>
+        </div>
+      </div>
+
+      <hr class="prep-divider">
+
+      <div class="prep-step">
+        <input type="checkbox" class="prep-step-check" id="prep-step-6">
+        <label class="prep-step-title" for="prep-step-6">Étape 6 — Déjacker le char</label>
+        <div class="prep-details">
+          <ul class="prep-list">
+            <li>Ramasser les jack et jack rod</li>
+            <li>Ramasser stoppers de roue</li>
+          </ul>
+        </div>
+      </div>
+
+      <hr class="prep-divider">
+
+      <div class="prep-step">
+        <input type="checkbox" class="prep-step-check" id="prep-step-7">
+        <label class="prep-step-title" for="prep-step-7">Étape 7 — Retour engine bay + remplissage</label>
+        <div class="prep-details">
+          <ul class="prep-list">
+            <li>Déboucher le bidon d'huile</li>
+            <li>Prendre entonnoir</li>
+          </ul>
+        </div>
+      </div>
+
+      <hr class="prep-divider">
+
+      <div class="prep-step">
+        <input type="checkbox" class="prep-step-check" id="prep-step-8">
+        <label class="prep-step-title" for="prep-step-8">Étape 8 — Tapis en avant du char</label>
+        <div class="prep-details">
+          <div class="prep-substep">Si plastic cover</div>
+          <ul class="prep-list">
+            <li>Ramasser drill + adapteur drill + socket plastic cover</li>
+          </ul>
+          <div class="prep-substep">Ramasser filtre à huile</div>
+          <ul class="prep-list">
+            <li>Ratchet + rallonge</li>
+            <li>Désserreur filtreur</li>
+            <li>Vieux filtre</li>
+          </ul>
+          <div class="prep-substep">Ramasser drainage</div>
+          <ul class="prep-list">
+            <li>Torque wrench</li>
+            <li>Socket drain plug</li>
+            <li>Breaker bar</li>
+            <li>Panne à huile</li>
+            <li>Scott</li>
+            <li>Brake cleaner</li>
+            <li>Poubelle</li>
+          </ul>
+        </div>
+      </div>
+
+      <hr class="prep-divider">
+
+      <div class="prep-step">
+        <input type="checkbox" class="prep-step-check" id="prep-step-9">
+        <label class="prep-step-title" for="prep-step-9">Étape 9 — Finaliser engine bay</label>
+        <div class="prep-details">
+          <ul class="prep-list">
+            <li class="photo">📸 PHOTO — Work Area After</li>
+            <li>Remettre le bouchon d'huile de la voiture</li>
+            <li>Ramasser engine bay covers</li>
+          </ul>
+        </div>
+      </div>
+
+      <hr class="prep-divider">
+
+      <div class="prep-step">
+        <input type="checkbox" class="prep-step-check" id="prep-step-10">
+        <label class="prep-step-title" for="prep-step-10">Étape 10 — Windshield washer fluid</label>
+        <div class="prep-details">
+          <ul class="prep-list">
+            <li>Top-up</li>
+          </ul>
+        </div>
+      </div>
+
+      <hr class="prep-divider">
+
+      <div class="prep-step">
+        <input type="checkbox" class="prep-step-check" id="prep-step-11">
+        <label class="prep-step-title" for="prep-step-11">Étape 11 — Intérieur voiture</label>
+        <div class="prep-details">
+          <ul class="prep-list">
+            <li>Collant de prochain RDV ou reset de l'ordi pour nouveau RDV</li>
+          </ul>
+        </div>
+      </div>
+
     </div>
   </div>
 
@@ -650,7 +869,7 @@
             <div class="pkg-num">1</div>
             <div>
               <div class="pkg-name" style="color:white;">5L OilRight PACKAGE</div>
-              <div class="pkg-price">$119.99</div>
+              <div class="pkg-price" style="display:flex;align-items:center;gap:6px;">$&nbsp;<input type="text" id="pkg1Price" value="119.99" autocomplete="off" style="background:transparent;border:none;border-bottom:1.5px solid rgba(255,255,255,0.6);color:white;font-size:14px;font-weight:700;font-family:inherit;outline:none;width:80px;padding:2px 4px;"></div>
             </div>
           </div>
           <div class="pkg-body">
@@ -662,7 +881,7 @@
             <div class="pkg-num">2</div>
             <div>
               <div class="pkg-name" style="color:white;">6L+ OilRight PACKAGE</div>
-              <div class="pkg-price">$139.99</div>
+              <div class="pkg-price" style="display:flex;align-items:center;gap:6px;">$&nbsp;<input type="text" id="pkg2Price" value="139.99" autocomplete="off" style="background:transparent;border:none;border-bottom:1.5px solid rgba(255,255,255,0.6);color:white;font-size:14px;font-weight:700;font-family:inherit;outline:none;width:80px;padding:2px 4px;"></div>
             </div>
           </div>
           <div class="pkg-body">
