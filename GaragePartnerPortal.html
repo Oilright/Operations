@@ -50986,16 +50986,16 @@
                     const aBorder = slotAfternoon ? 'border:2px solid #1a1a1a; border-top:none; border-bottom:none;' : '';
                     const eBorder = slotEvening ? 'border:2px solid #1a1a1a; border-top:none; border-radius:0 0 6px 6px;' : '';
                     day.innerHTML = `
-                        <div style="flex:1; background:${slotMorning ? activeBg : shadeBg}; ${mBorder} display:flex; align-items:center; justify-content:center;">
-                            ${slotMorning ? `<span style="font-size:9px;font-weight:700;${activeLabel}">AM</span>` : ''}
+                        <div style="flex:1; position:relative; background:${slotMorning ? activeBg : shadeBg}; ${mBorder}">
+                            ${slotMorning ? `<span style="font-size:8px;font-weight:700;${activeLabel};position:absolute;bottom:2px;left:3px;">AM</span>` : ''}
                         </div>
-                        <div style="flex:1; background:${slotAfternoon ? activeBg : shadeBg}; ${aBorder} display:flex; align-items:center; justify-content:center;">
-                            ${slotAfternoon ? `<span style="font-size:9px;font-weight:700;${activeLabel}">PM</span>` : ''}
+                        <div style="flex:1; position:relative; background:${slotAfternoon ? activeBg : shadeBg}; ${aBorder}">
+                            ${slotAfternoon ? `<span style="font-size:8px;font-weight:700;${activeLabel};position:absolute;bottom:2px;left:3px;">PM</span>` : ''}
                         </div>
-                        <div style="flex:1; background:${slotEvening ? activeBg : shadeBg}; ${eBorder} display:flex; align-items:center; justify-content:center;">
-                            ${slotEvening ? `<span style="font-size:9px;font-weight:700;${activeLabel}">Eve</span>` : ''}
+                        <div style="flex:1; position:relative; background:${slotEvening ? activeBg : shadeBg}; ${eBorder}">
+                            ${slotEvening ? `<span style="font-size:8px;font-weight:700;${activeLabel};position:absolute;bottom:2px;left:3px;">Eve</span>` : ''}
                         </div>
-                        <span style="position:absolute; top:3px; right:5px; font-size:11px; font-weight:700; color:#1a1a1a; z-index:2;">${i}</span>
+                        <span style="position:absolute; top:2px; right:4px; font-size:9px; font-weight:700; color:#1a1a1a; z-index:2;">${i}</span>
                     `;
                     day.onclick = () => selectDate(dateStr, day);
                 }
@@ -51490,16 +51490,16 @@
                     const yellowBg = 'rgba(245,180,0,0.35)';
                     const plainBg = '#ffffff';
                     day.innerHTML = `
-                        <div style="flex:1; background:${hasMorning ? yellowBg : plainBg}; border-bottom:1px solid #e0e0e0; display:flex; align-items:center; justify-content:center;">
-                            ${hasMorning ? '<span style="font-size:9px;font-weight:700;color:#1a1a1a;">AM</span>' : ''}
+                        <div style="flex:1; position:relative; background:${hasMorning ? yellowBg : plainBg}; border-bottom:1px solid #e0e0e0;">
+                            ${hasMorning ? '<span style="font-size:8px;font-weight:700;color:#1a1a1a;position:absolute;bottom:2px;left:3px;">AM</span>' : ''}
                         </div>
-                        <div style="flex:1; background:${hasAfternoon ? yellowBg : plainBg}; border-bottom:1px solid #e0e0e0; display:flex; align-items:center; justify-content:center;">
-                            ${hasAfternoon ? '<span style="font-size:9px;font-weight:700;color:#1a1a1a;">PM</span>' : ''}
+                        <div style="flex:1; position:relative; background:${hasAfternoon ? yellowBg : plainBg}; border-bottom:1px solid #e0e0e0;">
+                            ${hasAfternoon ? '<span style="font-size:8px;font-weight:700;color:#1a1a1a;position:absolute;bottom:2px;left:3px;">PM</span>' : ''}
                         </div>
-                        <div style="flex:1; background:${hasEvening ? yellowBg : plainBg}; display:flex; align-items:center; justify-content:center;">
-                            ${hasEvening ? '<span style="font-size:9px;font-weight:700;color:#1a1a1a;">Eve</span>' : ''}
+                        <div style="flex:1; position:relative; background:${hasEvening ? yellowBg : plainBg};">
+                            ${hasEvening ? '<span style="font-size:8px;font-weight:700;color:#1a1a1a;position:absolute;bottom:2px;left:3px;">Eve</span>' : ''}
                         </div>
-                        <span style="position:absolute; top:3px; right:5px; font-size:11px; font-weight:600; color:#1a1a1a; z-index:2;">${i}</span>
+                        <span style="position:absolute; top:2px; right:4px; font-size:9px; font-weight:700; color:#1a1a1a; z-index:2;">${i}</span>
                     `;
                 }
                 
@@ -51710,16 +51710,16 @@
                         const aBorder = hasAfternoonApt ? 'border:2px solid #1a1a1a; border-top:none; border-bottom:none;' : '';
                         const eBorder = hasEveningApt ? 'border:2px solid #1a1a1a; border-top:none; border-radius:0 0 6px 6px;' : '';
                         day.innerHTML = `
-                            <div style="flex:1; background:${hasMorningApt ? aptBg : shadeBg}; ${mBorder} display:flex; align-items:center; justify-content:center;">
-                                ${hasMorningApt ? '<span style="font-size:9px;font-weight:700;color:#000;">AM</span>' : ''}
+                            <div style="flex:1; position:relative; background:${hasMorningApt ? aptBg : shadeBg}; ${mBorder}">
+                                ${hasMorningApt ? '<span style="font-size:8px;font-weight:700;color:#000;position:absolute;bottom:2px;left:3px;">AM</span>' : ''}
                             </div>
-                            <div style="flex:1; background:${hasAfternoonApt ? aptBg : shadeBg}; ${aBorder} display:flex; align-items:center; justify-content:center;">
-                                ${hasAfternoonApt ? '<span style="font-size:9px;font-weight:700;color:#000;">PM</span>' : ''}
+                            <div style="flex:1; position:relative; background:${hasAfternoonApt ? aptBg : shadeBg}; ${aBorder}">
+                                ${hasAfternoonApt ? '<span style="font-size:8px;font-weight:700;color:#000;position:absolute;bottom:2px;left:3px;">PM</span>' : ''}
                             </div>
-                            <div style="flex:1; background:${hasEveningApt ? aptBg : shadeBg}; ${eBorder} display:flex; align-items:center; justify-content:center;">
-                                ${hasEveningApt ? '<span style="font-size:9px;font-weight:700;color:#000;">Eve</span>' : ''}
+                            <div style="flex:1; position:relative; background:${hasEveningApt ? aptBg : shadeBg}; ${eBorder}">
+                                ${hasEveningApt ? '<span style="font-size:8px;font-weight:700;color:#000;position:absolute;bottom:2px;left:3px;">Eve</span>' : ''}
                             </div>
-                            <span style="position:absolute; top:3px; right:5px; font-size:11px; font-weight:700; color:#1a1a1a; z-index:2;">${i}</span>
+                            <span style="position:absolute; top:2px; right:4px; font-size:9px; font-weight:700; color:#1a1a1a; z-index:2;">${i}</span>
                         `;
                     }
                 } else {
@@ -51832,16 +51832,16 @@
                         const aBorder = hasAfternoonApt ? 'border:2px solid #1a1a1a; border-top:none; border-bottom:none;' : '';
                         const eBorder = hasEveningApt ? 'border:2px solid #1a1a1a; border-top:none; border-radius:0 0 6px 6px;' : '';
                         day.innerHTML = `
-                            <div style="flex:1; background:${hasMorningApt ? aptBg : shadeBg}; ${mBorder} display:flex; align-items:center; justify-content:center;">
-                                ${hasMorningApt ? '<span style="font-size:9px;font-weight:700;color:#000;">AM</span>' : ''}
+                            <div style="flex:1; position:relative; background:${hasMorningApt ? aptBg : shadeBg}; ${mBorder}">
+                                ${hasMorningApt ? '<span style="font-size:8px;font-weight:700;color:#000;position:absolute;bottom:2px;left:3px;">AM</span>' : ''}
                             </div>
-                            <div style="flex:1; background:${hasAfternoonApt ? aptBg : shadeBg}; ${aBorder} display:flex; align-items:center; justify-content:center;">
-                                ${hasAfternoonApt ? '<span style="font-size:9px;font-weight:700;color:#000;">PM</span>' : ''}
+                            <div style="flex:1; position:relative; background:${hasAfternoonApt ? aptBg : shadeBg}; ${aBorder}">
+                                ${hasAfternoonApt ? '<span style="font-size:8px;font-weight:700;color:#000;position:absolute;bottom:2px;left:3px;">PM</span>' : ''}
                             </div>
-                            <div style="flex:1; background:${hasEveningApt ? aptBg : shadeBg}; ${eBorder} display:flex; align-items:center; justify-content:center;">
-                                ${hasEveningApt ? '<span style="font-size:9px;font-weight:700;color:#000;">Eve</span>' : ''}
+                            <div style="flex:1; position:relative; background:${hasEveningApt ? aptBg : shadeBg}; ${eBorder}">
+                                ${hasEveningApt ? '<span style="font-size:8px;font-weight:700;color:#000;position:absolute;bottom:2px;left:3px;">Eve</span>' : ''}
                             </div>
-                            <span style="position:absolute; top:3px; right:5px; font-size:11px; font-weight:700; color:#1a1a1a; z-index:2;">${i}</span>
+                            <span style="position:absolute; top:2px; right:4px; font-size:9px; font-weight:700; color:#1a1a1a; z-index:2;">${i}</span>
                         `;
                     }
                 } else {
@@ -51983,9 +51983,12 @@ ${body}`;
             rightBtn.innerHTML = '&#8594;';
 
             function updateCarousel() {
-                // Each card is 50% of wrapper minus half the gap
-                const cardWidth = (wrapper.offsetWidth - 12) / 2;
-                const offset = currentIndex * (cardWidth + 12);
+                const isMobile = window.innerWidth <= 768;
+                const cardWidth = isMobile
+                    ? wrapper.offsetWidth
+                    : (wrapper.offsetWidth - 12) / 2;
+                const gap = isMobile ? 0 : 12;
+                const offset = currentIndex * (cardWidth + gap);
                 track.style.transform = `translateX(-${offset}px)`;
                 leftBtn.classList.toggle('hidden', currentIndex === 0);
                 rightBtn.classList.toggle('hidden', currentIndex + visible >= apts.length);
@@ -52408,16 +52411,16 @@ ${body}`;
                     const aBorder = slotA ? 'border:2px solid #1a1a1a; border-top:none; border-bottom:none;' : '';
                     const eBorder = slotE ? 'border:2px solid #1a1a1a; border-top:none; border-radius:0 0 6px 6px;' : '';
                     day.innerHTML = `
-                        <div style="flex:1; background:${slotM ? activeBg : shadeBg}; ${mBorder} display:flex; align-items:center; justify-content:center;">
-                            ${slotM ? `<span style="font-size:9px;font-weight:700;${activeLabel}">AM</span>` : ''}
+                        <div style="flex:1; position:relative; background:${slotM ? activeBg : shadeBg}; ${mBorder}">
+                            ${slotM ? `<span style="font-size:8px;font-weight:700;${activeLabel};position:absolute;bottom:2px;left:3px;">AM</span>` : ''}
                         </div>
-                        <div style="flex:1; background:${slotA ? activeBg : shadeBg}; ${aBorder} display:flex; align-items:center; justify-content:center;">
-                            ${slotA ? `<span style="font-size:9px;font-weight:700;${activeLabel}">PM</span>` : ''}
+                        <div style="flex:1; position:relative; background:${slotA ? activeBg : shadeBg}; ${aBorder}">
+                            ${slotA ? `<span style="font-size:8px;font-weight:700;${activeLabel};position:absolute;bottom:2px;left:3px;">PM</span>` : ''}
                         </div>
-                        <div style="flex:1; background:${slotE ? activeBg : shadeBg}; ${eBorder} display:flex; align-items:center; justify-content:center;">
-                            ${slotE ? `<span style="font-size:9px;font-weight:700;${activeLabel}">Eve</span>` : ''}
+                        <div style="flex:1; position:relative; background:${slotE ? activeBg : shadeBg}; ${eBorder}">
+                            ${slotE ? `<span style="font-size:8px;font-weight:700;${activeLabel};position:absolute;bottom:2px;left:3px;">Eve</span>` : ''}
                         </div>
-                        <span style="position:absolute; top:3px; right:5px; font-size:11px; font-weight:700; color:#1a1a1a; z-index:2;">${i}</span>
+                        <span style="position:absolute; top:2px; right:4px; font-size:9px; font-weight:700; color:#1a1a1a; z-index:2;">${i}</span>
                     `;
                     day.onclick = () => selectEditDatePartner(dateStr);
                 }
@@ -52863,16 +52866,16 @@ ${body}`;
                     const aBorder = slotA ? 'border:2px solid #1a1a1a; border-top:none; border-bottom:none;' : '';
                     const eBorder = slotE ? 'border:2px solid #1a1a1a; border-top:none; border-radius:0 0 6px 6px;' : '';
                     day.innerHTML = `
-                        <div style="flex:1; background:${slotM ? activeBg : shadeBg}; ${mBorder} display:flex; align-items:center; justify-content:center;">
-                            ${slotM ? `<span style="font-size:9px;font-weight:700;${activeLabel}">AM</span>` : ''}
+                        <div style="flex:1; position:relative; background:${slotM ? activeBg : shadeBg}; ${mBorder}">
+                            ${slotM ? `<span style="font-size:8px;font-weight:700;${activeLabel};position:absolute;bottom:2px;left:3px;">AM</span>` : ''}
                         </div>
-                        <div style="flex:1; background:${slotA ? activeBg : shadeBg}; ${aBorder} display:flex; align-items:center; justify-content:center;">
-                            ${slotA ? `<span style="font-size:9px;font-weight:700;${activeLabel}">PM</span>` : ''}
+                        <div style="flex:1; position:relative; background:${slotA ? activeBg : shadeBg}; ${aBorder}">
+                            ${slotA ? `<span style="font-size:8px;font-weight:700;${activeLabel};position:absolute;bottom:2px;left:3px;">PM</span>` : ''}
                         </div>
-                        <div style="flex:1; background:${slotE ? activeBg : shadeBg}; ${eBorder} display:flex; align-items:center; justify-content:center;">
-                            ${slotE ? `<span style="font-size:9px;font-weight:700;${activeLabel}">Eve</span>` : ''}
+                        <div style="flex:1; position:relative; background:${slotE ? activeBg : shadeBg}; ${eBorder}">
+                            ${slotE ? `<span style="font-size:8px;font-weight:700;${activeLabel};position:absolute;bottom:2px;left:3px;">Eve</span>` : ''}
                         </div>
-                        <span style="position:absolute; top:3px; right:5px; font-size:11px; font-weight:700; color:#1a1a1a; z-index:2;">${i}</span>
+                        <span style="position:absolute; top:2px; right:4px; font-size:9px; font-weight:700; color:#1a1a1a; z-index:2;">${i}</span>
                     `;
                     day.onclick = () => selectEditDate(dateStr);
                 }
