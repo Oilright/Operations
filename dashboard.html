@@ -208,7 +208,7 @@
         </div>`;
       groups[date].forEach(a => {
         const hasReport = !!allReports[a.id];
-        const reportUrl = `report.html?id=${a.id}`;
+        const reportUrl = `servicereport.html?id=${a.id}`;
         const lastSaved = allReports[a.id]?.lastSaved
           ? 'Last saved: ' + new Date(allReports[a.id].lastSaved).toLocaleString('en-CA', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })
           : '';
