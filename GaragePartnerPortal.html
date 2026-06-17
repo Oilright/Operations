@@ -1194,6 +1194,16 @@
                     </div>
                 </div>
 
+                <div class="form-group" id="preferredContactGroup" style="display:none;">
+                    <label for="preferredContact">Preferred update method for your precise appointment time</label>
+                    <select id="preferredContact" required>
+                        <option value="">-- Select --</option>
+                        <option value="text">Text message</option>
+                        <option value="call">Phone call</option>
+                        <option value="email">Email</option>
+                    </select>
+                </div>
+
                 </div><!-- end bookingFormBody -->
 
                 <button type="submit" class="btn" id="bookSubmitBtn" style="display:none;" data-translate="bookButton">Book Appointment</button>
@@ -1417,6 +1427,15 @@
                     <textarea id="editNotesPartner"></textarea>
                 </div>
                 <div class="form-group">
+                    <label for="editPreferredContactPartner">Preferred update method for your precise appointment time</label>
+                    <select id="editPreferredContactPartner" required>
+                        <option value="">-- Select --</option>
+                        <option value="text">Text message</option>
+                        <option value="call">Phone call</option>
+                        <option value="email">Email</option>
+                    </select>
+                </div>
+                <div class="form-group">
                     <label>Select Date & Time</label>
                     <div class="calendar-container">
                         <div class="calendar-header">
@@ -1502,6 +1521,15 @@
                 <div class="form-group">
                     <label for="editNotes">Notes</label>
                     <textarea id="editNotes"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="editPreferredContactAdmin">Preferred update method for your precise appointment time</label>
+                    <select id="editPreferredContactAdmin" required>
+                        <option value="">-- Select --</option>
+                        <option value="text">Text message</option>
+                        <option value="call">Phone call</option>
+                        <option value="email">Email</option>
+                    </select>
                 </div>
                 <div class="form-group">
                     <label>Select Date & Time</label>
@@ -51068,6 +51096,7 @@
             document.querySelectorAll('input[name="serviceType"]').forEach(r => r.checked = false);
             bookingFormBody.style.display = 'none';
             bookSubmitBtn.style.display = 'none';
+            document.getElementById('preferredContactGroup').style.display = 'none';
             document.getElementById('mobileServiceInfo').style.display = 'none';
             document.getElementById('mobileAddressFields').style.display = 'none';
 
@@ -51104,6 +51133,8 @@
                 postalField.required = true;
                 document.getElementById('depositConfirmGroup').style.display = 'block';
                 document.getElementById('depositConfirmCheck').required = true;
+                document.getElementById('preferredContactGroup').style.display = 'block';
+                document.getElementById('preferredContact').required = true;
             } else {
                 mobileInfo.style.display = 'none';
                 mobileAddress.style.display = 'none';
@@ -51116,6 +51147,9 @@
                 document.getElementById('depositConfirmGroup').style.display = 'none';
                 document.getElementById('depositConfirmCheck').checked = false;
                 document.getElementById('depositConfirmCheck').required = false;
+                document.getElementById('preferredContactGroup').style.display = 'none';
+                document.getElementById('preferredContact').required = false;
+                document.getElementById('preferredContact').value = '';
             }
 
             selectedDate = null;
@@ -51284,6 +51318,7 @@
                     engine: ''
                 },
                 notes: document.getElementById('notes').value,
+                preferredContact: document.getElementById('preferredContact').value,
                 date: selectedDate,
                 timeSlot: selectedTimeSlot,
                 status: 'confirmed', // AUTO-ASSIGN CONFIRMED STATUS
@@ -52210,6 +52245,12 @@ ${body}`;
                         <span class="detail-value">${apt.notes}</span>
                     </div>
                     ` : ''}
+                    ${apt.serviceType === 'mobile' && apt.preferredContact ? `
+                    <div class="appointment-detail">
+                        <span class="detail-label">Preferred update:</span>
+                        <span class="detail-value">${apt.preferredContact === 'text' ? 'Text message' : apt.preferredContact === 'call' ? 'Phone call' : 'Email'}</span>
+                    </div>
+                    ` : ''}
                 </div>
                 <div class="appointment-actions">
                     ${isPartnerView ? 
@@ -52247,6 +52288,9 @@ ${body}`;
             document.getElementById('editAddressStreetPartner').required = isMobile;
             document.getElementById('editAddressCityPartner').required = isMobile;
             document.getElementById('editAddressPostalPartner').required = isMobile;
+            const preferredGroup = document.getElementById('editPreferredContactPartner').closest('.form-group');
+            preferredGroup.style.display = isMobile ? 'block' : 'none';
+            document.getElementById('editPreferredContactPartner').required = isMobile;
             // Re-render calendar and time slots to reflect mobile vs onsite availability
             editSelectedTimeSlotPartner = null;
             renderEditCalendarPartner();
@@ -52261,6 +52305,9 @@ ${body}`;
             document.getElementById('editAddressStreetAdmin').required = isMobile;
             document.getElementById('editAddressCityAdmin').required = isMobile;
             document.getElementById('editAddressPostalAdmin').required = isMobile;
+            const preferredGroup = document.getElementById('editPreferredContactAdmin').closest('.form-group');
+            preferredGroup.style.display = isMobile ? 'block' : 'none';
+            document.getElementById('editPreferredContactAdmin').required = isMobile;
             // Re-render calendar and time slots to reflect mobile vs onsite availability
             editSelectedTimeSlot = null;
             renderEditCalendar();
@@ -52291,6 +52338,10 @@ ${body}`;
             document.getElementById('editCustomerPhonePartner').value = apt.customerPhone;
             document.getElementById('editCustomerEmailPartner').value = apt.customerEmail || '';
             document.getElementById('editNotesPartner').value = apt.notes || '';
+            document.getElementById('editPreferredContactPartner').value = apt.preferredContact || '';
+            const preferredGroupPartner = document.getElementById('editPreferredContactPartner').closest('.form-group');
+            preferredGroupPartner.style.display = serviceTypePartner === 'mobile' ? 'block' : 'none';
+            document.getElementById('editPreferredContactPartner').required = serviceTypePartner === 'mobile';
 
             // Pre-fill service type
             const serviceTypePartner = apt.serviceType || 'onsite';
@@ -52656,7 +52707,8 @@ ${body}`;
                 document.getElementById('editVehicleModelPartner'),
                 document.getElementById('editAddressStreetPartner'),
                 document.getElementById('editAddressCityPartner'),
-                document.getElementById('editAddressPostalPartner')
+                document.getElementById('editAddressPostalPartner'),
+                document.getElementById('editPreferredContactPartner')
             ];
             for (const field of fieldsToValidatePartner) {
                 if (field && !field.reportValidity()) return;
@@ -52697,6 +52749,7 @@ ${body}`;
                 date: editSelectedDatePartner,
                 timeSlot: editSelectedTimeSlotPartner,
                 notes: document.getElementById('editNotesPartner').value,
+                preferredContact: document.getElementById('editPreferredContactPartner').value,
                 status: originalApt.status,
                 createdAt: originalApt.createdAt
             };
@@ -52742,6 +52795,10 @@ ${body}`;
             document.getElementById('editCustomerPhone').value = apt.customerPhone;
             document.getElementById('editCustomerEmail').value = apt.customerEmail || '';
             document.getElementById('editNotes').value = apt.notes || '';
+            document.getElementById('editPreferredContactAdmin').value = apt.preferredContact || '';
+            const preferredGroupAdmin = document.getElementById('editPreferredContactAdmin').closest('.form-group');
+            preferredGroupAdmin.style.display = serviceTypeAdmin === 'mobile' ? 'block' : 'none';
+            document.getElementById('editPreferredContactAdmin').required = serviceTypeAdmin === 'mobile';
             document.getElementById('editStatus').value = apt.status;
 
             // Pre-fill service type
@@ -53111,7 +53168,8 @@ ${body}`;
                 document.getElementById('editVehicleModel'),
                 document.getElementById('editAddressStreetAdmin'),
                 document.getElementById('editAddressCityAdmin'),
-                document.getElementById('editAddressPostalAdmin')
+                document.getElementById('editAddressPostalAdmin'),
+                document.getElementById('editPreferredContactAdmin')
             ];
             for (const field of fieldsToValidateAdmin) {
                 if (field && !field.reportValidity()) return;
@@ -53150,6 +53208,7 @@ ${body}`;
                 date: editSelectedDate,
                 timeSlot: editSelectedTimeSlot,
                 notes: document.getElementById('editNotes').value,
+                preferredContact: document.getElementById('editPreferredContactAdmin').value,
                 status: document.getElementById('editStatus').value,
                 createdAt: appointments.find(a => a.id === currentEditingAppointmentId).createdAt
             };
