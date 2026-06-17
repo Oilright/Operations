@@ -1169,6 +1169,11 @@
                 </div>
 
                 <div class="form-group">
+                    <label for="vehicleVin">VIN Number *</label>
+                    <input type="text" id="vehicleVin" placeholder="Enter VIN number" required maxlength="17" style="text-transform:uppercase;">
+                </div>
+
+                <div class="form-group">
                     <label for="notes" data-translate="notes">Notes / Additional Information</label>
                     <textarea id="notes" data-translate="notesPlaceholder" placeholder="Any special instructions or information..."></textarea>
                 </div>
@@ -1423,6 +1428,10 @@
                     <select id="editVehicleModelPartner"></select>
                 </div>
                 <div class="form-group">
+                    <label for="editVehicleVinPartner">VIN Number *</label>
+                    <input type="text" id="editVehicleVinPartner" placeholder="Enter VIN number" required maxlength="17" style="text-transform:uppercase;">
+                </div>
+                <div class="form-group">
                     <label for="editNotesPartner">Notes</label>
                     <textarea id="editNotesPartner"></textarea>
                 </div>
@@ -1517,6 +1526,10 @@
                 <div class="form-group">
                     <label for="editVehicleModel">Vehicle Model</label>
                     <select id="editVehicleModel"></select>
+                </div>
+                <div class="form-group">
+                    <label for="editVehicleVinAdmin">VIN Number *</label>
+                    <input type="text" id="editVehicleVinAdmin" placeholder="Enter VIN number" required maxlength="17" style="text-transform:uppercase;">
                 </div>
                 <div class="form-group">
                     <label for="editNotes">Notes</label>
@@ -51310,11 +51323,13 @@
                     year: 'Older',
                     make: 'N/A',
                     model: 'N/A',
+                    vin: document.getElementById('vehicleVin').value.toUpperCase(),
                     engine: ''
                 } : {
                     year: document.getElementById('vehicleYear').value,
                     make: document.getElementById('vehicleMake').value,
                     model: document.getElementById('vehicleModel').value,
+                    vin: document.getElementById('vehicleVin').value.toUpperCase(),
                     engine: ''
                 },
                 notes: document.getElementById('notes').value,
@@ -52229,6 +52244,12 @@ ${body}`;
                         <span class="detail-label">${t('vehicle')}:</span>
                         <span class="detail-value">${apt.vehicle.year} ${apt.vehicle.make} ${apt.vehicle.model}</span>
                     </div>
+                    ${apt.vehicle?.vin ? `
+                    <div class="appointment-detail">
+                        <span class="detail-label">VIN:</span>
+                        <span class="detail-value">${apt.vehicle.vin}</span>
+                    </div>
+                    ` : ''}
                     <div class="appointment-detail">
                         <span class="detail-label">${t('serviceLabel')}:</span>
                         <span class="detail-value" style="font-weight:700; color:${apt.serviceType === 'mobile' ? '#F5B400' : '#1a1a1a'};">${apt.serviceType === 'mobile' ? t('mobileService') : t('onSiteService')}</span>
@@ -52333,18 +52354,19 @@ ${body}`;
             yearSelect.innerHTML += '<option value="older">Older</option>';
             
             yearSelect.value = apt.vehicle.year;
+            document.getElementById('editVehicleVinPartner').value = apt.vehicle?.vin || '';
             
             document.getElementById('editCustomerNamePartner').value = apt.customerName;
             document.getElementById('editCustomerPhonePartner').value = apt.customerPhone;
             document.getElementById('editCustomerEmailPartner').value = apt.customerEmail || '';
             document.getElementById('editNotesPartner').value = apt.notes || '';
+
+            // Pre-fill service type
+            const serviceTypePartner = apt.serviceType || 'onsite';
             document.getElementById('editPreferredContactPartner').value = apt.preferredContact || '';
             const preferredGroupPartner = document.getElementById('editPreferredContactPartner').closest('.form-group');
             preferredGroupPartner.style.display = serviceTypePartner === 'mobile' ? 'block' : 'none';
             document.getElementById('editPreferredContactPartner').required = serviceTypePartner === 'mobile';
-
-            // Pre-fill service type
-            const serviceTypePartner = apt.serviceType || 'onsite';
             document.querySelectorAll('input[name="editServiceTypePartner"]').forEach(r => {
                 r.checked = r.value === serviceTypePartner;
             });
@@ -52705,6 +52727,7 @@ ${body}`;
                 document.getElementById('editVehicleYearPartner'),
                 document.getElementById('editVehicleMakePartner'),
                 document.getElementById('editVehicleModelPartner'),
+                document.getElementById('editVehicleVinPartner'),
                 document.getElementById('editAddressStreetPartner'),
                 document.getElementById('editAddressCityPartner'),
                 document.getElementById('editAddressPostalPartner'),
@@ -52739,11 +52762,13 @@ ${body}`;
                     year: 'Older',
                     make: 'N/A',
                     model: 'N/A',
+                    vin: document.getElementById('editVehicleVinPartner').value.toUpperCase(),
                     engine: ''
                 } : {
                     year: document.getElementById('editVehicleYearPartner').value,
                     make: document.getElementById('editVehicleMakePartner').value,
                     model: document.getElementById('editVehicleModelPartner').value,
+                    vin: document.getElementById('editVehicleVinPartner').value.toUpperCase(),
                     engine: ''
                 },
                 date: editSelectedDatePartner,
@@ -52790,19 +52815,20 @@ ${body}`;
             yearSelect.innerHTML += '<option value="older">Older</option>';
             
             yearSelect.value = apt.vehicle.year;
+            document.getElementById('editVehicleVinAdmin').value = apt.vehicle?.vin || '';
             
             document.getElementById('editCustomerName').value = apt.customerName;
             document.getElementById('editCustomerPhone').value = apt.customerPhone;
             document.getElementById('editCustomerEmail').value = apt.customerEmail || '';
             document.getElementById('editNotes').value = apt.notes || '';
-            document.getElementById('editPreferredContactAdmin').value = apt.preferredContact || '';
-            const preferredGroupAdmin = document.getElementById('editPreferredContactAdmin').closest('.form-group');
-            preferredGroupAdmin.style.display = serviceTypeAdmin === 'mobile' ? 'block' : 'none';
-            document.getElementById('editPreferredContactAdmin').required = serviceTypeAdmin === 'mobile';
             document.getElementById('editStatus').value = apt.status;
 
             // Pre-fill service type
             const serviceTypeAdmin = apt.serviceType || 'onsite';
+            document.getElementById('editPreferredContactAdmin').value = apt.preferredContact || '';
+            const preferredGroupAdmin = document.getElementById('editPreferredContactAdmin').closest('.form-group');
+            preferredGroupAdmin.style.display = serviceTypeAdmin === 'mobile' ? 'block' : 'none';
+            document.getElementById('editPreferredContactAdmin').required = serviceTypeAdmin === 'mobile';
             document.querySelectorAll('input[name="editServiceTypeAdmin"]').forEach(r => {
                 r.checked = r.value === serviceTypeAdmin;
             });
@@ -53166,6 +53192,7 @@ ${body}`;
                 document.getElementById('editVehicleYear'),
                 document.getElementById('editVehicleMake'),
                 document.getElementById('editVehicleModel'),
+                document.getElementById('editVehicleVinAdmin'),
                 document.getElementById('editAddressStreetAdmin'),
                 document.getElementById('editAddressCityAdmin'),
                 document.getElementById('editAddressPostalAdmin'),
@@ -53198,11 +53225,13 @@ ${body}`;
                     year: 'Older',
                     make: 'N/A',
                     model: 'N/A',
+                    vin: document.getElementById('editVehicleVinAdmin').value.toUpperCase(),
                     engine: ''
                 } : {
                     year: document.getElementById('editVehicleYear').value,
                     make: document.getElementById('editVehicleMake').value,
                     model: document.getElementById('editVehicleModel').value,
+                    vin: document.getElementById('editVehicleVinAdmin').value.toUpperCase(),
                     engine: ''
                 },
                 date: editSelectedDate,
