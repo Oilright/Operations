@@ -17,7 +17,7 @@
   body { font-family: -apple-system, 'Helvetica Neue', Arial, sans-serif; background: #f0f0f0; color: var(--dark); margin: 0; padding: 24px 16px; font-size: 14px; }
   .page { max-width: 760px; margin: 0 auto; background: white; border-radius: 10px; box-shadow: 0 2px 16px rgba(0,0,0,0.08); padding: 36px 40px; }
 
-  .header { display: flex; align-items: flex-start; justify-content: space-between; border-bottom: 3px solid var(--orange); padding-bottom: 18px; margin-bottom: 24px; }
+  .header { display: flex; align-items: flex-start; justify-content: space-between; border-bottom: 3px solid var(--orange); padding-bottom: 14px; margin-bottom: 18px; }
   .header-left { display: flex; align-items: center; gap: 12px; }
   .brand-name { font-size: 24px; font-weight: 700; color: var(--orange); }
   .brand-tagline { font-size: 11px; color: var(--gray); margin-top: 2px; }
@@ -26,23 +26,23 @@
   .doc-ref { font-size: 13px; color: var(--gray); text-align: right; margin-top: 8px; }
   .doc-ref strong { color: var(--dark); }
 
-  .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 24px; }
+  .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 16px; }
   .info-block h4 { font-size: 11px; font-weight: 700; color: var(--gray); text-transform: uppercase; letter-spacing: 0.5px; margin: 0 0 8px; }
   .info-block .name { font-size: 15px; font-weight: 700; margin-bottom: 2px; }
   .info-block div.line { font-size: 13px; color: var(--dark); line-height: 1.5; }
 
-  table.items { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
-  table.items th { text-align: left; font-size: 11px; font-weight: 700; color: var(--gray); text-transform: uppercase; letter-spacing: 0.4px; padding: 8px 6px; border-bottom: 2px solid var(--line); }
+  table.items { width: 100%; border-collapse: collapse; margin-bottom: 14px; }
+  table.items th { text-align: left; font-size: 10.5px; font-weight: 700; color: var(--gray); text-transform: uppercase; letter-spacing: 0.4px; padding: 6px 6px; border-bottom: 2px solid var(--line); }
   table.items th.num, table.items td.num { text-align: right; }
-  table.items td { padding: 10px 6px; border-bottom: 1px solid var(--line); font-size: 13px; vertical-align: top; }
+  table.items td { padding: 7px 6px; border-bottom: 1px solid var(--line); font-size: 12.5px; vertical-align: top; }
   table.items td.desc-main { font-weight: 700; }
 
-  .totals { display: flex; justify-content: flex-end; margin-bottom: 24px; }
+  .totals { display: flex; justify-content: flex-end; margin-bottom: 16px; }
   .totals-box { width: 260px; }
   .totals-row { display: flex; justify-content: space-between; padding: 6px 10px; font-size: 13px; }
   .totals-row.grand { background: var(--orange-light); border-radius: 6px; font-size: 16px; font-weight: 700; margin-top: 6px; padding: 10px 10px; }
 
-  .payment-block { margin-bottom: 24px; padding: 12px 16px; background: #FAFAFA; border: 1px solid var(--line); border-radius: 8px; }
+  .payment-block { margin-bottom: 16px; padding: 10px 16px; background: #FAFAFA; border: 1px solid var(--line); border-radius: 8px; }
   .payment-block h4 { font-size: 11px; font-weight: 700; color: var(--gray); text-transform: uppercase; letter-spacing: 0.5px; margin: 0 0 6px; }
 
   .thanks { font-style: italic; color: var(--gray); font-size: 13px; text-align: center; margin: 18px 0 14px; line-height: 1.6; }
@@ -82,6 +82,11 @@
     body { background: white; padding: 0; }
     .page { box-shadow: none; border-radius: 0; max-width: 100%; padding: 20px 24px; }
     .no-print { display: none !important; }
+    .header, .info-grid, table.items, .totals, .payment-block,
+    .scope-block, .thanks, .review-cta, .social-line {
+      page-break-inside: avoid;
+      break-inside: avoid;
+    }
     .annex-page { display: flex !important; flex-direction: column; page-break-before: always; padding: 32px 36px; box-sizing: border-box; }
     .annex-header { border-bottom: 3px solid #F5B400; padding-bottom: 12px; margin-bottom: 20px; }
     .annex-title { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.6px; color: #555; }
@@ -340,11 +345,11 @@
           Thank you for trusting OilRight for your oil change service!
         </div>
 
-        <div class="review-cta no-print">
+        <div class="review-cta">
           <a href="https://g.page/r/CdToqMWCnQACEBM/review" target="_blank">⭐ Leave us a Google Review</a>
         </div>
 
-        <div class="social-line no-print">
+        <div class="social-line">
           Follow us: <a href="https://instagram.com/oilrightnb" target="_blank">Instagram</a> · <a href="https://facebook.com/oilrightnb" target="_blank">Facebook</a> · <a href="https://tiktok.com/@oilrightnb" target="_blank">TikTok</a>
         </div>
       `;
@@ -484,11 +489,11 @@
         Thank you for trusting OilRight for your oil change service!
       </div>
 
-      <div class="review-cta no-print">
+      <div class="review-cta">
         <a href="https://g.page/r/CdToqMWCnQACEBM/review" target="_blank">⭐ Leave us a Google Review</a>
       </div>
 
-      <div class="social-line no-print">
+      <div class="social-line">
         Follow us: <a href="https://instagram.com/oilrightnb" target="_blank">Instagram</a> · <a href="https://facebook.com/oilrightnb" target="_blank">Facebook</a> · <a href="https://tiktok.com/@oilrightnb" target="_blank">TikTok</a>
       </div>
     `;
