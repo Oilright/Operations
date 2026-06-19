@@ -162,8 +162,8 @@
   /* PHOTO SECTION */
   .photo-slot { display: flex; flex-direction: column; gap: 6px; }
   .photo-label { font-size: 10px; font-weight: 700; color: var(--gray); text-transform: uppercase; letter-spacing: 0.5px; }
-  .photo-upload-area { display: block; border: 2px dashed var(--border); border-radius: 8px; overflow: hidden; cursor: pointer; background: #fafafa; min-height: 160px; position: relative; }
-  .photo-upload-area:hover { border-color: var(--orange); background: var(--orange-light); }
+  .photo-upload-area { display: block; border: 2px dashed var(--border); border-radius: 8px; overflow: hidden; cursor: pointer; background: var(--orange-light); min-height: 160px; position: relative; }
+  .photo-upload-area:hover { border-color: var(--orange); background: var(--orange); }
   .photo-input { display: none; }
   .photo-placeholder { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 160px; gap: 8px; }
   .photo-icon { font-size: 32px; }
@@ -216,8 +216,7 @@
       height: auto !important;
     }
 
-    /* Hide photo section in its current position */
-    #photoSection { display: none !important; }
+    /* Photo section removed — photos now live inside Process (no-print) */
 
 
     /* ANNEX PHOTO PAGES */
@@ -243,7 +242,7 @@
 <body>
 
 <div class="fabs">
-  <button class="fab fab-p" onclick="exportPDF()">⬇ Export PDF</button>
+  <button class="fab fab-p" onclick="exportPDF()">📄 Create Invoice</button>
   <div id="saveStatus" style="text-align:center;font-size:11px;font-weight:700;color:#888;padding:4px 0;">–</div>
 </div>
 
@@ -271,204 +270,6 @@
     </div>
   </div>
 
-  <!-- PRE-WORK CHECKLIST (internal, no-print) -->
-  <div class="prep-section">
-    <div class="prep-hdr" onclick="document.getElementById('prepBody').classList.toggle('prep-collapsed')" style="cursor:pointer;">
-      <span class="tech-badge">Internal</span>
-      <span class="sec-title">Pré-Travail — À faire avant de toucher au char</span>
-    </div>
-    <div class="prep-body prep-collapsed" id="prepBody">
-
-      <div class="prep-step">
-        <input type="checkbox" class="prep-step-check" id="prep-step-1">
-        <label class="prep-step-title" for="prep-step-1">Étape 1 — Préparation engine bay</label>
-        <div class="prep-details">
-          <div class="prep-substep">Partie 1 — Avant d'ouvrir</div>
-          <ul class="prep-list">
-            <li>Mettre les gants</li>
-            <li>Ouvrir le hood</li>
-            <li>Apporter le bouchon moteur d'huile</li>
-          </ul>
-          <div class="prep-substep">Partie 2 — Équipement engine bay</div>
-          <ul class="prep-list">
-            <li>Pogner adapteur aspirateur</li>
-            <li>Pressure regulator</li>
-            <li>Balayeuse</li>
-            <li>Engine bay covers</li>
-          </ul>
-        </div>
-      </div>
-
-      <hr class="prep-divider">
-
-      <div class="prep-step">
-        <input type="checkbox" class="prep-step-check" id="prep-step-2">
-        <label class="prep-step-title" for="prep-step-2">Étape 2 — Jacker le char</label>
-        <div class="prep-details">
-          <ul class="prep-list">
-            <li>Mettre les stoppers de roue</li>
-            <li>Sortir le jack et le jack rod</li>
-            <li class="photo">📸 PHOTO — Work Area Before</li>
-          </ul>
-        </div>
-      </div>
-
-      <hr class="prep-divider">
-
-      <div class="prep-step">
-        <input type="checkbox" class="prep-step-check" id="prep-step-3">
-        <label class="prep-step-title" for="prep-step-3">Étape 3 — En dessous de la voiture</label>
-        <div class="prep-details">
-          <ul class="prep-list">
-            <li>Tapis</li>
-          </ul>
-          <div class="prep-substep">Si plastic cover</div>
-          <ul class="prep-list">
-            <li>Drill + adapteur drill + socket plastic cover</li>
-          </ul>
-          <div class="prep-substep">Filtre à huile</div>
-          <ul class="prep-list">
-            <li>Ratchet + rallonge</li>
-            <li>Désserreur filtreur</li>
-            <li>Nouveau filtre</li>
-          </ul>
-          <div class="prep-substep">Drainage</div>
-          <ul class="prep-list">
-            <li>Torque wrench</li>
-            <li>Socket drain plug</li>
-            <li>Breaker bar</li>
-            <li>Panne à huile</li>
-            <li>Scott</li>
-            <li>Brake cleaner</li>
-            <li>Sac plastique pour vieux filtre</li>
-            <li>Poubelle</li>
-            <li class="photo">📸 PHOTO — Drain Plug Before</li>
-          </ul>
-        </div>
-      </div>
-
-      <hr class="prep-divider">
-
-      <div class="prep-step">
-        <input type="checkbox" class="prep-step-check" id="prep-step-4">
-        <label class="prep-step-title" for="prep-step-4">Étape 4 — Changer le washer seal du drain plug</label>
-        <div class="prep-details">
-          <ul class="prep-list">
-            <li>Remplacer le crush washer</li>
-            <li class="photo">📸 PHOTO — Drain Plug After — mettre un mot de rappel dans le kit de crush washer</li>
-          </ul>
-        </div>
-      </div>
-
-      <hr class="prep-divider">
-
-      <div class="prep-step">
-        <input type="checkbox" class="prep-step-check" id="prep-step-5">
-        <label class="prep-step-title" for="prep-step-5">Étape 5 — Nettoyage en dessous</label>
-        <div class="prep-details">
-          <ul class="prep-list">
-            <li>Ramasser le pressure regulator</li>
-            <li>Ramasser la balayeuse</li>
-            <li>Vérifier plus rien en dessous de la voiture</li>
-          </ul>
-        </div>
-      </div>
-
-      <hr class="prep-divider">
-
-      <div class="prep-step">
-        <input type="checkbox" class="prep-step-check" id="prep-step-6">
-        <label class="prep-step-title" for="prep-step-6">Étape 6 — Déjacker le char</label>
-        <div class="prep-details">
-          <ul class="prep-list">
-            <li>Ramasser les jack et jack rod</li>
-            <li>Ramasser stoppers de roue</li>
-          </ul>
-        </div>
-      </div>
-
-      <hr class="prep-divider">
-
-      <div class="prep-step">
-        <input type="checkbox" class="prep-step-check" id="prep-step-7">
-        <label class="prep-step-title" for="prep-step-7">Étape 7 — Retour engine bay + remplissage</label>
-        <div class="prep-details">
-          <ul class="prep-list">
-            <li>Déboucher le bidon d'huile</li>
-            <li>Prendre entonnoir</li>
-          </ul>
-        </div>
-      </div>
-
-      <hr class="prep-divider">
-
-      <div class="prep-step">
-        <input type="checkbox" class="prep-step-check" id="prep-step-8">
-        <label class="prep-step-title" for="prep-step-8">Étape 8 — Tapis en avant du char</label>
-        <div class="prep-details">
-          <div class="prep-substep">Si plastic cover</div>
-          <ul class="prep-list">
-            <li>Ramasser drill + adapteur drill + socket plastic cover</li>
-          </ul>
-          <div class="prep-substep">Ramasser filtre à huile</div>
-          <ul class="prep-list">
-            <li>Ratchet + rallonge</li>
-            <li>Désserreur filtreur</li>
-            <li>Vieux filtre</li>
-          </ul>
-          <div class="prep-substep">Ramasser drainage</div>
-          <ul class="prep-list">
-            <li>Torque wrench</li>
-            <li>Socket drain plug</li>
-            <li>Breaker bar</li>
-            <li>Panne à huile</li>
-            <li>Scott</li>
-            <li>Brake cleaner</li>
-            <li>Poubelle</li>
-          </ul>
-        </div>
-      </div>
-
-      <hr class="prep-divider">
-
-      <div class="prep-step">
-        <input type="checkbox" class="prep-step-check" id="prep-step-9">
-        <label class="prep-step-title" for="prep-step-9">Étape 9 — Finaliser engine bay</label>
-        <div class="prep-details">
-          <ul class="prep-list">
-            <li class="photo">📸 PHOTO — Work Area After</li>
-            <li>Remettre le bouchon d'huile de la voiture</li>
-            <li>Ramasser engine bay covers</li>
-          </ul>
-        </div>
-      </div>
-
-      <hr class="prep-divider">
-
-      <div class="prep-step">
-        <input type="checkbox" class="prep-step-check" id="prep-step-10">
-        <label class="prep-step-title" for="prep-step-10">Étape 10 — Windshield washer fluid</label>
-        <div class="prep-details">
-          <ul class="prep-list">
-            <li>Top-up</li>
-          </ul>
-        </div>
-      </div>
-
-      <hr class="prep-divider">
-
-      <div class="prep-step">
-        <input type="checkbox" class="prep-step-check" id="prep-step-11">
-        <label class="prep-step-title" for="prep-step-11">Étape 11 — Intérieur voiture</label>
-        <div class="prep-details">
-          <ul class="prep-list">
-            <li>Collant de prochain RDV ou reset de l'ordi pour nouveau RDV</li>
-          </ul>
-        </div>
-      </div>
-
-    </div>
-  </div>
 
 
   <!-- 1. CLIENT & VEHICLE -->
@@ -486,7 +287,7 @@
         <div class="field"><label>Color</label><input type="text" id="clientColor" placeholder="e.g. Blue" autocomplete="off"></div>
       </div>
       <div class="g3">
-        <div class="field"><label>VIN (partial)</label><input type="text" id="clientVin" placeholder="Last 6 digits" autocomplete="off"></div>
+        <div class="field"><label>VIN</label><input type="text" id="clientVin" placeholder="VIN" autocomplete="off" maxlength="17"></div>
         <div class="field"><label>Service Date</label><input type="date" id="clientDate" autocomplete="off"></div>
         <div class="field"><label>Partner</label><input type="text" id="clientPartner" placeholder="Partner name" autocomplete="off"></div>
       </div>
@@ -501,110 +302,347 @@
   </div>
 
   <!-- TECH PREP (no-print) -->
-  <div class="tech-section no-print">
-    <div class="tech-hdr">
-      <span class="tech-badge">Internal</span>
-      <span class="sec-title">Technician Prep — Pre-Appointment Notes</span>
-    </div>
-    <div class="tech-body">
-      <div class="g3" style="margin-bottom:12px;">
-        <div class="field"><label>Oil Viscosity</label><input type="text" placeholder="e.g. 5W-30" autocomplete="off"></div>
-        <div class="field"><label>Oil Capacity (L)</label><input type="text" placeholder="e.g. 4.5" autocomplete="off"></div>
-        <div class="field"><label>Drain Plug Torque</label><input type="text" placeholder="e.g. 30 Nm / 22 ft·lb" autocomplete="off"></div>
+
+  <!-- 2. TECH PREP -->
+  <div class="section">
+    <div class="sec-hdr"><span class="sec-num">2</span><span class="sec-title">Tech Prep</span></div>
+    <div class="sec-body">
+      <div class="g3">
+        <div class="field"><label>Oil Viscosity</label><input type="text" id="techViscosity" placeholder="e.g. 5W-30" autocomplete="off"></div>
+        <div class="field"><label>Oil Capacity (L)</label><input type="text" id="techCapacity" placeholder="e.g. 4.5" autocomplete="off"></div>
+        <div class="field"><label>Drain Plug Torque</label><input type="text" id="techTorque" placeholder="e.g. 30 Nm / 22 ft·lb" autocomplete="off"></div>
       </div>
-      <div style="margin-bottom:12px;">
-        <div class="field"><label>Oil Filter Code</label><input type="text" placeholder="e.g. PH3614" autocomplete="off"></div>
+      <div class="g2" style="margin-top:10px;">
+        <div class="field">
+          <label>Engine Covers / Skid Plate</label>
+          <textarea class="tech-notes" id="techCovers" rows="2" placeholder="e.g. 2 plastic clips, T20 torx" autocomplete="off"></textarea>
+        </div>
+        <div class="field">
+          <label>Oil Filter</label>
+          <textarea class="tech-notes" id="techFilterCode" rows="2" placeholder="e.g. PH3614" autocomplete="off"></textarea>
+        </div>
       </div>
-      <div class="field">
+      <div class="g2" style="margin-top:10px;">
+        <div class="field"><label>Drain Plug Socket Size (mm)</label><input type="text" id="techSocketSize" placeholder="e.g. 17mm" autocomplete="off"></div>
+        <div class="field"></div>
+      </div>
+      <div class="field" style="margin-top:10px;">
         <label>Prep Notes</label>
-        <textarea class="tech-notes" rows="2" placeholder="Anything to flag before the appointment — vehicle quirks, customer requests, special tools needed..." autocomplete="off"></textarea>
+        <textarea class="tech-notes" id="techNotes" rows="2" placeholder="Vehicle quirks, customer requests, special tools needed..." autocomplete="off"></textarea>
       </div>
     </div>
   </div>
 
-  <!-- 2. OIL & SERVICE -->
+  <!-- 3. MATERIAL INFO -->
+  <div class="section" style="background:#E3F2FD;">
+    <div class="sec-hdr" style="background:#e53935;"><span class="sec-num">3</span><span class="sec-title">Material Info</span></div>
+    <div class="sec-body" style="overflow-x:auto;">
+      <table id="materialTable" style="width:100%;border-collapse:collapse;font-size:13px;">
+        <thead>
+          <tr style="border-bottom:2px solid var(--border);">
+            <th style="text-align:left;padding:6px 8px;color:var(--gray);font-size:11px;text-transform:uppercase;letter-spacing:0.4px;width:40%;">Description</th>
+            <th style="text-align:left;padding:6px 8px;color:var(--gray);font-size:11px;text-transform:uppercase;letter-spacing:0.4px;width:25%;">Part #</th>
+            <th style="text-align:left;padding:6px 8px;color:var(--gray);font-size:11px;text-transform:uppercase;letter-spacing:0.4px;width:10%;">Qty</th>
+            <th style="text-align:left;padding:6px 8px;color:var(--gray);font-size:11px;text-transform:uppercase;letter-spacing:0.4px;width:15%;">Price</th>
+            <th style="width:10%;"></th>
+          </tr>
+        </thead>
+        <tbody id="materialRows"></tbody>
+      </table>
+      <div id="materialInfoWarning" style="display:none;margin-top:10px;padding:8px 12px;background:#FFF3E0;border:1.5px solid var(--orange);border-radius:6px;font-size:12px;color:#8a5a00;font-weight:700;">⚠ At least 2 completed material rows are required before exporting.</div>
+    </div>
+  </div>
+
+  <!-- 4. PROCESS -->
+  <div class="prep-section">
+    <div class="sec-hdr" onclick="document.getElementById('prepBody').classList.toggle('prep-collapsed')" style="cursor:pointer;">
+      <span class="sec-num">4</span>
+      <span class="sec-title">Process — Étapes du changement d'huile</span>
+    </div>
+    <div class="prep-body" id="prepBody">
+
+      <div class="prep-step">
+        <input type="checkbox" class="prep-step-check" id="prep-step-1">
+        <label class="prep-step-title" for="prep-step-1">Étape 1 — Préparation engine bay</label>
+        <div class="prep-details">
+          <div class="prep-substep">Partie 1 — Voiture client</div>
+          <ul class="prep-list">
+            <li>Mettre les gants</li>
+            <li>Ouvrir le hood</li>
+            <li>Apporter le bouchon moteur d'huile</li>
+          </ul>
+          <div class="prep-substep">Partie 2 — Valise OilRight</div>
+          <ul class="prep-list">
+            <li>Pogner adapteur aspirateur</li>
+            <li>Pressure regulator</li>
+            <li>Balayeuse</li>
+            <li>Engine bay covers</li>
+            <li>Installer sur engine bay client</li>
+          </ul>
+        </div>
+      </div>
+
+      <hr class="prep-divider">
+
+      <div class="prep-step">
+        <input type="checkbox" class="prep-step-check" id="prep-step-2">
+        <label class="prep-step-title" for="prep-step-2">Étape 2 — Jacker le char</label>
+        <div class="prep-details">
+          <ul class="prep-list">
+            <li>Mettre les stoppers de roue</li>
+            <li>Sortir planche de bois</li>
+            <li>Sortir le jack et le jack rod</li>
+            <li>Jacker le char</li>
+          </ul>
+        </div>
+      </div>
+
+      <hr class="prep-divider">
+
+      <div class="prep-step">
+        <input type="checkbox" class="prep-step-check" id="prep-step-3">
+        <label class="prep-step-title" for="prep-step-3">Étape 3 — En dessous de la voiture</label>
+        <div class="prep-details">
+          <div class="photo-slot" style="margin-bottom:10px;" id="slot-ws-before-proc">
+            <div class="photo-label">📸 Work Area — Before</div>
+            <label class="photo-upload-area" id="area-ws-before-proc">
+              <input type="file" accept="image/*" class="photo-input" data-slot="ws-before-proc" onchange="handlePhoto(this)">
+              <div class="photo-placeholder" id="ph-ws-before-proc">
+                <div class="photo-icon">📷</div>
+                <div class="photo-hint">Tap to add photo</div>
+              </div>
+              <img class="photo-preview" id="prev-ws-before-proc" style="display:none;">
+            </label>
+            <button class="photo-clear-btn" id="clr-ws-before-proc" style="display:none;" onclick="clearPhoto('ws-before-proc')">✕ Remove</button>
+          </div>
+          <ul class="prep-list">
+            <li>Tapis</li>
+          </ul>
+          <div class="prep-substep">Si Engine Covers / Skid Plate</div>
+          <ul class="prep-list">
+            <li>Drill + adapteur drill</li>
+            <li id="proc-covers-display" style="font-style:italic;color:var(--gray);">—</li>
+          </ul>
+          <div class="photo-slot" style="margin-top:10px;" id="slot-dp-before-proc">
+            <div class="photo-label">📸 Drain Plug — Before</div>
+            <label class="photo-upload-area" id="area-dp-before-proc">
+              <input type="file" accept="image/*" class="photo-input" data-slot="dp-before-proc" onchange="handlePhoto(this)">
+              <div class="photo-placeholder" id="ph-dp-before-proc">
+                <div class="photo-icon">📷</div>
+                <div class="photo-hint">Tap to add photo</div>
+              </div>
+              <img class="photo-preview" id="prev-dp-before-proc" style="display:none;">
+            </label>
+            <button class="photo-clear-btn" id="clr-dp-before-proc" style="display:none;" onclick="clearPhoto('dp-before-proc')">✕ Remove</button>
+          </div>
+          <div class="prep-substep">Filtre à huile</div>
+          <ul class="prep-list">
+            <li>Ratchet + rallonge</li>
+            <li>Désserreur filtreur</li>
+            <li>Nouveau filtre</li>
+            <li id="proc-filter-display" style="font-style:italic;color:var(--gray);">—</li>
+            <li>Bac filtre usé</li>
+            <li>Panne à l'huile</li>
+            <li>Scott</li>
+            <li>Brake cleaner</li>
+            <li>Poubelle</li>
+          </ul>
+          <div class="prep-substep">Drainage</div>
+          <ul class="prep-list">
+            <li>Torque wrench — <span id="proc-torque-display" style="font-style:italic;color:var(--gray);">—</span></li>
+            <li>Drain plug — <span id="proc-socket-display" style="font-style:italic;color:var(--gray);">—</span></li>
+            <li>Manette balayeuse</li>
+          </ul>
+        </div>
+      </div>
+
+      <hr class="prep-divider">
+
+      <div class="prep-step">
+        <input type="checkbox" class="prep-step-check" id="prep-step-4">
+        <label class="prep-step-title" for="prep-step-4">Étape 4 — Crush washer</label>
+        <div class="prep-details">
+          <ul class="prep-list">
+            <li>Remplacer le crush washer</li>
+            <li>Serrer drain plug avec torque wrench</li>
+            <li>Clean oil filter and oil drain plug section</li>
+          </ul>
+        </div>
+      </div>
+
+      <hr class="prep-divider">
+
+      <div class="prep-step">
+        <input type="checkbox" class="prep-step-check" id="prep-step-5">
+        <label class="prep-step-title" for="prep-step-5">Étape 5 — Remettre Engine Covers / Skid Plate</label>
+        <div class="prep-details">
+          <div class="photo-slot" style="margin-bottom:10px;" id="slot-dp-after-proc">
+            <div class="photo-label">📸 Drain Plug — After</div>
+            <label class="photo-upload-area" id="area-dp-after-proc">
+              <input type="file" accept="image/*" class="photo-input" data-slot="dp-after-proc" onchange="handlePhoto(this)">
+              <div class="photo-placeholder" id="ph-dp-after-proc">
+                <div class="photo-icon">📷</div>
+                <div class="photo-hint">Tap to add photo</div>
+              </div>
+              <img class="photo-preview" id="prev-dp-after-proc" style="display:none;">
+            </label>
+            <button class="photo-clear-btn" id="clr-dp-after-proc" style="display:none;" onclick="clearPhoto('dp-after-proc')">✕ Remove</button>
+          </div>
+          <ul class="prep-list">
+            <li>Remettre Engine Covers / Skid Plate</li>
+          </ul>
+        </div>
+      </div>
+
+      <hr class="prep-divider">
+
+      <div class="prep-step">
+        <input type="checkbox" class="prep-step-check" id="prep-step-6">
+        <label class="prep-step-title" for="prep-step-6">Étape 6 — Préparation remplissage d'huile</label>
+        <div class="prep-details">
+          <div class="prep-substep">Under the car</div>
+          <ul class="prep-list">
+            <li>Sortir panne d'huile usé d'en dessous de voiture</li>
+            <li>Sortir tout les outils qui peuvent être en dessous de voiture</li>
+          </ul>
+          <div class="prep-substep">Engine bay</div>
+          <ul class="prep-list">
+            <li>Ramasser le pressure regulator</li>
+            <li>Ramasser la balayeuse</li>
+          </ul>
+        </div>
+      </div>
+
+      <hr class="prep-divider">
+
+      <div class="prep-step">
+        <input type="checkbox" class="prep-step-check" id="prep-step-7">
+        <label class="prep-step-title" for="prep-step-7">Étape 7 — Déjacker le char</label>
+        <div class="prep-details">
+          <ul class="prep-list">
+            <li>Ramasser les jack et jack rod</li>
+            <li>Ramasser stoppers de roue</li>
+            <li>Ramasser planche de bois</li>
+          </ul>
+        </div>
+      </div>
+
+      <hr class="prep-divider">
+
+      <div class="prep-step">
+        <input type="checkbox" class="prep-step-check" id="prep-step-8">
+        <label class="prep-step-title" for="prep-step-8">Étape 8 — Retour engine bay + remplissage</label>
+        <div class="prep-details">
+          <ul class="prep-list">
+            <li>Confirmer viscosité — <span id="proc-viscosity-display" style="font-style:italic;color:var(--gray);">—</span> <span id="proc-mat-desc-display" style="font-style:italic;color:var(--gray);"></span></li>
+            <li>Déboucher fresh oil</li>
+            <li>Prendre entonnoir</li>
+            <li>Verser — <span id="proc-capacity-display" style="font-style:italic;color:var(--gray);">—</span></li>
+          </ul>
+        </div>
+      </div>
+
+      <hr class="prep-divider">
+
+      <div class="prep-step">
+        <input type="checkbox" class="prep-step-check" id="prep-step-9">
+        <label class="prep-step-title" for="prep-step-9">Étape 9 — Recueillir huile usée</label>
+        <div class="prep-details">
+          <ul class="prep-list">
+            <li>Prendre balloune</li>
+            <li>Verser huile usée dans contenant vide</li>
+            <li>Ramasser contenant huile usé</li>
+            <li>Ramasser panne d'huile</li>
+          </ul>
+        </div>
+      </div>
+
+      <hr class="prep-divider">
+
+      <div class="prep-step">
+        <input type="checkbox" class="prep-step-check" id="prep-step-10">
+        <label class="prep-step-title" for="prep-step-10">Étape 10 — Clean up !</label>
+        <div class="prep-details">
+          <ul class="prep-list">
+            <li>Ramasser tout ce qui a été sorti</li>
+          </ul>
+        </div>
+      </div>
+
+      <hr class="prep-divider">
+
+      <div class="prep-step">
+        <input type="checkbox" class="prep-step-check" id="prep-step-11">
+        <label class="prep-step-title" for="prep-step-11">Étape 11 — Finaliser engine bay</label>
+        <div class="prep-details">
+          <div class="photo-slot" style="margin-bottom:10px;" id="slot-ws-after-proc">
+            <div class="photo-label">📸 Work Area — After</div>
+            <label class="photo-upload-area" id="area-ws-after-proc">
+              <input type="file" accept="image/*" class="photo-input" data-slot="ws-after-proc" onchange="handlePhoto(this)">
+              <div class="photo-placeholder" id="ph-ws-after-proc">
+                <div class="photo-icon">📷</div>
+                <div class="photo-hint">Tap to add photo</div>
+              </div>
+              <img class="photo-preview" id="prev-ws-after-proc" style="display:none;">
+            </label>
+            <button class="photo-clear-btn" id="clr-ws-after-proc" style="display:none;" onclick="clearPhoto('ws-after-proc')">✕ Remove</button>
+          </div>
+          <ul class="prep-list">
+            <li>Remettre le bouchon d'huile de la voiture</li>
+            <li>Ramasser engine bay covers</li>
+          </ul>
+        </div>
+      </div>
+
+      <hr class="prep-divider">
+
+      <div class="prep-step">
+        <input type="checkbox" class="prep-step-check" id="prep-step-12">
+        <label class="prep-step-title" for="prep-step-12">Étape 12 — Windshield washer fluid</label>
+        <div class="prep-details">
+          <ul class="prep-list">
+            <li>Top-up</li>
+            <li>Ferme le hood</li>
+          </ul>
+        </div>
+      </div>
+
+      <hr class="prep-divider">
+
+      <div class="prep-step">
+        <input type="checkbox" class="prep-step-check" id="prep-step-13">
+        <label class="prep-step-title" for="prep-step-13">Étape 13 — Intérieur voiture</label>
+        <div class="prep-details">
+          <ul class="prep-list">
+            <li>Collant de prochain RDV ou reset de l'ordi pour nouveau RDV</li>
+          </ul>
+          <div class="g2" style="margin-top:10px;">
+            <div class="field"><label>Current Mileage (km)</label><input type="text" id="oilMileage" placeholder="e.g. 85,400" autocomplete="off"></div>
+            <div class="field"><label>Next Service (km)</label><input type="text" id="oilNext" placeholder="e.g. 93,400" autocomplete="off"></div>
+          </div>
+        </div>
+      </div>
+
+      <hr class="prep-divider">
+
+      <div class="prep-step">
+        <input type="checkbox" class="prep-step-check" id="prep-step-14">
+        <label class="prep-step-title" for="prep-step-14">Étape 14 — $$$$</label>
+        <div class="prep-details">
+          <ul class="prep-list">
+            <li>Redonne les clefs et accepte ton paiement</li>
+          </ul>
+        </div>
+      </div>
+
+      <div id="photoWarning" style="display:none;margin-top:12px;padding:8px 12px;background:#FFF3E0;border:1.5px solid var(--orange);border-radius:6px;font-size:12px;color:var(--warn);font-weight:700;">⚠ All 4 process photos are required before exporting.</div>
+    </div>
+  </div>
+
+
+  <!-- 5. PACKAGE & PAYMENT -->
   <div class="section">
-    <div class="sec-hdr"><span class="sec-num">2</span><span class="sec-title">Oil &amp; Service Details</span></div>
-    <div class="sec-body">
-      <div class="g3-oil">
-        <div class="field"><label>Oil Grade Used</label><input type="text" id="oilGrade" placeholder="e.g. 5W-30 Full Synthetic" autocomplete="off"></div>
-        <div class="field"><label>Quantity (L)</label><input type="text" id="oilQty" placeholder="e.g. 5" autocomplete="off"></div>
-        <div class="field"><label>Filter Part No.</label><input type="text" id="oilFilter" placeholder="e.g. PH3614" autocomplete="off"></div>
-      </div>
-      <div class="g2">
-        <div class="field"><label>Current Mileage (km)</label><input type="text" id="oilMileage" placeholder="e.g. 85,400" autocomplete="off"></div>
-        <div class="field"><label>Next Service (km)</label><input type="text" id="oilNext" placeholder="e.g. 90,400" autocomplete="off"></div>
-      </div>
-    </div>
-  </div>
-
-  <!-- PHOTO DOCUMENTATION (screen only) -->
-  <div class="section" id="photoSection">
-    <div class="sec-hdr"><span class="sec-num">3</span><span class="sec-title">Photo Documentation</span></div>
-    <div class="sec-body">
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
-
-        <div class="photo-slot" id="slot-dp-before">
-          <div class="photo-label">Drain Plug — Before</div>
-          <label class="photo-upload-area" id="area-dp-before">
-            <input type="file" accept="image/*" capture="environment" class="photo-input" data-slot="dp-before" onchange="handlePhoto(this)">
-            <div class="photo-placeholder" id="ph-dp-before">
-              <div class="photo-icon">📷</div>
-              <div class="photo-hint">Tap to add photo</div>
-            </div>
-            <img class="photo-preview" id="prev-dp-before" style="display:none;">
-          </label>
-          <button class="photo-clear-btn" id="clr-dp-before" style="display:none;" onclick="clearPhoto('dp-before')">✕ Remove</button>
-        </div>
-
-        <div class="photo-slot" id="slot-dp-after">
-          <div class="photo-label">Drain Plug — After</div>
-          <label class="photo-upload-area" id="area-dp-after">
-            <input type="file" accept="image/*" capture="environment" class="photo-input" data-slot="dp-after" onchange="handlePhoto(this)">
-            <div class="photo-placeholder" id="ph-dp-after">
-              <div class="photo-icon">📷</div>
-              <div class="photo-hint">Tap to add photo</div>
-            </div>
-            <img class="photo-preview" id="prev-dp-after" style="display:none;">
-          </label>
-          <button class="photo-clear-btn" id="clr-dp-after" style="display:none;" onclick="clearPhoto('dp-after')">✕ Remove</button>
-        </div>
-
-        <div class="photo-slot" id="slot-ws-before">
-          <div class="photo-label">Work Area — Before</div>
-          <label class="photo-upload-area" id="area-ws-before">
-            <input type="file" accept="image/*" capture="environment" class="photo-input" data-slot="ws-before" onchange="handlePhoto(this)">
-            <div class="photo-placeholder" id="ph-ws-before">
-              <div class="photo-icon">📷</div>
-              <div class="photo-hint">Tap to add photo</div>
-            </div>
-            <img class="photo-preview" id="prev-ws-before" style="display:none;">
-          </label>
-          <button class="photo-clear-btn" id="clr-ws-before" style="display:none;" onclick="clearPhoto('ws-before')">✕ Remove</button>
-        </div>
-
-        <div class="photo-slot" id="slot-ws-after">
-          <div class="photo-label">Work Area — After</div>
-          <label class="photo-upload-area" id="area-ws-after">
-            <input type="file" accept="image/*" capture="environment" class="photo-input" data-slot="ws-after" onchange="handlePhoto(this)">
-            <div class="photo-placeholder" id="ph-ws-after">
-              <div class="photo-icon">📷</div>
-              <div class="photo-hint">Tap to add photo</div>
-            </div>
-            <img class="photo-preview" id="prev-ws-after" style="display:none;">
-          </label>
-          <button class="photo-clear-btn" id="clr-ws-after" style="display:none;" onclick="clearPhoto('ws-after')">✕ Remove</button>
-        </div>
-
-      </div>
-      <div id="photoWarning" style="display:none;margin-top:12px;padding:8px 12px;background:#FFF3E0;border:1.5px solid var(--orange);border-radius:6px;font-size:12px;color:var(--warn);font-weight:700;">⚠ All 4 photos are required before exporting.</div>
-    </div>
-  </div>
-
-
-  <!-- 4. PACKAGE & PAYMENT -->
-  <div class="section">
-    <div class="sec-hdr"><span class="sec-num">4</span><span class="sec-title">Package &amp; Payment</span></div>
+    <div class="sec-hdr"><span class="sec-num">5</span><span class="sec-title">Package &amp; Payment</span></div>
     <div class="sec-body">
 
       <!-- PACKAGE DROPDOWN -->
@@ -612,6 +650,7 @@
         <label>Select Package</label>
         <select id="pkgSelect" onchange="showPackage(this.value)" style="margin-top:6px;padding:10px 12px;font-size:14px;font-family:inherit;border:2px solid var(--line);border-radius:8px;background:white;color:var(--dark);outline:none;width:100%;-webkit-appearance:none;">
           <option value="">— Choose a package —</option>
+          <option value="0">Service Fee</option>
           <option value="1">5L OilRight Package — $119.99</option>
           <option value="2">6L+ OilRight Package — $139.99</option>
           <option value="3">OilRight Partner Deal</option>
@@ -620,6 +659,15 @@
 
       <!-- PACKAGE CARD DISPLAY -->
       <div id="pkgDisplay" style="margin-bottom:14px;display:none;">
+        <div id="pkgCard0" class="pkg-card selected" style="display:none;">
+          <div class="pkg-hdr" style="background:var(--orange-light) !important;">
+            <div class="pkg-num" style="color:var(--dark);background:rgba(0,0,0,0.08);">$</div>
+            <div>
+              <div class="pkg-name" style="color:var(--dark);">Service Fee</div>
+              <div class="pkg-price" style="display:flex;align-items:center;gap:6px;color:var(--dark);">$&nbsp;<input type="text" id="serviceFeePrice" placeholder="Enter amount" autocomplete="off" style="background:transparent;border:none;border-bottom:1.5px solid rgba(0,0,0,0.3);color:var(--dark);font-size:14px;font-weight:700;font-family:inherit;outline:none;width:110px;padding:2px 4px;"></div>
+            </div>
+          </div>
+        </div>
         <div id="pkgCard1" class="pkg-card selected" style="display:none;">
           <div class="pkg-hdr">
             <div class="pkg-num">1</div>
@@ -791,7 +839,7 @@
 
   // ── TECH PREP FIELD IDs ──────────────────────────────────────
   // These are the ONLY fields saved to Firebase
-  const TECH_IDS = ['techViscosity', 'techCapacity', 'techTorque', 'techFilterCode', 'techNotes'];
+  const TECH_IDS = ['techViscosity', 'techCapacity', 'techTorque', 'techCovers', 'techFilterCode', 'techSocketSize', 'techNotes', 'oilMileage', 'oilNext'];
 
   // Add IDs to tech prep fields so we can target them
   function tagTechFields() {
@@ -812,15 +860,26 @@
         const el = document.getElementById(id);
         if (el) data[id] = el.value;
       });
+      data.materialRows = getMaterialRows();
 
-      // Assign ref number on first save if not already set
+      // Assign ref number based on highest existing refNumber in serviceReports
       const refEl = document.querySelector('.header input[type="text"]');
       if (refEl && !refEl.value.trim()) {
-        const counterSnap = await get(ref(db, 'refCounter'));
-        const next = counterSnap.exists() ? counterSnap.val() + 1 : 1;
-        await set(ref(db, 'refCounter'), next);
-        refEl.value = String(next);
-        data.refNumber = next;
+        try {
+          const reportsSnap = await get(ref(db, 'serviceReports'));
+          let highest = 0;
+          if (reportsSnap.exists()) {
+            reportsSnap.forEach(child => {
+              const n = parseInt(child.val().refNumber) || 0;
+              if (n > highest) highest = n;
+            });
+          }
+          const next = highest + 1;
+          refEl.value = String(next);
+          data.refNumber = next;
+        } catch(e) {
+          console.error('Ref number error:', e);
+        }
       } else if (refEl && refEl.value.trim()) {
         data.refNumber = parseInt(refEl.value) || refEl.value;
       }
@@ -855,6 +914,50 @@
         }
       }
     });
+    // Sync dynamic displays
+    const coversVal = document.getElementById('techCovers')?.value.trim();
+    const display = document.getElementById('proc-covers-display');
+    if (display) {
+      display.textContent = coversVal || '—';
+      display.style.fontStyle = coversVal ? 'normal' : 'italic';
+      display.style.color = coversVal ? 'var(--dark)' : 'var(--gray)';
+    }
+    const filterVal = document.getElementById('techFilterCode')?.value.trim();
+    const filterDisplay = document.getElementById('proc-filter-display');
+    if (filterDisplay) {
+      filterDisplay.textContent = filterVal || '—';
+      filterDisplay.style.fontStyle = filterVal ? 'normal' : 'italic';
+      filterDisplay.style.color = filterVal ? 'var(--dark)' : 'var(--gray)';
+    }
+    const torqueVal = document.getElementById('techTorque')?.value.trim();
+    const torqueDisplay = document.getElementById('proc-torque-display');
+    if (torqueDisplay) {
+      torqueDisplay.textContent = torqueVal || '—';
+      torqueDisplay.style.fontStyle = torqueVal ? 'normal' : 'italic';
+      torqueDisplay.style.color = torqueVal ? 'var(--dark)' : 'var(--gray)';
+    }
+    const socketVal = document.getElementById('techSocketSize')?.value.trim();
+    const socketDisplay = document.getElementById('proc-socket-display');
+    if (socketDisplay) {
+      socketDisplay.textContent = socketVal || '—';
+      socketDisplay.style.fontStyle = socketVal ? 'normal' : 'italic';
+      socketDisplay.style.color = socketVal ? 'var(--dark)' : 'var(--gray)';
+    }
+    const viscosityVal = document.getElementById('techViscosity')?.value.trim();
+    const viscosityDisplay = document.getElementById('proc-viscosity-display');
+    if (viscosityDisplay) {
+      viscosityDisplay.textContent = viscosityVal || '—';
+      viscosityDisplay.style.fontStyle = viscosityVal ? 'normal' : 'italic';
+      viscosityDisplay.style.color = viscosityVal ? 'var(--dark)' : 'var(--gray)';
+    }
+    const capacityVal = document.getElementById('techCapacity')?.value.trim();
+    const capacityDisplay = document.getElementById('proc-capacity-display');
+    if (capacityDisplay) {
+      capacityDisplay.textContent = capacityVal || '—';
+      capacityDisplay.style.fontStyle = capacityVal ? 'normal' : 'italic';
+      capacityDisplay.style.color = capacityVal ? 'var(--dark)' : 'var(--gray)';
+    }
+    if (data.materialRows) restoreMaterialRows(data.materialRows);
   }
 
   // ── PRE-FILL SECTION 1 FROM APPOINTMENT ─────────────────────
@@ -923,8 +1026,8 @@
     // Section 1
     'clientName', 'clientPhone', 'clientEmail',
     'clientMakeModel', 'clientYear', 'clientColor', 'clientVin', 'clientDate', 'clientPartner',
-    // Section 2
-    'oilGrade', 'oilQty', 'oilFilter', 'oilMileage', 'oilNext'
+    // Section 2 — Tech Prep
+    'techViscosity', 'techCapacity', 'techTorque', 'techFilterCode', 'techSocketSize', 'oilMileage', 'oilNext'
   ];
 
   // Tech prep required (red but don't block export)
@@ -1018,6 +1121,14 @@
     }
   }
 
+  function checkMaterialInfo() {
+    const rows = getMaterialRows();
+    const warning = document.getElementById('materialInfoWarning');
+    if (warning) {
+      warning.style.display = rows.length >= 2 ? 'none' : 'block';
+    }
+  }
+
   function runAllValidation() {
     // Required inputs
     REQUIRED_INPUTS.forEach(id => checkInput(document.getElementById(id)));
@@ -1033,6 +1144,8 @@
     checkSignature();
     // Package select
     checkPkgSelect();
+    // Material info — at least 2 complete rows
+    checkMaterialInfo();
   }
 
   // Re-run on every input change
@@ -1063,7 +1176,7 @@
   });
 
   // ── PHOTO HANDLING ───────────────────────────────────────────
-  const photoData = { 'dp-before': null, 'dp-after': null, 'ws-before': null, 'ws-after': null };
+  const photoData = { 'ws-before-proc': null, 'dp-before-proc': null, 'dp-after-proc': null, 'ws-after-proc': null };
 
   window.handlePhoto = function(input) {
     const slot = input.dataset.slot;
@@ -1093,7 +1206,8 @@
   // ── EXPORT PDF ───────────────────────────────────────────────
   window.exportPDF = async function() {
     // Check photos
-    const missingPhotos = Object.values(photoData).some(v => v === null);
+    const REQUIRED_PHOTOS = ['ws-before-proc', 'dp-before-proc', 'dp-after-proc', 'ws-after-proc'];
+    const missingPhotos = REQUIRED_PHOTOS.some(s => photoData[s] === null);
 
     // Check required inputs
     const missingInputs = REQUIRED_INPUTS.some(id => {
@@ -1107,6 +1221,14 @@
     if (missingPartnerPrice) {
       const pp = document.getElementById('partnerPrice');
       if (pp) pp.style.borderBottomColor = '#e53935';
+    }
+
+    // Check service fee price if package 0 selected
+    const pkgIsServiceFee = document.getElementById('pkgSelect')?.value === '0';
+    const missingServiceFeePrice = pkgIsServiceFee && !document.getElementById('serviceFeePrice')?.value.trim();
+    if (missingServiceFeePrice) {
+      const sf = document.getElementById('serviceFeePrice');
+      if (sf) sf.style.borderBottomColor = '#e53935';
     }
 
     // Check address if mobile
@@ -1129,62 +1251,65 @@
     // Check signature
     const missingSig = !hasSig;
 
+    // Check material info — at least 2 rows
+    const missingMaterialInfo = getMaterialRows().length < 2;
 
-
+    if (missingPhotos || missingInputs || missingPartnerPrice || missingServiceFeePrice || missingAddr || missingPay || missingPkg || missingSig || missingMaterialInfo) {
+      runAllValidation();
+      if (missingPhotos) {
+        document.getElementById('prepBody').classList.remove('prep-collapsed');
+        document.getElementById('prepBody').scrollIntoView({ behavior: 'smooth' });
+        document.getElementById('photoWarning').style.display = 'block';
+      } else if (missingMaterialInfo) {
+        document.getElementById('materialTable')?.scrollIntoView({ behavior: 'smooth' });
+      } else {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+      alert('Please fill in all required fields (highlighted in red) before exporting.');
+      return;
+    }
     const refInput = document.querySelector('.header input[type="text"]');
     const r = refInput?.value.trim() || 'NoRef';
-    const clientName = document.getElementById('clientName')?.value.trim() || '';
-    const clientEmail = document.getElementById('clientEmail')?.value.trim() || '';
-    const clientFirst = clientName.split(' ')[0] || clientName;
-    const client = clientName.replace(/\s+/g, '-') || 'NoName';
-    const date = document.getElementById('clientDate')?.value || new Date().toISOString().slice(0,10);
-    const nextService = document.getElementById('oilNext')?.value.trim() || '';
 
-    // Format date nicely for email
-    const dateObj = date ? new Date(date + 'T12:00:00') : new Date();
-    const dateFmt = dateObj.toLocaleDateString('en-CA', { year: 'numeric', month: 'long', day: 'numeric' });
-
-    // Populate annex pages
-    const refLabel = `Ref. ${r} — ${clientName} — ${date}`;
-    const annexMap = {
-      'dp-before': { img: 'annexImgDpBefore', ref: 'annexRefDpBefore' },
-      'dp-after':  { img: 'annexImgDpAfter',  ref: 'annexRefDpAfter'  },
-      'ws-before': { img: 'annexImgWsBefore', ref: 'annexRefWsBefore' },
-      'ws-after':  { img: 'annexImgWsAfter',  ref: 'annexRefWsAfter'  },
-    };
-    Object.entries(annexMap).forEach(([slot, ids]) => {
-      const imgEl = document.getElementById(ids.img);
-      const refEl = document.getElementById(ids.ref);
-      if (imgEl && photoData[slot]) imgEl.src = photoData[slot];
-      if (refEl) refEl.textContent = refLabel;
-    });
-
-    // Build email and copy to clipboard
-    const subject = `Your OilRight Service Report — Ref. #${r} · ${dateFmt}`;
-    const body = `To: ${clientEmail}
-Subject: ${subject}
-
-Hi ${clientFirst},
-
-Thank you for trusting OilRight for your oil change service! Please find your service report attached (Ref. #${r}).
-${nextService ? `\nYour next oil change is due at ${nextService} km.\n` : ''}
-If you enjoyed the service, we'd love it if you could take a moment to leave us a review on Google — it means the world to us and helps other drivers in the Moncton area find us!
-
-And if you know anyone who could use a convenient mobile oil change, don't hesitate to refer us — we'd be happy to take care of them too.
-
-Don't hesitate to reach out if you have any questions.
-
-OilRight Mobile Oil Changes
-Greater Moncton, NB`;
-
-    // Show email popup
-    const modal = document.getElementById('emailModal');
-    const modalText = document.getElementById('emailModalText');
-    if (modal && modalText) {
-      modalText.value = body;
-      modal.style.display = 'flex';
-      document.title = 'OilRight_' + r + '_' + client + '_' + date;
+    // Save package/payment selections + ref number so invoice.html can read them
+    try {
+      const pkgSelectValue = document.getElementById('pkgSelect')?.value || '';
+      const payChecked = document.querySelector('input[name="pay"]:checked')?.value || '';
+      const pkg1Price = document.getElementById('pkg1Price')?.value || '';
+      const pkg2Price = document.getElementById('pkg2Price')?.value || '';
+      const partnerPriceVal = document.getElementById('partnerPrice')?.value || '';
+      const serviceFeePriceVal = document.getElementById('serviceFeePrice')?.value || '';
+      await set(ref(db, 'serviceReports/' + apptId + '/refNumber'), parseInt(r) || r);
+      await set(ref(db, 'serviceReports/' + apptId + '/pkgSelectValue'), pkgSelectValue);
+      await set(ref(db, 'serviceReports/' + apptId + '/payMethod'), payChecked);
+      await set(ref(db, 'serviceReports/' + apptId + '/pkg1Price'), pkg1Price);
+      await set(ref(db, 'serviceReports/' + apptId + '/pkg2Price'), pkg2Price);
+      await set(ref(db, 'serviceReports/' + apptId + '/partnerPrice'), partnerPriceVal);
+      await set(ref(db, 'serviceReports/' + apptId + '/serviceFeePrice'), serviceFeePriceVal);
+      await set(ref(db, 'serviceReports/' + apptId + '/materialRows'), getMaterialRows());
+    } catch (e) {
+      console.error('Error saving invoice data:', e);
     }
+
+    // Pass photos + signature to invoice.html via sessionStorage (not saved to Firebase)
+    try {
+      const photosForInvoice = {
+        'ws-before-proc': photoData['ws-before-proc'],
+        'dp-before-proc': photoData['dp-before-proc'],
+        'dp-after-proc': photoData['dp-after-proc'],
+        'ws-after-proc': photoData['ws-after-proc']
+      };
+      sessionStorage.setItem('oilright_invoice_photos_' + apptId, JSON.stringify(photosForInvoice));
+
+      const sigCanvas = document.getElementById('sigCanvas');
+      if (sigCanvas && hasSig) {
+        sessionStorage.setItem('oilright_invoice_sig_' + apptId, sigCanvas.toDataURL());
+      }
+    } catch (e) {
+      console.error('Error storing photos/signature for invoice:', e);
+    }
+
+    window.open('invoice.html?id=' + encodeURIComponent(apptId), '_blank');
   };
 
   document.getElementById('partnerPrice')?.addEventListener('input', function() {
@@ -1193,6 +1318,154 @@ Greater Moncton, NB`;
       this.style.borderBottomColor = this.value.trim() ? 'rgba(255,255,255,0.6)' : '#e53935';
     }
   });
+
+  document.getElementById('serviceFeePrice')?.addEventListener('input', function() {
+    const pkgIsServiceFee = document.getElementById('pkgSelect')?.value === '0';
+    if (pkgIsServiceFee) {
+      this.style.borderBottomColor = this.value.trim() ? 'rgba(0,0,0,0.3)' : '#e53935';
+    }
+  });
+
+  // Auto-calculate next service km (current + 8000)
+  document.getElementById('oilMileage')?.addEventListener('input', function() {
+    const nextEl = document.getElementById('oilNext');
+    if (!nextEl) return;
+    const raw = this.value.replace(/[^0-9]/g, '');
+    if (raw && !nextEl.dataset.manualOverride) {
+      const next = parseInt(raw) + 8000;
+      nextEl.value = next.toLocaleString('en-CA');
+      checkInput(nextEl);
+    } else if (!raw) {
+      nextEl.value = '';
+      nextEl.dataset.manualOverride = '';
+    }
+  });
+
+  document.getElementById('oilNext')?.addEventListener('input', function() {
+    this.dataset.manualOverride = this.value ? 'true' : '';
+  });
+
+  // Live sync techCovers → process step 3
+  document.getElementById('techCovers')?.addEventListener('input', function() {
+    const display = document.getElementById('proc-covers-display');
+    if (display) {
+      display.textContent = this.value.trim() || '—';
+      display.style.fontStyle = this.value.trim() ? 'normal' : 'italic';
+      display.style.color = this.value.trim() ? 'var(--dark)' : 'var(--gray)';
+    }
+  });
+
+  // Live sync techFilterCode → process step 3
+  document.getElementById('techFilterCode')?.addEventListener('input', function() {
+    const display = document.getElementById('proc-filter-display');
+    if (display) {
+      display.textContent = this.value.trim() || '—';
+      display.style.fontStyle = this.value.trim() ? 'normal' : 'italic';
+      display.style.color = this.value.trim() ? 'var(--dark)' : 'var(--gray)';
+    }
+  });
+
+  // Live sync techTorque → process step 3
+  document.getElementById('techTorque')?.addEventListener('input', function() {
+    const display = document.getElementById('proc-torque-display');
+    if (display) {
+      display.textContent = this.value.trim() || '—';
+      display.style.fontStyle = this.value.trim() ? 'normal' : 'italic';
+      display.style.color = this.value.trim() ? 'var(--dark)' : 'var(--gray)';
+    }
+  });
+
+  // Live sync techSocketSize → process step 3
+  document.getElementById('techSocketSize')?.addEventListener('input', function() {
+    const display = document.getElementById('proc-socket-display');
+    if (display) {
+      display.textContent = this.value.trim() || '—';
+      display.style.fontStyle = this.value.trim() ? 'normal' : 'italic';
+      display.style.color = this.value.trim() ? 'var(--dark)' : 'var(--gray)';
+    }
+  });
+
+  // Live sync techViscosity → process step 7
+  document.getElementById('techViscosity')?.addEventListener('input', function() {
+    const display = document.getElementById('proc-viscosity-display');
+    if (display) {
+      display.textContent = this.value.trim() || '—';
+      display.style.fontStyle = this.value.trim() ? 'normal' : 'italic';
+      display.style.color = this.value.trim() ? 'var(--dark)' : 'var(--gray)';
+    }
+  });
+
+  // Live sync techCapacity → process step 7
+  document.getElementById('techCapacity')?.addEventListener('input', function() {
+    const display = document.getElementById('proc-capacity-display');
+    if (display) {
+      display.textContent = this.value.trim() || '—';
+      display.style.fontStyle = this.value.trim() ? 'normal' : 'italic';
+      display.style.color = this.value.trim() ? 'var(--dark)' : 'var(--gray)';
+    }
+  });
+
+  // ── MATERIAL TABLE ───────────────────────────────────────────
+  function syncMatDesc() {
+    const firstInput = document.querySelector('#materialRows tr:first-child input:first-child');
+    const display = document.getElementById('proc-mat-desc-display');
+    if (display) {
+      const val = firstInput?.value.trim() || '';
+      display.textContent = val ? '— ' + val : '';
+      display.style.fontStyle = val ? 'normal' : 'italic';
+      display.style.color = val ? 'var(--dark)' : 'var(--gray)';
+    }
+  }
+
+  function createMaterialRow(data = {}) {
+    const tr = document.createElement('tr');
+    tr.style.borderBottom = '1px solid var(--border)';
+    tr.innerHTML = `
+      <td style="padding:4px 6px;"><input type="text" placeholder="info huile première rangée — info pas en gras" autocomplete="off" style="width:100%;border:none;border-bottom:1px solid var(--line);background:transparent;font-size:13px;font-family:inherit;color:var(--dark);padding:3px 2px;outline:none;font-weight:400;" value="${data.desc || ''}"></td>
+      <td style="padding:4px 6px;"><input type="text" placeholder="info en gras" autocomplete="off" style="width:100%;border:none;border-bottom:1px solid var(--line);background:transparent;font-size:13px;font-family:inherit;color:var(--dark);padding:3px 2px;outline:none;font-weight:700;" value="${data.part || ''}"></td>
+      <td style="padding:4px 6px;"><input type="text" placeholder="1" autocomplete="off" style="width:100%;border:none;border-bottom:1px solid var(--line);background:transparent;font-size:13px;font-family:inherit;color:var(--dark);padding:3px 2px;outline:none;" value="${data.qty || ''}"></td>
+      <td style="padding:4px 6px;"><input type="text" placeholder="$0.00" autocomplete="off" style="width:100%;border:none;border-bottom:1px solid var(--line);background:transparent;font-size:13px;font-family:inherit;color:var(--dark);padding:3px 2px;outline:none;" value="${data.price || ''}"></td>
+      <td style="padding:4px 6px;text-align:center;"><button type="button" onclick="removeMaterialRow(this)" style="background:none;border:none;color:#ccc;font-size:16px;cursor:pointer;line-height:1;">✕</button></td>
+    `;
+    tr.querySelectorAll('input').forEach(input => {
+      input.addEventListener('input', () => { scheduleSave(); checkAddNewRow(); syncMatDesc(); });
+    });
+    return tr;
+  }
+
+  window.removeMaterialRow = function(btn) {
+    const tbody = document.getElementById('materialRows');
+    if (tbody.rows.length > 1) { btn.closest('tr').remove(); scheduleSave(); }
+  };
+
+  function checkAddNewRow() {
+    const tbody = document.getElementById('materialRows');
+    const rows = tbody.querySelectorAll('tr');
+    const lastRow = rows[rows.length - 1];
+    const inputs = lastRow.querySelectorAll('input');
+    const anyFilled = Array.from(inputs).some(i => i.value.trim());
+    if (anyFilled) tbody.appendChild(createMaterialRow());
+  }
+
+  function getMaterialRows() {
+    const rows = [];
+    document.querySelectorAll('#materialRows tr').forEach(tr => {
+      const inputs = tr.querySelectorAll('input');
+      const row = { desc: inputs[0]?.value || '', part: inputs[1]?.value || '', qty: inputs[2]?.value || '', price: inputs[3]?.value || '' };
+      if (row.desc || row.part || row.qty || row.price) rows.push(row);
+    });
+    return rows;
+  }
+
+  function restoreMaterialRows(rows) {
+    const tbody = document.getElementById('materialRows');
+    tbody.innerHTML = '';
+    if (rows && rows.length) rows.forEach(r => tbody.appendChild(createMaterialRow(r)));
+    tbody.appendChild(createMaterialRow());
+    syncMatDesc();
+  }
+
+  document.getElementById('materialRows').appendChild(createMaterialRow());
 
   // ── EMAIL MODAL ──────────────────────────────────────────────
   window.closeEmailModal = function() {
@@ -1223,7 +1496,7 @@ Greater Moncton, NB`;
 
   // ── PACKAGE DROPDOWN ─────────────────────────────────────────
   window.showPackage = function(val) {
-    [1,2,3].forEach(i => document.getElementById('pkgCard'+i).style.display = 'none');
+    [0,1,2,3].forEach(i => document.getElementById('pkgCard'+i).style.display = 'none');
     const display = document.getElementById('pkgDisplay');
     const paymentRow = document.getElementById('paymentRow');
     const payCardOpt = document.getElementById('payCardOpt');
@@ -1315,6 +1588,7 @@ Greater Moncton, NB`;
     window.clearSig();
     Object.keys(photoData).forEach(slot => window.clearPhoto(slot));
     document.getElementById('photoWarning').style.display = 'none';
+    restoreMaterialRows([]);
     setTimeout(runAllValidation, 50);
   };
 </script>

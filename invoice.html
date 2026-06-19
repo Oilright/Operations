@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OilRight – Invoice</title>
+<style>
+  :root {
+    --orange: #F5B400;
+    --orange-light: #FFF3E0;
+    --dark: #1a1a1a;
+    --gray: #666;
+    --line: #ddd;
+    --ok: #2E7D32;
+  }
+  * { box-sizing: border-box; }
+  body { font-family: -apple-system, 'Helvetica Neue', Arial, sans-serif; background: #f0f0f0; color: var(--dark); margin: 0; padding: 24px 16px; font-size: 14px; }
+  .page { max-width: 760px; margin: 0 auto; background: white; border-radius: 10px; box-shadow: 0 2px 16px rgba(0,0,0,0.08); padding: 36px 40px; }
+
+  .header { display: flex; align-items: flex-start; justify-content: space-between; border-bottom: 3px solid var(--orange); padding-bottom: 18px; margin-bottom: 24px; }
+  .header-left { display: flex; align-items: center; gap: 12px; }
+  .brand-name { font-size: 24px; font-weight: 700; color: var(--orange); }
+  .brand-tagline { font-size: 11px; color: var(--gray); margin-top: 2px; }
+  .doc-title { font-size: 26px; font-weight: 700; color: var(--dark); text-align: right; }
+  .doc-sub { font-size: 12px; color: var(--gray); text-align: right; margin-top: 2px; }
+  .doc-ref { font-size: 13px; color: var(--gray); text-align: right; margin-top: 8px; }
+  .doc-ref strong { color: var(--dark); }
+
+  .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 24px; }
+  .info-block h4 { font-size: 11px; font-weight: 700; color: var(--gray); text-transform: uppercase; letter-spacing: 0.5px; margin: 0 0 8px; }
+  .info-block .name { font-size: 15px; font-weight: 700; margin-bottom: 2px; }
+  .info-block div.line { font-size: 13px; color: var(--dark); line-height: 1.5; }
+
+  table.items { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
+  table.items th { text-align: left; font-size: 11px; font-weight: 700; color: var(--gray); text-transform: uppercase; letter-spacing: 0.4px; padding: 8px 6px; border-bottom: 2px solid var(--line); }
+  table.items th.num, table.items td.num { text-align: right; }
+  table.items td { padding: 10px 6px; border-bottom: 1px solid var(--line); font-size: 13px; vertical-align: top; }
+  table.items td.desc-main { font-weight: 700; }
+
+  .totals { display: flex; justify-content: flex-end; margin-bottom: 24px; }
+  .totals-box { width: 260px; }
+  .totals-row { display: flex; justify-content: space-between; padding: 6px 10px; font-size: 13px; }
+  .totals-row.grand { background: var(--orange-light); border-radius: 6px; font-size: 16px; font-weight: 700; margin-top: 6px; padding: 10px 10px; }
+
+  .payment-block { margin-bottom: 24px; padding: 12px 16px; background: #FAFAFA; border: 1px solid var(--line); border-radius: 8px; }
+  .payment-block h4 { font-size: 11px; font-weight: 700; color: var(--gray); text-transform: uppercase; letter-spacing: 0.5px; margin: 0 0 6px; }
+
+  .thanks { font-style: italic; color: var(--gray); font-size: 13px; text-align: center; margin: 18px 0 14px; line-height: 1.6; }
+
+  .scope-block { margin-bottom: 18px; padding: 12px 16px; background: #FAFAFA; border: 1px solid var(--line); border-radius: 8px; }
+  .scope-block h4 { font-size: 10px; font-weight: 700; color: var(--gray); text-transform: uppercase; letter-spacing: 0.5px; margin: 0 0 6px; }
+  .scope-text { font-size: 11px; color: var(--dark); line-height: 1.5; }
+  .sig-row { display: flex; align-items: flex-end; gap: 12px; margin-top: 10px; }
+  .sig-box { border-bottom: 1.5px solid var(--line); width: 220px; height: 50px; display: flex; align-items: center; }
+  .sig-box img { max-height: 48px; max-width: 100%; object-fit: contain; }
+  .sig-empty { font-size: 11px; color: #aaa; font-style: italic; }
+  .sig-caption { font-size: 10px; color: var(--gray); text-transform: uppercase; letter-spacing: 0.4px; padding-bottom: 4px; }
+
+  .review-cta { text-align: center; margin-bottom: 10px; }
+  .review-cta a { display: inline-block; background: var(--orange-light); color: var(--dark); border: 1px solid var(--orange); border-radius: 20px; padding: 8px 20px; font-size: 13px; font-weight: 700; text-decoration: none; }
+
+  .social-line { text-align: center; font-size: 11px; color: var(--gray); margin-bottom: 4px; }
+  .social-line a { color: var(--gray); text-decoration: none; font-weight: 600; }
+  .social-line a:hover { text-decoration: underline; }
+
+  .footer-bar { display: flex; gap: 0; border: 1px solid var(--line); border-radius: 8px; overflow: hidden; }
+  .footer-cell { flex: 1; padding: 16px; text-align: center; border-right: 1px solid var(--line); }
+  .footer-cell:last-child { border-right: none; }
+  .footer-cell a { color: var(--dark); text-decoration: none; font-size: 13px; font-weight: 700; display: block; }
+  .footer-cell .icon { font-size: 22px; margin-bottom: 6px; }
+  .footer-cell .sub { font-size: 11px; color: var(--gray); margin-top: 2px; }
+
+  .print-btn-wrap { text-align: center; margin-top: 20px; }
+  .print-btn { background: var(--orange); color: white; border: none; border-radius: 8px; padding: 12px 28px; font-size: 14px; font-weight: 700; font-family: inherit; cursor: pointer; }
+
+  .loading { text-align: center; padding: 60px; color: var(--gray); }
+
+  .annex-page { display: none; }
+
+  @media print {
+    * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; color-adjust: exact !important; }
+    body { background: white; padding: 0; }
+    .page { box-shadow: none; border-radius: 0; max-width: 100%; padding: 20px 24px; }
+    .no-print { display: none !important; }
+    .annex-page { display: flex !important; flex-direction: column; page-break-before: always; padding: 32px 36px; box-sizing: border-box; }
+    .annex-header { border-bottom: 3px solid #F5B400; padding-bottom: 12px; margin-bottom: 20px; }
+    .annex-title { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.6px; color: #555; }
+    .annex-label { font-size: 20px; font-weight: 700; color: #1a1a1a; margin-top: 4px; }
+    .annex-photo { flex: 1; display: flex; align-items: center; justify-content: center; }
+    .annex-photo img { max-width: 100%; max-height: 75vh; object-fit: contain; border-radius: 6px; }
+    .annex-footer { border-top: 1px solid #ddd; padding-top: 10px; margin-top: 16px; font-size: 10px; color: #888; display: flex; justify-content: space-between; }
+  }
+</style>
+</head>
+<body>
+
+<div class="page" id="page">
+  <div class="loading" id="loadingMsg">Loading invoice…</div>
+</div>
+
+<div class="annex-page" id="annexWsBefore">
+  <div class="annex-header">
+    <div class="annex-title">Annex — Photo Documentation</div>
+    <div class="annex-label">Work Area — Before Service</div>
+  </div>
+  <div class="annex-photo"><img id="annexImgWsBefore" src=""></div>
+  <div class="annex-footer">
+    <span id="annexRefWsBefore"></span>
+    <span>OilRight Mobile Oil Changes · Greater Moncton, NB</span>
+  </div>
+</div>
+
+<div class="annex-page" id="annexWsAfter">
+  <div class="annex-header">
+    <div class="annex-title">Annex — Photo Documentation</div>
+    <div class="annex-label">Work Area — After Service</div>
+  </div>
+  <div class="annex-photo"><img id="annexImgWsAfter" src=""></div>
+  <div class="annex-footer">
+    <span id="annexRefWsAfter"></span>
+    <span>OilRight Mobile Oil Changes · Greater Moncton, NB</span>
+  </div>
+</div>
+
+<div class="annex-page" id="annexDpBefore">
+  <div class="annex-header">
+    <div class="annex-title">Annex — Photo Documentation</div>
+    <div class="annex-label">Drain Plug Area — Before Service</div>
+  </div>
+  <div class="annex-photo"><img id="annexImgDpBefore" src=""></div>
+  <div class="annex-footer">
+    <span id="annexRefDpBefore"></span>
+    <span>OilRight Mobile Oil Changes · Greater Moncton, NB</span>
+  </div>
+</div>
+
+<div class="annex-page" id="annexDpAfter">
+  <div class="annex-header">
+    <div class="annex-title">Annex — Photo Documentation</div>
+    <div class="annex-label">Drain Plug Area — After Service</div>
+  </div>
+  <div class="annex-photo"><img id="annexImgDpAfter" src=""></div>
+  <div class="annex-footer">
+    <span id="annexRefDpAfter"></span>
+    <span>OilRight Mobile Oil Changes · Greater Moncton, NB</span>
+  </div>
+</div>
+
+<div class="print-btn-wrap no-print" id="printBtnWrap" style="display:none;">
+  <button class="print-btn" onclick="startExport()">⬇ Export Invoice</button>
+</div>
+
+<div class="email-modal no-print" id="emailModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);align-items:center;justify-content:center;z-index:1000;">
+  <div style="background:white;border-radius:12px;width:100%;max-width:560px;margin:16px;padding:24px;box-shadow:0 8px 40px rgba(0,0,0,0.3);">
+    <h3 style="margin:0 0 4px;font-size:16px;color:#1a1a1a;">Copy this email for your client</h3>
+    <p style="margin:0 0 12px;font-size:12px;color:#666;">Copy the text below, then continue to print/export the invoice as a PDF.</p>
+    <textarea id="emailModalText" readonly style="width:100%;height:220px;font-family:monospace;font-size:12px;padding:10px;border:1px solid #ddd;border-radius:8px;resize:vertical;"></textarea>
+    <div style="display:flex;gap:10px;margin-top:14px;justify-content:flex-end;">
+      <button onclick="copyEmail()" style="background:#1a1a1a;color:white;border:none;border-radius:8px;padding:10px 18px;font-size:13px;font-weight:700;font-family:inherit;cursor:pointer;" id="emailBtn">✉️ Copy Email</button>
+      <button onclick="continueToPrint()" style="background:var(--orange,#F5B400);color:#1a1a1a;border:none;border-radius:8px;padding:10px 18px;font-size:13px;font-weight:700;font-family:inherit;cursor:pointer;">🖨️ Continue to Print</button>
+    </div>
+  </div>
+</div>
+
+<script type="module">
+  import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+  import { getDatabase, ref, get } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js';
+
+  const app = initializeApp({
+    apiKey: "AIzaSyBbmCXZDyocrXlmnqB9sbaWpuZWGsCcOlk",
+    authDomain: "oilright.firebaseapp.com",
+    databaseURL: "https://oilright-default-rtdb.firebaseio.com",
+    projectId: "oilright",
+    storageBucket: "oilright.firebasestorage.app",
+    messagingSenderId: "256978778968",
+    appId: "1:256978778968:web:f35cbc6ed1cb20a0b4432d"
+  });
+  const db = getDatabase(app);
+
+  const apptId = new URLSearchParams(window.location.search).get('id');
+
+  const PKG_NAMES = { '0': 'Service Fee', '1': '5L OilRight Package', '2': '6L+ OilRight Package', '3': 'OilRight Partner Deal' };
+  const PAY_LABELS = { cash: 'Cash', etransfer: 'E-Transfer', card: 'Credit / Debit Card' };
+
+  function esc(s) { return (s || '').toString().replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+
+  let invoiceData = {};
+
+  async function loadInvoice() {
+    if (!apptId) {
+      renderSampleInvoice();
+      return;
+    }
+    try {
+      const [apptSnap, reportSnap] = await Promise.all([
+        get(ref(db, 'appointments/' + apptId)),
+        get(ref(db, 'serviceReports/' + apptId))
+      ]);
+      const appt = apptSnap.exists() ? apptSnap.val() : {};
+      const report = reportSnap.exists() ? reportSnap.val() : {};
+
+      const refNumber = report.refNumber || '—';
+      const dateStr = appt.date || '';
+      const dateFmt = dateStr ? new Date(dateStr + 'T12:00:00').toLocaleDateString('en-CA', { year: 'numeric', month: 'long', day: 'numeric' }) : '—';
+
+      const clientName = appt.customerName || '—';
+      const clientPhone = appt.customerPhone || '';
+      const clientEmail = appt.customerEmail || '';
+      const addr = appt.address ? [appt.address.street, appt.address.city, appt.address.postal].filter(Boolean).join(', ') : '';
+
+      const vehicle = [appt.vehicle?.year, appt.vehicle?.make, appt.vehicle?.model].filter(Boolean).join(' ') || '—';
+      const color = appt.vehicle?.color || '';
+      const vin = appt.vehicle?.vin || '';
+      const currentKm = report.oilMileage || '';
+      const nextKm = report.oilNext || '';
+
+      // Package & price
+      const pkgVal = report.pkgSelectValue || '';
+      let pkgName = PKG_NAMES[pkgVal] || 'Oil Change Service';
+      let pkgPrice = 0;
+      if (pkgVal === '0') pkgPrice = parseFloat(report.serviceFeePrice) || 0;
+      else if (pkgVal === '1') pkgPrice = parseFloat(report.pkg1Price) || 0;
+      else if (pkgVal === '2') pkgPrice = parseFloat(report.pkg2Price) || 0;
+      else if (pkgVal === '3') pkgPrice = parseFloat(report.partnerPrice) || 0;
+
+      // Payment method
+      const payMethod = PAY_LABELS[report.payMethod] || '—';
+
+      // Material rows
+      const materialRows = (report.materialRows || []).filter(r => r.desc || r.part || r.price);
+
+      // Signature (passed via sessionStorage from servicereport.html)
+      let sigDataUrl = '';
+      try { sigDataUrl = sessionStorage.getItem('oilright_invoice_sig_' + apptId) || ''; } catch (e) {}
+
+      let itemsHtml = '';
+      let subtotal = 0;
+      let rowNum = 1;
+
+      // Package row first (the core service)
+      if (pkgPrice > 0) {
+        itemsHtml += `<tr>
+          <td class="num">${rowNum++}</td>
+          <td><div class="desc-main">${esc(pkgName)}</div></td>
+          <td></td>
+          <td class="num">1</td>
+          <td class="num">$${pkgPrice.toFixed(2)}</td>
+        </tr>`;
+        subtotal += pkgPrice;
+      }
+
+      materialRows.forEach(r => {
+        const price = parseFloat(r.price) || 0;
+        const qty = r.qty || '1';
+        itemsHtml += `<tr>
+          <td class="num">${rowNum++}</td>
+          <td><div class="desc-main">${esc(r.desc)}</div></td>
+          <td>${esc(r.part)}</td>
+          <td class="num">${esc(qty)}</td>
+          <td class="num">$${price.toFixed(2)}</td>
+        </tr>`;
+        subtotal += price;
+      });
+
+      if (!itemsHtml) {
+        itemsHtml = `<tr><td colspan="5" style="text-align:center;color:var(--gray);padding:20px;">No items on this invoice.</td></tr>`;
+      }
+
+      const html = `
+        <div class="header">
+          <div class="header-left">
+            <svg width="40" height="48" viewBox="0 0 44 54" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M22 2 C22 2 4 22 4 34 C4 44.5 12.1 52 22 52 C31.9 52 40 44.5 40 34 C40 22 22 2 22 2Z" fill="#F5B400"/>
+              <path d="M22 14 C22 14 10 28 10 36 C10 42.6 15.4 48 22 48 C28.6 48 34 42.6 34 36 C34 28 22 14 22 14Z" fill="rgba(255,255,255,0.25)"/>
+            </svg>
+            <div>
+              <div class="brand-name">OilRight</div>
+              <div class="brand-tagline">Mobile Oil Change · Greater Moncton</div>
+            </div>
+          </div>
+          <div>
+            <div class="doc-title">INVOICE</div>
+            <div class="doc-sub">Service Invoice</div>
+            <div class="doc-ref">Ref. # <strong>${esc(refNumber)}</strong><br>${esc(dateFmt)}</div>
+          </div>
+        </div>
+
+        <div class="info-grid">
+          <div class="info-block">
+            <h4>Bill To</h4>
+            <div class="name">${esc(clientName)}</div>
+            ${addr ? `<div class="line">${esc(addr)}</div>` : ''}
+            ${clientPhone ? `<div class="line">${esc(clientPhone)}</div>` : ''}
+            ${clientEmail ? `<div class="line">${esc(clientEmail)}</div>` : ''}
+          </div>
+          <div class="info-block">
+            <h4>Vehicle Details</h4>
+            <div class="line"><strong>${esc(vehicle)}</strong></div>
+            ${color ? `<div class="line">Color: ${esc(color)}</div>` : ''}
+            ${vin ? `<div class="line">VIN: ${esc(vin)}</div>` : ''}
+            ${currentKm ? `<div class="line">Current Mileage: ${esc(currentKm)} km</div>` : ''}
+            ${nextKm ? `<div class="line">Next Service: ${esc(nextKm)} km</div>` : ''}
+          </div>
+        </div>
+
+        <table class="items">
+          <thead>
+            <tr>
+              <th class="num" style="width:30px;">#</th>
+              <th>Description</th>
+              <th style="width:110px;">Part #</th>
+              <th class="num" style="width:50px;">Qty</th>
+              <th class="num" style="width:80px;">Price</th>
+            </tr>
+          </thead>
+          <tbody>${itemsHtml}</tbody>
+        </table>
+
+        <div class="totals">
+          <div class="totals-box">
+            <div class="totals-row grand"><span>Total Due</span><span>$${subtotal.toFixed(2)}</span></div>
+          </div>
+        </div>
+
+        <div class="payment-block">
+          <h4>Payment Method</h4>
+          <div>${esc(payMethod)}</div>
+        </div>
+
+        <div class="scope-block">
+          <h4>Scope of Service — Agreement</h4>
+          <div class="scope-text">This service report covers the following services only: <strong>full synthetic oil change, oil filter replacement, and windshield washer fluid top-up.</strong> No other mechanical work was performed, recommended for immediate action, or is implied by this report.</div>
+          <div class="sig-row">
+            <div class="sig-box">${sigDataUrl ? `<img src="${sigDataUrl}" alt="Customer signature">` : '<span class="sig-empty">No signature on file</span>'}</div>
+            <div class="sig-caption">Customer Signature</div>
+          </div>
+        </div>
+
+        <div class="thanks">
+          Thank you for trusting OilRight for your oil change service!
+        </div>
+
+        <div class="review-cta no-print">
+          <a href="https://g.page/r/CdToqMWCnQACEBM/review" target="_blank">⭐ Leave us a Google Review</a>
+        </div>
+
+        <div class="social-line no-print">
+          Follow us: <a href="https://instagram.com/oilrightnb" target="_blank">Instagram</a> · <a href="https://facebook.com/oilrightnb" target="_blank">Facebook</a> · <a href="https://tiktok.com/@oilrightnb" target="_blank">TikTok</a>
+        </div>
+      `;
+
+      document.getElementById('page').innerHTML = html;
+      document.getElementById('printBtnWrap').style.display = 'block';
+
+      invoiceData = {
+        refNumber, dateFmt, clientName, clientEmail,
+        clientFirst: clientName.split(' ')[0] || clientName,
+        total: subtotal,
+        nextService: report.oilNext || ''
+      };
+
+      // Populate annex photo pages from sessionStorage (set by servicereport.html)
+      try {
+        const stored = sessionStorage.getItem('oilright_invoice_photos_' + apptId);
+        if (stored) {
+          const photos = JSON.parse(stored);
+          const refLabel = `Ref. ${refNumber} — ${clientName} — ${dateStr}`;
+          const annexMap = {
+            'ws-before-proc': { img: 'annexImgWsBefore', ref: 'annexRefWsBefore' },
+            'dp-before-proc': { img: 'annexImgDpBefore', ref: 'annexRefDpBefore' },
+            'dp-after-proc':  { img: 'annexImgDpAfter',  ref: 'annexRefDpAfter'  },
+            'ws-after-proc':  { img: 'annexImgWsAfter',  ref: 'annexRefWsAfter'  },
+          };
+          Object.entries(annexMap).forEach(([slot, ids]) => {
+            const imgEl = document.getElementById(ids.img);
+            const refEl = document.getElementById(ids.ref);
+            if (imgEl && photos[slot]) imgEl.src = photos[slot];
+            if (refEl) refEl.textContent = refLabel;
+          });
+        }
+      } catch (e) {
+        console.error('Error loading photos for annex pages:', e);
+      }
+    } catch (e) {
+      console.error(e);
+      renderSampleInvoice();
+    }
+  }
+
+  function renderSampleInvoice() {
+    const refNumber = '0001';
+    const dateFmt = new Date().toLocaleDateString('en-CA', { year: 'numeric', month: 'long', day: 'numeric' });
+    const clientName = 'Sample Client';
+    const html = `
+      <div class="header">
+        <div class="header-left">
+          <svg width="40" height="48" viewBox="0 0 44 54" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M22 2 C22 2 4 22 4 34 C4 44.5 12.1 52 22 52 C31.9 52 40 44.5 40 34 C40 22 22 2 22 2Z" fill="#F5B400"/>
+            <path d="M22 14 C22 14 10 28 10 36 C10 42.6 15.4 48 22 48 C28.6 48 34 42.6 34 36 C34 28 22 14 22 14Z" fill="rgba(255,255,255,0.25)"/>
+          </svg>
+          <div>
+            <div class="brand-name">OilRight</div>
+            <div class="brand-tagline">Mobile Oil Change · Greater Moncton</div>
+          </div>
+        </div>
+        <div>
+          <div class="doc-title">INVOICE</div>
+          <div class="doc-sub">Service Invoice</div>
+          <div class="doc-ref">Ref. # <strong>${refNumber}</strong><br>${dateFmt}</div>
+        </div>
+      </div>
+
+      <div style="background:#FFF3E0;border:1px solid #F5B400;border-radius:6px;padding:10px 14px;margin-bottom:20px;font-size:12px;color:#8a5a00;">
+        ⚠ Sample preview — could not load live data (this is normal when opening the file locally instead of via your website).
+      </div>
+
+      <div class="info-grid">
+        <div class="info-block">
+          <h4>Bill To</h4>
+          <div class="name">${clientName}</div>
+          <div class="line">123 Sample St, Moncton, NB</div>
+          <div class="line">(506) 555-0100</div>
+          <div class="line">client@example.com</div>
+        </div>
+        <div class="info-block">
+          <h4>Vehicle Details</h4>
+          <div class="line"><strong>2020 Honda Civic</strong></div>
+          <div class="line">Color: Blue</div>
+          <div class="line">VIN: 1HGCM82633A123456</div>
+          <div class="line">Current Mileage: 85,400 km</div>
+          <div class="line">Next Service: 93,400 km</div>
+        </div>
+      </div>
+
+      <table class="items">
+        <thead>
+          <tr>
+            <th class="num" style="width:30px;">#</th>
+            <th>Description</th>
+            <th style="width:110px;">Part #</th>
+            <th class="num" style="width:50px;">Qty</th>
+            <th class="num" style="width:80px;">Price</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="num">1</td>
+            <td><div class="desc-main">5L OilRight Package</div></td>
+            <td></td>
+            <td class="num">1</td>
+            <td class="num">$119.99</td>
+          </tr>
+          <tr>
+            <td class="num">2</td>
+            <td><div class="desc-main">Carquest Full Synthetic 0W-20</div></td>
+            <td>CQ1500</td>
+            <td class="num">5</td>
+            <td class="num">$0.00</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="totals">
+        <div class="totals-box">
+          <div class="totals-row grand"><span>Total Due</span><span>$119.99</span></div>
+        </div>
+      </div>
+
+      <div class="payment-block">
+        <h4>Payment Method</h4>
+        <div>E-Transfer</div>
+      </div>
+
+      <div class="scope-block">
+        <h4>Scope of Service — Agreement</h4>
+        <div class="scope-text">This service report covers the following services only: <strong>full synthetic oil change, oil filter replacement, and windshield washer fluid top-up.</strong> No other mechanical work was performed, recommended for immediate action, or is implied by this report.</div>
+        <div class="sig-row">
+          <div class="sig-box"><span class="sig-empty">No signature on file</span></div>
+          <div class="sig-caption">Customer Signature</div>
+        </div>
+      </div>
+
+      <div class="thanks">
+        Thank you for trusting OilRight for your oil change service!
+      </div>
+
+      <div class="review-cta no-print">
+        <a href="https://g.page/r/CdToqMWCnQACEBM/review" target="_blank">⭐ Leave us a Google Review</a>
+      </div>
+
+      <div class="social-line no-print">
+        Follow us: <a href="https://instagram.com/oilrightnb" target="_blank">Instagram</a> · <a href="https://facebook.com/oilrightnb" target="_blank">Facebook</a> · <a href="https://tiktok.com/@oilrightnb" target="_blank">TikTok</a>
+      </div>
+    `;
+    document.getElementById('page').innerHTML = html;
+    document.getElementById('printBtnWrap').style.display = 'block';
+
+    invoiceData = {
+      refNumber: '0001',
+      dateFmt: new Date().toLocaleDateString('en-CA', { year: 'numeric', month: 'long', day: 'numeric' }),
+      clientName: 'Sample Client',
+      clientEmail: 'client@example.com',
+      clientFirst: 'Sample',
+      total: 119.99,
+      nextService: '93,400'
+    };
+  }
+
+  loadInvoice();
+
+  function buildEmailBody() {
+    const { refNumber, dateFmt, clientName, clientEmail, clientFirst, total, nextService } = invoiceData;
+    const subject = `Your OilRight Invoice — Ref. #${refNumber} · ${dateFmt}`;
+    return `To: ${clientEmail}
+Subject: ${subject}
+
+Hi ${clientFirst},
+
+Thank you for trusting OilRight for your oil change service! Please find your invoice attached (Ref. #${refNumber}) for a total of $${total.toFixed(2)}.
+${nextService ? `\nYour next oil change is due at ${nextService} km.\n` : ''}
+If you enjoyed the service, we'd love it if you could take a moment to leave us a review on Google — it means the world to us and helps other drivers in the Greater Moncton area find a service they can trust!
+⭐ Google Review: https://g.page/r/CdToqMWCnQACEBM/review
+
+And if you know anyone who could use a convenient mobile oil change, don't hesitate to refer us — we'd be happy to take care of their oil change too.
+
+Stay connected with us:
+📷 Instagram: instagram.com/oilrightnb
+👍 Facebook: facebook.com/oilrightnb
+🎵 TikTok: tiktok.com/@oilrightnb
+
+Don't hesitate to reach out if you have any questions.`;
+  }
+
+  window.startExport = function() {
+    const body = buildEmailBody();
+    document.getElementById('emailModalText').value = body;
+    document.getElementById('emailModal').style.display = 'flex';
+  };
+
+  window.copyEmail = function() {
+    const body = document.getElementById('emailModalText').value;
+    navigator.clipboard.writeText(body).then(() => {
+      const btn = document.getElementById('emailBtn');
+      const original = btn.textContent;
+      btn.textContent = '✓ Copied!';
+      setTimeout(() => { btn.textContent = original; }, 2000);
+    }).catch(() => {
+      alert('Could not copy automatically. Please copy manually:\n\n' + body);
+    });
+  };
+
+  window.continueToPrint = function() {
+    document.getElementById('emailModal').style.display = 'none';
+    window.print();
+  };
+
+</script>
+</body>
+</html>
