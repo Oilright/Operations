@@ -54,6 +54,23 @@
   .pay-methods.req-empty .pay-btn { border-color: #e53935 !important; }
   input.req-empty { border-bottom-color: #e53935 !important; background: #fff5f5 !important; }
 
+  .fill-this-field { position: relative; }
+  .fill-this-field::after {
+    content: 'Remplir ce champ';
+    position: absolute;
+    left: 0; top: -22px;
+    background: #e53935; color: white;
+    font-size: 10px; font-weight: 700;
+    padding: 2px 8px; border-radius: 4px;
+    white-space: nowrap;
+    animation: fillPulse 1s ease-in-out 3;
+    z-index: 10;
+  }
+  @keyframes fillPulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+  }
+
   /* FIELD */
   .field { display: flex; flex-direction: column; gap: 4px; }
   .field label { font-size: 10px; font-weight: 700; color: var(--gray); text-transform: uppercase; letter-spacing: 0.5px; }
@@ -1204,6 +1221,108 @@
   };
 
   // ── EXPORT PDF ───────────────────────────────────────────────
+  function clearFillIndicators() {
+    document.querySelectorAll('.fill-this-field').forEach(el => el.classList.remove('fill-this-field'));
+  }
+
+  function goToFirstMissingField() {
+    clearFillIndicators();
+
+    // 1. Check REQUIRED_INPUTS in DOM order
+    for (const id of REQUIRED_INPUTS) {
+      const el = document.getElementById(id);
+      if (el && !el.value.trim()) {
+        el.parentElement.classList.add('fill-this-field');
+        el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        setTimeout(() => { el.focus(); }, 350);
+        setTimeout(() => clearFillIndicators(), 3200);
+        return;
+      }
+    }
+
+    // 2. Material Info — at least 2 rows
+    if (getMaterialRows().length < 2) {
+      const table = document.getElementById('materialTable');
+      table?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      const firstInput = table?.querySelector('tbody tr input');
+      if (firstInput) {
+        firstInput.parentElement.classList.add('fill-this-field');
+        setTimeout(() => { firstInput.focus(); }, 350);
+        setTimeout(() => clearFillIndicators(), 3200);
+      }
+      return;
+    }
+
+    // 3. Process photos
+    const REQUIRED_PHOTOS_LOCAL = ['ws-before-proc', 'dp-before-proc', 'dp-after-proc', 'ws-after-proc'];
+    for (const slot of REQUIRED_PHOTOS_LOCAL) {
+      if (photoData[slot] === null) {
+        document.getElementById('prepBody').classList.remove('prep-collapsed');
+        const area = document.getElementById('area-' + slot);
+        area?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        document.getElementById('photoWarning').style.display = 'block';
+        return;
+      }
+    }
+
+    // 4. Package selection
+    const pkgSelect = document.getElementById('pkgSelect');
+    if (pkgSelect && !pkgSelect.value) {
+      pkgSelect.parentElement.classList.add('fill-this-field');
+      pkgSelect.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      setTimeout(() => clearFillIndicators(), 3200);
+      return;
+    }
+
+    // 5. Package-specific price fields
+    const pkgVal = pkgSelect?.value;
+    if (pkgVal === '0' && !document.getElementById('serviceFeePrice')?.value.trim()) {
+      const el = document.getElementById('serviceFeePrice');
+      el.parentElement.classList.add('fill-this-field');
+      el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      setTimeout(() => { el.focus(); }, 350);
+      setTimeout(() => clearFillIndicators(), 3200);
+      return;
+    }
+    if (pkgVal === '3' && !document.getElementById('partnerPrice')?.value.trim()) {
+      const el = document.getElementById('partnerPrice');
+      el.parentElement.classList.add('fill-this-field');
+      el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      setTimeout(() => { el.focus(); }, 350);
+      setTimeout(() => clearFillIndicators(), 3200);
+      return;
+    }
+
+    // 6. Address if mobile
+    const addrRow = document.getElementById('addressRow');
+    if (addrRow && addrRow.style.display !== 'none') {
+      const el = document.getElementById('clientAddress');
+      if (el && !el.value.trim()) {
+        el.parentElement.classList.add('fill-this-field');
+        el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        setTimeout(() => { el.focus(); }, 350);
+        setTimeout(() => clearFillIndicators(), 3200);
+        return;
+      }
+    }
+
+    // 7. Payment method
+    const partnerCollects = document.getElementById('partnerCollectsPayment')?.checked;
+    const oilrightCollects = document.getElementById('oilrightCollectsPayment')?.checked;
+    const payNeeded = pkgVal !== '3' || oilrightCollects || (!partnerCollects && !oilrightCollects);
+    if (payNeeded && !document.querySelector('input[name="pay"]:checked')) {
+      const methods = document.getElementById('payMethods');
+      methods?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      return;
+    }
+
+    // 8. Signature
+    if (!hasSig) {
+      document.getElementById('sigCanvas')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      return;
+    }
+  }
+
   window.exportPDF = async function() {
     // Check photos
     const REQUIRED_PHOTOS = ['ws-before-proc', 'dp-before-proc', 'dp-after-proc', 'ws-after-proc'];
@@ -1256,16 +1375,7 @@
 
     if (missingPhotos || missingInputs || missingPartnerPrice || missingServiceFeePrice || missingAddr || missingPay || missingPkg || missingSig || missingMaterialInfo) {
       runAllValidation();
-      if (missingPhotos) {
-        document.getElementById('prepBody').classList.remove('prep-collapsed');
-        document.getElementById('prepBody').scrollIntoView({ behavior: 'smooth' });
-        document.getElementById('photoWarning').style.display = 'block';
-      } else if (missingMaterialInfo) {
-        document.getElementById('materialTable')?.scrollIntoView({ behavior: 'smooth' });
-      } else {
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-      }
-      alert('Please fill in all required fields (highlighted in red) before exporting.');
+      goToFirstMissingField();
       return;
     }
     const refInput = document.querySelector('.header input[type="text"]');
@@ -1309,7 +1419,7 @@
       console.error('Error storing photos/signature for invoice:', e);
     }
 
-    window.open('invoice.html?id=' + encodeURIComponent(apptId), '_blank');
+    window.location.href = 'invoice.html?id=' + encodeURIComponent(apptId);
   };
 
   document.getElementById('partnerPrice')?.addEventListener('input', function() {
