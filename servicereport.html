@@ -781,19 +781,14 @@
       data.materialRows = getMaterialRows();
       data.photoConfirm = { ...photoData };
 
-      // Assign ref number based on highest existing refNumber in serviceReports
+      // Assign ref number using refCounter (incremented once, persists even if reports are deleted)
       const refEl = document.querySelector('.header input[type="text"]');
       if (refEl && !refEl.value.trim()) {
         try {
-          const reportsSnap = await get(ref(db, 'serviceReports'));
-          let highest = 0;
-          if (reportsSnap.exists()) {
-            reportsSnap.forEach(child => {
-              const n = parseInt(child.val().refNumber) || 0;
-              if (n > highest) highest = n;
-            });
-          }
-          const next = highest + 1;
+          const counterSnap = await get(ref(db, 'refCounter'));
+          const current = counterSnap.exists() ? (parseInt(counterSnap.val()) || 0) : 0;
+          const next = current + 1;
+          await set(ref(db, 'refCounter'), next);
           refEl.value = String(next);
           data.refNumber = next;
         } catch(e) {
@@ -1264,7 +1259,20 @@
       return;
     }
     const refInput = document.querySelector('.header input[type="text"]');
-    const r = refInput?.value.trim() || 'NoRef';
+    let r = refInput?.value.trim();
+    if (!r) {
+      try {
+        const counterSnap = await get(ref(db, 'refCounter'));
+        const current = counterSnap.exists() ? (parseInt(counterSnap.val()) || 0) : 0;
+        const next = current + 1;
+        await set(ref(db, 'refCounter'), next);
+        r = String(next);
+        if (refInput) refInput.value = r;
+      } catch (e) {
+        console.error('Ref number error:', e);
+        r = 'NoRef';
+      }
+    }
 
     // Save package/payment selections + ref number so invoice.html can read them
     try {
