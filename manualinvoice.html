@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OilRight – Manual Invoice</title>
+<style>
+  :root {
+    --orange: #F5B400;
+    --orange-light: #FFF3E0;
+    --dark: #1a1a1a;
+    --gray: #666;
+    --line: #ddd;
+    --ok: #2E7D32;
+  }
+  * { box-sizing: border-box; }
+  body { font-family: -apple-system, 'Helvetica Neue', Arial, sans-serif; background: #f0f0f0; color: var(--dark); margin: 0; padding: 24px 16px; font-size: 14px; }
+  .page { max-width: 760px; margin: 0 auto; background: white; border-radius: 10px; box-shadow: 0 2px 16px rgba(0,0,0,0.08); padding: 36px 40px; }
+
+  .header { display: flex; align-items: flex-start; justify-content: space-between; border-bottom: 3px solid var(--orange); padding-bottom: 14px; margin-bottom: 18px; }
+  .header-left { display: flex; align-items: center; gap: 12px; }
+  .brand-name { font-size: 24px; font-weight: 700; color: var(--orange); }
+  .brand-tagline { font-size: 11px; color: var(--gray); margin-top: 2px; }
+  .doc-title { font-size: 26px; font-weight: 700; color: var(--dark); text-align: right; }
+  .doc-sub { font-size: 12px; color: var(--gray); text-align: right; margin-top: 2px; }
+  .doc-ref { font-size: 13px; color: var(--gray); text-align: right; margin-top: 8px; }
+  .doc-ref strong { color: var(--dark); }
+
+  .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 16px; }
+  .info-block h4 { font-size: 11px; font-weight: 700; color: var(--gray); text-transform: uppercase; letter-spacing: 0.5px; margin: 0 0 8px; }
+  .info-block .name { font-size: 15px; font-weight: 700; margin-bottom: 2px; }
+  .info-block div.line { font-size: 13px; color: var(--dark); line-height: 1.5; }
+  .info-block:last-child { text-align: right; }
+
+  table.items { width: 100%; border-collapse: collapse; margin-bottom: 14px; }
+  table.items th { text-align: left; font-size: 10px; font-weight: 700; color: var(--gray); text-transform: uppercase; letter-spacing: 0.4px; padding: 5px 6px; border-bottom: 2px solid var(--line); }
+  table.items th.num, table.items td.num { text-align: right; }
+  table.items td { padding: 5px 6px; border-bottom: 1px solid var(--line); font-size: 12px; vertical-align: top; }
+  table.items td.desc-main { font-weight: 700; }
+
+  .totals { display: flex; justify-content: flex-end; margin-bottom: 16px; }
+  .totals-box { width: 260px; }
+  .totals-row { display: flex; justify-content: space-between; padding: 6px 10px; font-size: 13px; }
+  .totals-row.grand { background: var(--orange-light); border-radius: 6px; font-size: 16px; font-weight: 700; margin-top: 6px; padding: 10px 10px; }
+
+  .payment-block { margin-bottom: 16px; padding: 10px 16px; background: #FAFAFA; border: 1px solid var(--line); border-radius: 8px; }
+  .payment-block h4 { font-size: 11px; font-weight: 700; color: var(--gray); text-transform: uppercase; letter-spacing: 0.5px; margin: 0 0 6px; }
+
+  .thanks { font-style: italic; color: var(--gray); font-size: 13px; text-align: center; margin: 18px 0 14px; line-height: 1.6; }
+
+  .scope-block { margin-bottom: 18px; padding: 12px 16px; background: #FAFAFA; border: 1px solid var(--line); border-radius: 8px; }
+  .scope-block h4 { font-size: 10px; font-weight: 700; color: var(--gray); text-transform: uppercase; letter-spacing: 0.5px; margin: 0 0 6px; }
+  .scope-text { font-size: 11px; color: var(--dark); line-height: 1.5; }
+
+  .review-cta { text-align: center; margin-bottom: 10px; }
+  .review-cta a { display: inline-block; background: var(--orange-light); color: var(--dark); border: 1px solid var(--orange); border-radius: 20px; padding: 8px 20px; font-size: 13px; font-weight: 700; text-decoration: none; }
+
+  .social-line { text-align: center; font-size: 11px; color: var(--gray); margin-bottom: 4px; }
+  .social-line a { color: var(--gray); text-decoration: none; font-weight: 600; }
+  .social-line a:hover { text-decoration: underline; }
+
+  /* PAGE 0 — MANUAL FORM ENTRY */
+  .page0-title { font-size: 18px; font-weight: 700; color: var(--dark); margin: 0 0 6px; border-bottom: 3px solid var(--orange); padding-bottom: 10px; }
+  .page0-sub { font-size: 12px; color: var(--gray); margin: -2px 0 18px; }
+  .form-section { margin-bottom: 20px; }
+  .form-section-title { font-size: 11px; font-weight: 700; color: var(--orange); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 10px; border-bottom: 1px solid #eee; padding-bottom: 6px; }
+  .form-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px 16px; margin-bottom: 10px; }
+  .form-grid.g2 { grid-template-columns: 1fr 1fr; }
+  .form-field { display: flex; flex-direction: column; gap: 4px; }
+  .form-field label { font-size: 10px; font-weight: 700; color: var(--gray); text-transform: uppercase; letter-spacing: 0.4px; }
+  .form-field input, .form-field select { border: none; border-bottom: 2px solid var(--line); background: transparent; font-size: 14px; font-family: inherit; color: var(--dark); padding: 5px 2px; outline: none; width: 100%; border-radius: 0; -webkit-appearance: none; }
+  .form-field input:focus, .form-field select:focus { border-bottom-color: var(--orange); }
+
+  .manual-table { width: 100%; border-collapse: collapse; margin-bottom: 8px; }
+  .manual-table th { text-align: left; font-size: 10px; font-weight: 700; color: var(--gray); text-transform: uppercase; letter-spacing: 0.4px; padding: 6px; border-bottom: 2px solid var(--line); }
+  .manual-table td { padding: 4px 6px; }
+  .manual-table input { width: 100%; border: none; border-bottom: 1px solid var(--line); background: transparent; font-size: 13px; font-family: inherit; color: var(--dark); padding: 4px 2px; outline: none; }
+  .manual-table input:focus { border-bottom-color: var(--orange); }
+  .manual-table .desc-input { font-weight: 400; }
+  .manual-table .part-input { font-weight: 700; }
+  .remove-row-btn { background: none; border: none; color: #ccc; font-size: 16px; cursor: pointer; line-height: 1; }
+
+  .pay-method-row { display: flex; gap: 20px; flex-wrap: wrap; margin-top: 6px; }
+  .pay-method-row label { display: flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 700; cursor: pointer; }
+
+  .build-btn-wrap { text-align: center; margin-top: 24px; }
+  .build-btn { background: var(--dark); color: white; border: none; border-radius: 8px; padding: 12px 28px; font-size: 14px; font-weight: 700; font-family: inherit; cursor: pointer; }
+
+  /* PAGE 2 — DOCUMENTATION & SIGNATURE */
+  .page2 { margin-top: 24px; }
+  .page2-title { font-size: 15px; font-weight: 700; color: var(--dark); margin: 0 0 16px; border-bottom: 3px solid var(--orange); padding-bottom: 10px; }
+
+  .sig-section { margin-bottom: 14px; }
+  .sig-label { font-size: 10px; font-weight: 700; color: var(--gray); text-transform: uppercase; letter-spacing: 0.4px; margin-bottom: 6px; }
+  .sig-wrap { border: 2px solid var(--line); border-radius: 8px; background: white; overflow: hidden; position: relative; height: 70px; }
+  .sig-canvas { display: block; width: 100%; height: 70px; touch-action: none; cursor: crosshair; }
+  .sig-hint { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: #ccc; font-size: 13px; text-align: center; pointer-events: none; line-height: 1.6; }
+  .sig-line { position: absolute; bottom: 14px; left: 20px; right: 20px; height: 1px; background: var(--line); pointer-events: none; }
+  .sig-clear { margin-top: 8px; font-size: 11px; font-family: inherit; border: 1px solid #e53935; border-radius: 4px; padding: 4px 12px; background: white; color: #e53935; cursor: pointer; }
+
+  .photo-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .photo-slot2 { display: flex; flex-direction: column; gap: 6px; }
+  .photo-slot2-label { font-size: 11px; font-weight: 700; color: var(--gray); }
+  .photo-upload-area2 { display: block; border: 2px dashed var(--line); border-radius: 8px; overflow: hidden; cursor: pointer; background: var(--orange-light); min-height: 130px; position: relative; }
+  .photo-upload-area2:hover { border-color: var(--orange); }
+  .photo-upload-area2 input { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
+  .photo-placeholder2 { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 130px; gap: 6px; }
+  .photo-icon2 { font-size: 28px; }
+  .photo-hint2 { font-size: 11px; color: var(--gray); font-weight: 700; }
+  .photo-preview2 { display: block; width: 100%; max-height: 200px; object-fit: contain; }
+  .photo-clear-btn2 { font-size: 11px; font-family: inherit; border: 1px solid #e53935; border-radius: 4px; padding: 4px 10px; background: white; color: #e53935; cursor: pointer; align-self: flex-start; }
+
+  @media (max-width: 600px) {
+    .photo-grid { grid-template-columns: 1fr; }
+    .form-grid { grid-template-columns: 1fr 1fr; }
+    .form-grid.g2 { grid-template-columns: 1fr; }
+  }
+
+  .print-btn-wrap { text-align: center; margin-top: 20px; }
+  .print-btn { background: var(--orange); color: white; border: none; border-radius: 8px; padding: 12px 28px; font-size: 14px; font-weight: 700; font-family: inherit; cursor: pointer; }
+
+  .annex-page { display: none; }
+
+  @media print {
+    * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; color-adjust: exact !important; }
+    body { background: white; padding: 0; }
+    .page { box-shadow: none; border-radius: 0; max-width: 100%; padding: 20px 24px; }
+    .no-print { display: none !important; }
+    .annex-page.has-photo { display: flex !important; flex-direction: column; page-break-before: always; padding: 32px 36px; box-sizing: border-box; }
+    .annex-header { border-bottom: 3px solid #F5B400; padding-bottom: 12px; margin-bottom: 20px; }
+    .annex-title { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.6px; color: #555; }
+    .annex-label { font-size: 20px; font-weight: 700; color: #1a1a1a; margin-top: 4px; }
+    .annex-photo { flex: 1; display: flex; align-items: center; justify-content: center; }
+    .annex-photo img { max-width: 100%; max-height: 75vh; object-fit: contain; border-radius: 6px; }
+    .annex-footer { border-top: 1px solid #ddd; padding-top: 10px; margin-top: 16px; font-size: 10px; color: #888; display: flex; justify-content: space-between; }
+  }
+</style>
+</head>
+<body>
+
+<!-- PAGE 0 — MANUAL FORM ENTRY (never printed) -->
+<div class="page no-print" id="formPage">
+  <h2 class="page0-title">Manual Invoice — Data Entry</h2>
+  <div class="page0-sub">Fill in the fields below, then click "Build Invoice" to generate the printable invoice. No database or internet connection required.</div>
+
+  <div class="form-section">
+    <div class="form-section-title">Invoice Info</div>
+    <div class="form-grid g2">
+      <div class="form-field"><label>Ref #</label><input type="text" id="f-ref" placeholder="e.g. 0042"></div>
+      <div class="form-field"><label>Date</label><input type="date" id="f-date"></div>
+    </div>
+  </div>
+
+  <div class="form-section">
+    <div class="form-section-title">Bill To</div>
+    <div class="form-grid">
+      <div class="form-field"><label>Client Name</label><input type="text" id="f-name" placeholder="Full name"></div>
+      <div class="form-field"><label>Phone</label><input type="text" id="f-phone" placeholder="(506) 555-1234"></div>
+      <div class="form-field"><label>Email</label><input type="text" id="f-email" placeholder="client@email.com"></div>
+    </div>
+    <div class="form-grid g2">
+      <div class="form-field" style="grid-column:1/-1;"><label>Address (optional)</label><input type="text" id="f-address" placeholder="Street, City, Postal"></div>
+    </div>
+  </div>
+
+  <div class="form-section">
+    <div class="form-section-title">Vehicle Details</div>
+    <div class="form-grid">
+      <div class="form-field"><label>Year / Make / Model</label><input type="text" id="f-vehicle" placeholder="e.g. 2020 Honda Civic"></div>
+      <div class="form-field"><label>Color</label><input type="text" id="f-color" placeholder="e.g. Blue"></div>
+      <div class="form-field"><label>VIN</label><input type="text" id="f-vin" placeholder="VIN" maxlength="17"></div>
+    </div>
+    <div class="form-grid g2">
+      <div class="form-field"><label>Current Mileage (km)</label><input type="text" id="f-mileage" placeholder="e.g. 85,400"></div>
+      <div class="form-field"><label>Next Service (km)</label><input type="text" id="f-next-service" placeholder="e.g. 93,400"></div>
+    </div>
+  </div>
+
+  <div class="form-section">
+    <div class="form-section-title">Package</div>
+    <div class="form-grid g2">
+      <div class="form-field">
+        <label>Select Package</label>
+        <select id="f-pkg">
+          <option value="">— Choose a package —</option>
+          <option value="Service Fee">Service Fee</option>
+          <option value="5L OilRight Package">5L OilRight Package</option>
+          <option value="6L+ OilRight Package">6L+ OilRight Package</option>
+          <option value="OilRight Partner Deal">OilRight Partner Deal</option>
+        </select>
+      </div>
+      <div class="form-field"><label>Package Price</label><input type="text" id="f-pkg-price" placeholder="$0.00"></div>
+    </div>
+  </div>
+
+  <div class="form-section">
+    <div class="form-section-title">Material Info</div>
+    <table class="manual-table" id="manualTable">
+      <thead>
+        <tr>
+          <th style="width:40%;">Description</th>
+          <th style="width:25%;">Part #</th>
+          <th style="width:10%;">Qty</th>
+          <th style="width:15%;">Price</th>
+          <th style="width:10%;"></th>
+        </tr>
+      </thead>
+      <tbody id="manualRows"></tbody>
+    </table>
+  </div>
+
+  <div class="form-section">
+    <div class="form-section-title">Payment Method</div>
+    <div class="pay-method-row">
+      <label><input type="radio" name="f-pay" value="E-Transfer"> E-Transfer</label>
+      <label><input type="radio" name="f-pay" value="Cash"> Cash</label>
+      <label><input type="radio" name="f-pay" value="Credit / Debit Card"> Card</label>
+    </div>
+  </div>
+
+  <div class="build-btn-wrap">
+    <button class="build-btn" onclick="buildInvoice()">📄 Build Invoice</button>
+  </div>
+</div>
+
+<!-- PAGE 1 — GENERATED INVOICE -->
+<div class="page" id="page" style="display:none;"></div>
+
+<!-- PAGE 2 — PHOTO DOCUMENTATION -->
+<div class="page page2 no-print" id="page2" style="display:none;">
+  <h3 class="page2-title">Photo Documentation</h3>
+  <p style="font-size:11px;color:var(--gray);margin:-8px 0 16px;">This page is for adding photos before exporting — it will not appear in the printed/exported PDF. Photos become annex pages once exported.</p>
+
+  <div class="photo-grid">
+    <div class="photo-slot2">
+      <div class="photo-slot2-label">📸 Work Area — Before</div>
+      <label class="photo-upload-area2" id="area2-ws-before">
+        <input type="file" accept="image/*" class="photo-input2" data-slot="ws-before" onchange="handlePhoto2(this)">
+        <div class="photo-placeholder2" id="ph2-ws-before"><div class="photo-icon2">📷</div><div class="photo-hint2">Tap to add photo</div></div>
+        <img class="photo-preview2" id="prev2-ws-before" style="display:none;">
+      </label>
+      <button class="photo-clear-btn2 no-print" id="clr2-ws-before" style="display:none;" onclick="clearPhoto2('ws-before')">✕ Remove</button>
+    </div>
+    <div class="photo-slot2">
+      <div class="photo-slot2-label">📸 Work Area — After</div>
+      <label class="photo-upload-area2" id="area2-ws-after">
+        <input type="file" accept="image/*" class="photo-input2" data-slot="ws-after" onchange="handlePhoto2(this)">
+        <div class="photo-placeholder2" id="ph2-ws-after"><div class="photo-icon2">📷</div><div class="photo-hint2">Tap to add photo</div></div>
+        <img class="photo-preview2" id="prev2-ws-after" style="display:none;">
+      </label>
+      <button class="photo-clear-btn2 no-print" id="clr2-ws-after" style="display:none;" onclick="clearPhoto2('ws-after')">✕ Remove</button>
+    </div>
+    <div class="photo-slot2">
+      <div class="photo-slot2-label">📸 Drain Plug — Before</div>
+      <label class="photo-upload-area2" id="area2-dp-before">
+        <input type="file" accept="image/*" class="photo-input2" data-slot="dp-before" onchange="handlePhoto2(this)">
+        <div class="photo-placeholder2" id="ph2-dp-before"><div class="photo-icon2">📷</div><div class="photo-hint2">Tap to add photo</div></div>
+        <img class="photo-preview2" id="prev2-dp-before" style="display:none;">
+      </label>
+      <button class="photo-clear-btn2 no-print" id="clr2-dp-before" style="display:none;" onclick="clearPhoto2('dp-before')">✕ Remove</button>
+    </div>
+    <div class="photo-slot2">
+      <div class="photo-slot2-label">📸 Drain Plug — After</div>
+      <label class="photo-upload-area2" id="area2-dp-after">
+        <input type="file" accept="image/*" class="photo-input2" data-slot="dp-after" onchange="handlePhoto2(this)">
+        <div class="photo-placeholder2" id="ph2-dp-after"><div class="photo-icon2">📷</div><div class="photo-hint2">Tap to add photo</div></div>
+        <img class="photo-preview2" id="prev2-dp-after" style="display:none;">
+      </label>
+      <button class="photo-clear-btn2 no-print" id="clr2-dp-after" style="display:none;" onclick="clearPhoto2('dp-after')">✕ Remove</button>
+    </div>
+  </div>
+</div>
+
+<div class="annex-page" id="annexWsBefore">
+  <div class="annex-header">
+    <div class="annex-title">Annex — Photo Documentation</div>
+    <div class="annex-label">Work Area — Before Service</div>
+  </div>
+  <div class="annex-photo"><img id="annexImgWsBefore" src=""></div>
+  <div class="annex-footer">
+    <span id="annexRefWsBefore"></span>
+    <span>OilRight Mobile Oil Changes · Greater Moncton, NB</span>
+  </div>
+</div>
+
+<div class="annex-page" id="annexWsAfter">
+  <div class="annex-header">
+    <div class="annex-title">Annex — Photo Documentation</div>
+    <div class="annex-label">Work Area — After Service</div>
+  </div>
+  <div class="annex-photo"><img id="annexImgWsAfter" src=""></div>
+  <div class="annex-footer">
+    <span id="annexRefWsAfter"></span>
+    <span>OilRight Mobile Oil Changes · Greater Moncton, NB</span>
+  </div>
+</div>
+
+<div class="annex-page" id="annexDpBefore">
+  <div class="annex-header">
+    <div class="annex-title">Annex — Photo Documentation</div>
+    <div class="annex-label">Drain Plug Area — Before Service</div>
+  </div>
+  <div class="annex-photo"><img id="annexImgDpBefore" src=""></div>
+  <div class="annex-footer">
+    <span id="annexRefDpBefore"></span>
+    <span>OilRight Mobile Oil Changes · Greater Moncton, NB</span>
+  </div>
+</div>
+
+<div class="annex-page" id="annexDpAfter">
+  <div class="annex-header">
+    <div class="annex-title">Annex — Photo Documentation</div>
+    <div class="annex-label">Drain Plug Area — After Service</div>
+  </div>
+  <div class="annex-photo"><img id="annexImgDpAfter" src=""></div>
+  <div class="annex-footer">
+    <span id="annexRefDpAfter"></span>
+    <span>OilRight Mobile Oil Changes · Greater Moncton, NB</span>
+  </div>
+</div>
+
+<div class="print-btn-wrap no-print" id="printBtnWrap" style="display:none;">
+  <button class="print-btn" onclick="startExport()">⬇ Export Invoice</button>
+  <div style="margin-top:10px;"><button onclick="backToForm()" style="background:none;border:none;color:var(--gray);font-size:12px;text-decoration:underline;cursor:pointer;">← Back to form</button></div>
+</div>
+
+<div class="email-modal no-print" id="emailModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);align-items:center;justify-content:center;z-index:1000;">
+  <div style="background:white;border-radius:12px;width:100%;max-width:560px;margin:16px;padding:24px;box-shadow:0 8px 40px rgba(0,0,0,0.3);">
+    <h3 style="margin:0 0 4px;font-size:16px;color:#1a1a1a;">Copy this email for your client</h3>
+    <p style="margin:0 0 12px;font-size:12px;color:#666;">Copy the text below, then continue to print/export the invoice as a PDF.</p>
+    <textarea id="emailModalText" readonly style="width:100%;height:220px;font-family:monospace;font-size:12px;padding:10px;border:1px solid #ddd;border-radius:8px;resize:vertical;"></textarea>
+    <div style="display:flex;gap:10px;margin-top:14px;justify-content:flex-end;">
+      <button onclick="copyEmail()" style="background:#1a1a1a;color:white;border:none;border-radius:8px;padding:10px 18px;font-size:13px;font-weight:700;font-family:inherit;cursor:pointer;" id="emailBtn">✉️ Copy Email</button>
+      <button onclick="continueToPrint()" style="background:var(--orange,#F5B400);color:#1a1a1a;border:none;border-radius:8px;padding:10px 18px;font-size:13px;font-weight:700;font-family:inherit;cursor:pointer;">🖨️ Continue to Print</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  function esc(s) { return (s || '').toString().replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+
+  let invoiceData = {};
+
+  // ── MANUAL MATERIAL TABLE ─────────────────────────────────────
+  function createManualRow(data = {}) {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td><input type="text" class="desc-input" placeholder="info pas en gras" value="${data.desc || ''}"></td>
+      <td><input type="text" class="part-input" placeholder="info en gras" value="${data.part || ''}"></td>
+      <td><input type="text" placeholder="1" value="${data.qty || ''}"></td>
+      <td><input type="text" placeholder="$0.00" value="${data.price || ''}"></td>
+      <td style="text-align:center;"><button type="button" class="remove-row-btn" onclick="removeManualRow(this)">✕</button></td>
+    `;
+    tr.querySelectorAll('input').forEach(input => {
+      input.addEventListener('input', checkAddManualRow);
+    });
+    return tr;
+  }
+
+  window.removeManualRow = function(btn) {
+    const tbody = document.getElementById('manualRows');
+    if (tbody.rows.length > 1) btn.closest('tr').remove();
+  };
+
+  function checkAddManualRow() {
+    const tbody = document.getElementById('manualRows');
+    const rows = tbody.querySelectorAll('tr');
+    const lastRow = rows[rows.length - 1];
+    const inputs = lastRow.querySelectorAll('input');
+    const anyFilled = Array.from(inputs).some(i => i.value.trim());
+    if (anyFilled) tbody.appendChild(createManualRow());
+  }
+
+  function getManualRows() {
+    const rows = [];
+    document.querySelectorAll('#manualRows tr').forEach(tr => {
+      const inputs = tr.querySelectorAll('input');
+      const row = { desc: inputs[0]?.value || '', part: inputs[1]?.value || '', qty: inputs[2]?.value || '', price: inputs[3]?.value || '' };
+      if (row.desc || row.part || row.qty || row.price) rows.push(row);
+    });
+    return rows;
+  }
+
+  document.getElementById('manualRows').appendChild(createManualRow());
+
+  // Default date to today
+  document.getElementById('f-date').value = new Date().toISOString().slice(0, 10);
+
+  // ── BUILD INVOICE FROM FORM ────────────────────────────────────
+  window.buildInvoice = function() {
+    const refNumber = document.getElementById('f-ref').value.trim() || '—';
+    const dateStr = document.getElementById('f-date').value;
+    const dateFmt = dateStr ? new Date(dateStr + 'T12:00:00').toLocaleDateString('en-CA', { year: 'numeric', month: 'long', day: 'numeric' }) : '—';
+
+    const clientName = document.getElementById('f-name').value.trim() || '—';
+    const clientPhone = document.getElementById('f-phone').value.trim();
+    const clientEmail = document.getElementById('f-email').value.trim();
+    const addr = document.getElementById('f-address').value.trim();
+
+    const vehicle = document.getElementById('f-vehicle').value.trim() || '—';
+    const color = document.getElementById('f-color').value.trim();
+    const vin = document.getElementById('f-vin').value.trim();
+    const currentKm = document.getElementById('f-mileage').value.trim();
+    const nextKm = document.getElementById('f-next-service').value.trim();
+
+    const pkgName = document.getElementById('f-pkg').value;
+    const pkgPrice = parseFloat(document.getElementById('f-pkg-price').value) || 0;
+
+    const payMethod = document.querySelector('input[name="f-pay"]:checked')?.value || '—';
+
+    const materialRows = getManualRows();
+
+    let itemsHtml = '';
+    let subtotal = 0;
+    let rowNum = 1;
+
+    if (pkgName && pkgPrice > 0) {
+      itemsHtml += `<tr>
+        <td class="num">${rowNum++}</td>
+        <td><div class="desc-main">${esc(pkgName)}</div></td>
+        <td></td>
+        <td class="num">1</td>
+        <td class="num">$${pkgPrice.toFixed(2)}</td>
+      </tr>`;
+      subtotal += pkgPrice;
+    }
+
+    materialRows.forEach(r => {
+      const price = parseFloat(r.price) || 0;
+      const qty = r.qty || '1';
+      itemsHtml += `<tr>
+        <td class="num">${rowNum++}</td>
+        <td><div class="desc-main">${esc(r.desc)}</div></td>
+        <td>${esc(r.part)}</td>
+        <td class="num">${esc(qty)}</td>
+        <td class="num">$${price.toFixed(2)}</td>
+      </tr>`;
+      subtotal += price;
+    });
+
+    if (!itemsHtml) {
+      itemsHtml = `<tr><td colspan="5" style="text-align:center;color:var(--gray);padding:20px;">No items on this invoice.</td></tr>`;
+    }
+
+    const html = `
+      <div class="header">
+        <div class="header-left">
+          <svg width="40" height="48" viewBox="0 0 44 54" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M22 2 C22 2 4 22 4 34 C4 44.5 12.1 52 22 52 C31.9 52 40 44.5 40 34 C40 22 22 2 22 2Z" fill="#F5B400"/>
+            <path d="M22 14 C22 14 10 28 10 36 C10 42.6 15.4 48 22 48 C28.6 48 34 42.6 34 36 C34 28 22 14 22 14Z" fill="rgba(255,255,255,0.25)"/>
+          </svg>
+          <div>
+            <div class="brand-name">OilRight</div>
+            <div class="brand-tagline">Mobile Oil Change · Greater Moncton</div>
+          </div>
+        </div>
+        <div>
+          <div class="doc-title">INVOICE</div>
+          <div class="doc-sub">Service Invoice</div>
+          <div class="doc-ref">Ref. # <strong>${esc(refNumber)}</strong><br>${esc(dateFmt)}</div>
+        </div>
+      </div>
+
+      <div class="info-grid">
+        <div class="info-block">
+          <h4>Bill To</h4>
+          <div class="name">${esc(clientName)}</div>
+          ${addr ? `<div class="line">${esc(addr)}</div>` : ''}
+          ${clientPhone ? `<div class="line">${esc(clientPhone)}</div>` : ''}
+          ${clientEmail ? `<div class="line">${esc(clientEmail)}</div>` : ''}
+        </div>
+        <div class="info-block">
+          <h4>Vehicle Details</h4>
+          <div class="line"><strong>${esc(vehicle)}</strong></div>
+          ${color ? `<div class="line">Color: ${esc(color)}</div>` : ''}
+          ${vin ? `<div class="line">VIN: ${esc(vin)}</div>` : ''}
+          ${currentKm ? `<div class="line">Current Mileage: ${esc(currentKm)} km</div>` : ''}
+          ${nextKm ? `<div class="line">Next Service: ${esc(nextKm)} km</div>` : ''}
+        </div>
+      </div>
+
+      <table class="items">
+        <thead>
+          <tr>
+            <th class="num" style="width:30px;">#</th>
+            <th>Description</th>
+            <th style="width:110px;">Part #</th>
+            <th class="num" style="width:50px;">Qty</th>
+            <th class="num" style="width:80px;">Price</th>
+          </tr>
+        </thead>
+        <tbody>${itemsHtml}</tbody>
+      </table>
+
+      <div class="totals">
+        <div class="totals-box">
+          <div class="totals-row grand"><span>Total Due</span><span>$${subtotal.toFixed(2)}</span></div>
+        </div>
+      </div>
+
+      <div class="payment-block">
+        <h4>Payment Method</h4>
+        <div>${esc(payMethod)}</div>
+      </div>
+
+      <div class="scope-block">
+        <h4>Scope of Service — Agreement</h4>
+        <div class="scope-text">This service report covers the following services only: <strong>full synthetic oil change, oil filter replacement, and windshield washer fluid top-up.</strong> No other mechanical work was performed, recommended for immediate action, or is implied by this report.</div>
+        <div class="sig-section">
+          <div class="sig-label">Customer Signature</div>
+          <div class="sig-wrap">
+            <canvas class="sig-canvas" id="sigCanvas"></canvas>
+            <div class="sig-line"></div>
+            <div class="sig-hint" id="sigHint">✏️ Sign here<br><span style="font-size:11px;color:#ddd">Tap to begin</span></div>
+          </div>
+          <button class="sig-clear no-print" onclick="clearSig()">✕ Clear Signature</button>
+        </div>
+      </div>
+
+      <div class="thanks">
+        Thank you for trusting OilRight for your oil change service!
+      </div>
+
+      <div class="review-cta">
+        <a href="https://g.page/r/CdToqMWCnQACEBM/review" target="_blank">⭐ Leave us a Google Review</a>
+      </div>
+
+      <div class="social-line">
+        Follow us: <a href="https://instagram.com/oilrightnb" target="_blank">Instagram</a> · <a href="https://facebook.com/oilrightnb" target="_blank">Facebook</a> · <a href="https://tiktok.com/@oilrightnb" target="_blank">TikTok</a>
+      </div>
+    `;
+
+    document.getElementById('page').innerHTML = html;
+    document.getElementById('formPage').style.display = 'none';
+    document.getElementById('page').style.display = 'block';
+    document.getElementById('page2').style.display = 'block';
+    document.getElementById('printBtnWrap').style.display = 'block';
+    setTimeout(initSignature, 0);
+
+    invoiceData = {
+      refNumber, dateFmt, clientName, clientEmail,
+      clientFirst: clientName.split(' ')[0] || clientName,
+      total: subtotal,
+      nextService: nextKm
+    };
+
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  window.backToForm = function() {
+    document.getElementById('formPage').style.display = 'block';
+    document.getElementById('page').style.display = 'none';
+    document.getElementById('page2').style.display = 'none';
+    document.getElementById('printBtnWrap').style.display = 'none';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  function buildEmailBody() {
+    const { refNumber, dateFmt, clientName, clientEmail, clientFirst, total, nextService } = invoiceData;
+    const subject = `Your OilRight Invoice — Ref. #${refNumber} · ${dateFmt}`;
+    return `To: ${clientEmail}
+Subject: ${subject}
+
+Hi ${clientFirst},
+
+Thank you for trusting OilRight for your oil change service! Please find your invoice attached (Ref. #${refNumber}) for a total of $${total.toFixed(2)}.
+${nextService ? `\nYour next oil change is due at ${nextService} km.\n` : ''}`;
+  }
+
+  // ── PAGE 2: PHOTOS ───────────────────────────────────────────
+  const photoData2 = { 'ws-before': null, 'ws-after': null, 'dp-before': null, 'dp-after': null };
+
+  window.handlePhoto2 = function(input) {
+    const slot = input.dataset.slot;
+    const file = input.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      photoData2[slot] = e.target.result;
+      document.getElementById('ph2-' + slot).style.display = 'none';
+      const prev = document.getElementById('prev2-' + slot);
+      prev.src = e.target.result;
+      prev.style.display = 'block';
+      document.getElementById('clr2-' + slot).style.display = 'inline-block';
+    };
+    reader.readAsDataURL(file);
+  };
+
+  window.clearPhoto2 = function(slot) {
+    photoData2[slot] = null;
+    document.getElementById('ph2-' + slot).style.display = 'flex';
+    const prev = document.getElementById('prev2-' + slot);
+    prev.src = ''; prev.style.display = 'none';
+    document.getElementById('clr2-' + slot).style.display = 'none';
+  };
+
+  // ── PAGE 1: SIGNATURE ────────────────────────────────────────
+  let hasSig2 = false;
+  let sigCanvas, sigCtx, sigHintEl, sigDrawing = false;
+
+  function initSignature() {
+    sigCanvas = document.getElementById('sigCanvas');
+    sigCtx = sigCanvas.getContext('2d');
+    sigHintEl = document.getElementById('sigHint');
+
+    function resizeSig() {
+      const r = sigCanvas.getBoundingClientRect();
+      const dpr = window.devicePixelRatio || 1;
+      const saved = hasSig2 ? sigCanvas.toDataURL() : null;
+      sigCanvas.width = r.width * dpr;
+      sigCanvas.height = r.height * dpr;
+      sigCtx.scale(dpr, dpr);
+      sigCtx.strokeStyle = '#1a1a1a';
+      sigCtx.lineWidth = 2;
+      sigCtx.lineJoin = 'round';
+      sigCtx.lineCap = 'round';
+      if (saved) {
+        const img = new Image();
+        img.onload = () => sigCtx.drawImage(img, 0, 0, r.width, r.height);
+        img.src = saved;
+      }
+    }
+
+    function pos(e) {
+      const r = sigCanvas.getBoundingClientRect();
+      const src = e.touches ? e.touches[0] : e;
+      return { x: src.clientX - r.left, y: src.clientY - r.top };
+    }
+    function start(e) {
+      e.preventDefault(); sigDrawing = true;
+      const p = pos(e); sigCtx.beginPath(); sigCtx.moveTo(p.x, p.y);
+      if (!hasSig2) { sigHintEl.style.display = 'none'; hasSig2 = true; }
+    }
+    function move(e) {
+      if (!sigDrawing) return; e.preventDefault();
+      const p = pos(e);
+      sigCtx.lineTo(p.x, p.y); sigCtx.stroke(); sigCtx.beginPath(); sigCtx.moveTo(p.x, p.y);
+    }
+    function stop() { sigDrawing = false; sigCtx.beginPath(); }
+
+    sigCanvas.addEventListener('pointerdown', start, { passive: false });
+    sigCanvas.addEventListener('pointermove', move, { passive: false });
+    sigCanvas.addEventListener('pointerup', stop);
+    sigCanvas.addEventListener('pointercancel', stop);
+    sigCanvas.addEventListener('touchstart', start, { passive: false });
+    sigCanvas.addEventListener('touchmove', move, { passive: false });
+    sigCanvas.addEventListener('touchend', stop);
+    window.addEventListener('resize', resizeSig);
+    setTimeout(resizeSig, 100);
+  }
+
+  window.clearSig = function() {
+    const r = sigCanvas.getBoundingClientRect();
+    sigCtx.clearRect(0, 0, r.width, r.height);
+    hasSig2 = false; sigHintEl.style.display = '';
+  };
+
+  window.startExport = function() {
+    if (!hasSig2) {
+      alert('Please add the customer signature before exporting.');
+      return;
+    }
+
+    // Populate annex pages with page-2 photos — only show pages that have a photo
+    const annexMap2 = {
+      'ws-before': { img: 'annexImgWsBefore', page: 'annexWsBefore' },
+      'ws-after': { img: 'annexImgWsAfter', page: 'annexWsAfter' },
+      'dp-before': { img: 'annexImgDpBefore', page: 'annexDpBefore' },
+      'dp-after': { img: 'annexImgDpAfter', page: 'annexDpAfter' },
+    };
+    Object.entries(annexMap2).forEach(([slot, ids]) => {
+      const imgEl = document.getElementById(ids.img);
+      const pageEl = document.getElementById(ids.page);
+      if (photoData2[slot]) {
+        if (imgEl) imgEl.src = photoData2[slot];
+        pageEl?.classList.add('has-photo');
+      } else {
+        pageEl?.classList.remove('has-photo');
+      }
+    });
+    const refLabel = `Ref. ${invoiceData.refNumber} — ${invoiceData.clientName} — ${invoiceData.dateFmt}`;
+    ['annexRefWsBefore', 'annexRefWsAfter', 'annexRefDpBefore', 'annexRefDpAfter'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.textContent = refLabel;
+    });
+
+    const body = buildEmailBody();
+    document.getElementById('emailModalText').value = body;
+    document.getElementById('emailModal').style.display = 'flex';
+  };
+
+  window.copyEmail = function() {
+    const body = document.getElementById('emailModalText').value;
+    navigator.clipboard.writeText(body).then(() => {
+      const btn = document.getElementById('emailBtn');
+      const original = btn.textContent;
+      btn.textContent = '✓ Copied!';
+      setTimeout(() => { btn.textContent = original; }, 2000);
+    }).catch(() => {
+      alert('Could not copy automatically. Please copy manually:\n\n' + body);
+    });
+  };
+
+  window.continueToPrint = function() {
+    document.getElementById('emailModal').style.display = 'none';
+    window.print();
+  };
+</script>
+</body>
+</html>
