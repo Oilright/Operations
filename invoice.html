@@ -30,11 +30,12 @@
   .info-block h4 { font-size: 11px; font-weight: 700; color: var(--gray); text-transform: uppercase; letter-spacing: 0.5px; margin: 0 0 8px; }
   .info-block .name { font-size: 15px; font-weight: 700; margin-bottom: 2px; }
   .info-block div.line { font-size: 13px; color: var(--dark); line-height: 1.5; }
+  .info-block:last-child { text-align: right; }
 
   table.items { width: 100%; border-collapse: collapse; margin-bottom: 14px; }
-  table.items th { text-align: left; font-size: 10.5px; font-weight: 700; color: var(--gray); text-transform: uppercase; letter-spacing: 0.4px; padding: 6px 6px; border-bottom: 2px solid var(--line); }
+  table.items th { text-align: left; font-size: 10px; font-weight: 700; color: var(--gray); text-transform: uppercase; letter-spacing: 0.4px; padding: 5px 6px; border-bottom: 2px solid var(--line); }
   table.items th.num, table.items td.num { text-align: right; }
-  table.items td { padding: 7px 6px; border-bottom: 1px solid var(--line); font-size: 12.5px; vertical-align: top; }
+  table.items td { padding: 5px 6px; border-bottom: 1px solid var(--line); font-size: 12px; vertical-align: top; }
   table.items td.desc-main { font-weight: 700; }
 
   .totals { display: flex; justify-content: flex-end; margin-bottom: 16px; }
@@ -50,11 +51,6 @@
   .scope-block { margin-bottom: 18px; padding: 12px 16px; background: #FAFAFA; border: 1px solid var(--line); border-radius: 8px; }
   .scope-block h4 { font-size: 10px; font-weight: 700; color: var(--gray); text-transform: uppercase; letter-spacing: 0.5px; margin: 0 0 6px; }
   .scope-text { font-size: 11px; color: var(--dark); line-height: 1.5; }
-  .sig-row { display: flex; align-items: flex-end; gap: 12px; margin-top: 10px; }
-  .sig-box { border-bottom: 1.5px solid var(--line); width: 220px; height: 50px; display: flex; align-items: center; }
-  .sig-box img { max-height: 48px; max-width: 100%; object-fit: contain; }
-  .sig-empty { font-size: 11px; color: #aaa; font-style: italic; }
-  .sig-caption { font-size: 10px; color: var(--gray); text-transform: uppercase; letter-spacing: 0.4px; padding-bottom: 4px; }
 
   .review-cta { text-align: center; margin-bottom: 10px; }
   .review-cta a { display: inline-block; background: var(--orange-light); color: var(--dark); border: 1px solid var(--orange); border-radius: 20px; padding: 8px 20px; font-size: 13px; font-weight: 700; text-decoration: none; }
@@ -62,6 +58,34 @@
   .social-line { text-align: center; font-size: 11px; color: var(--gray); margin-bottom: 4px; }
   .social-line a { color: var(--gray); text-decoration: none; font-weight: 600; }
   .social-line a:hover { text-decoration: underline; }
+
+  /* PAGE 2 — DOCUMENTATION & SIGNATURE */
+  .page2 { margin-top: 24px; }
+  .page2-title { font-size: 15px; font-weight: 700; color: var(--dark); margin: 0 0 16px; border-bottom: 3px solid var(--orange); padding-bottom: 10px; }
+
+  .sig-section { margin-bottom: 14px; }
+  .sig-label { font-size: 10px; font-weight: 700; color: var(--gray); text-transform: uppercase; letter-spacing: 0.4px; margin-bottom: 6px; }
+  .sig-wrap { border: 2px solid var(--line); border-radius: 8px; background: white; overflow: hidden; position: relative; height: 70px; }
+  .sig-canvas { display: block; width: 100%; height: 70px; touch-action: none; cursor: crosshair; }
+  .sig-hint { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: #ccc; font-size: 13px; text-align: center; pointer-events: none; line-height: 1.6; }
+  .sig-line { position: absolute; bottom: 14px; left: 20px; right: 20px; height: 1px; background: var(--line); pointer-events: none; }
+  .sig-clear { margin-top: 8px; font-size: 11px; font-family: inherit; border: 1px solid #e53935; border-radius: 4px; padding: 4px 12px; background: white; color: #e53935; cursor: pointer; }
+
+  .photo-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .photo-slot2 { display: flex; flex-direction: column; gap: 6px; }
+  .photo-slot2-label { font-size: 11px; font-weight: 700; color: var(--gray); }
+  .photo-upload-area2 { display: block; border: 2px dashed var(--line); border-radius: 8px; overflow: hidden; cursor: pointer; background: var(--orange-light); min-height: 130px; position: relative; }
+  .photo-upload-area2:hover { border-color: var(--orange); }
+  .photo-upload-area2 input { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
+  .photo-placeholder2 { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 130px; gap: 6px; }
+  .photo-icon2 { font-size: 28px; }
+  .photo-hint2 { font-size: 11px; color: var(--gray); font-weight: 700; }
+  .photo-preview2 { display: block; width: 100%; max-height: 200px; object-fit: contain; }
+  .photo-clear-btn2 { font-size: 11px; font-family: inherit; border: 1px solid #e53935; border-radius: 4px; padding: 4px 10px; background: white; color: #e53935; cursor: pointer; align-self: flex-start; }
+
+  @media (max-width: 600px) {
+    .photo-grid { grid-template-columns: 1fr; }
+  }
 
   .footer-bar { display: flex; gap: 0; border: 1px solid var(--line); border-radius: 8px; overflow: hidden; }
   .footer-cell { flex: 1; padding: 16px; text-align: center; border-right: 1px solid var(--line); }
@@ -82,12 +106,7 @@
     body { background: white; padding: 0; }
     .page { box-shadow: none; border-radius: 0; max-width: 100%; padding: 20px 24px; }
     .no-print { display: none !important; }
-    .header, .info-grid, table.items, .totals, .payment-block,
-    .scope-block, .thanks, .review-cta, .social-line {
-      page-break-inside: avoid;
-      break-inside: avoid;
-    }
-    .annex-page { display: flex !important; flex-direction: column; page-break-before: always; padding: 32px 36px; box-sizing: border-box; }
+    .annex-page.has-photo { display: flex !important; flex-direction: column; page-break-before: always; padding: 32px 36px; box-sizing: border-box; }
     .annex-header { border-bottom: 3px solid #F5B400; padding-bottom: 12px; margin-bottom: 20px; }
     .annex-title { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.6px; color: #555; }
     .annex-label { font-size: 20px; font-weight: 700; color: #1a1a1a; margin-top: 4px; }
@@ -101,6 +120,50 @@
 
 <div class="page" id="page">
   <div class="loading" id="loadingMsg">Loading invoice…</div>
+</div>
+
+<div class="page page2 no-print" id="page2" style="display:none;">
+  <h3 class="page2-title">Photo Documentation</h3>
+  <p style="font-size:11px;color:var(--gray);margin:-8px 0 16px;">This page is for adding photos before exporting — it will not appear in the printed/exported PDF. Photos become annex pages once exported.</p>
+
+  <div class="photo-grid">
+    <div class="photo-slot2">
+      <div class="photo-slot2-label">📸 Work Area — Before</div>
+      <label class="photo-upload-area2" id="area2-ws-before">
+        <input type="file" accept="image/*" class="photo-input2" data-slot="ws-before" onchange="handlePhoto2(this)">
+        <div class="photo-placeholder2" id="ph2-ws-before"><div class="photo-icon2">📷</div><div class="photo-hint2">Tap to add photo</div></div>
+        <img class="photo-preview2" id="prev2-ws-before" style="display:none;">
+      </label>
+      <button class="photo-clear-btn2 no-print" id="clr2-ws-before" style="display:none;" onclick="clearPhoto2('ws-before')">✕ Remove</button>
+    </div>
+    <div class="photo-slot2">
+      <div class="photo-slot2-label">📸 Work Area — After</div>
+      <label class="photo-upload-area2" id="area2-ws-after">
+        <input type="file" accept="image/*" class="photo-input2" data-slot="ws-after" onchange="handlePhoto2(this)">
+        <div class="photo-placeholder2" id="ph2-ws-after"><div class="photo-icon2">📷</div><div class="photo-hint2">Tap to add photo</div></div>
+        <img class="photo-preview2" id="prev2-ws-after" style="display:none;">
+      </label>
+      <button class="photo-clear-btn2 no-print" id="clr2-ws-after" style="display:none;" onclick="clearPhoto2('ws-after')">✕ Remove</button>
+    </div>
+    <div class="photo-slot2">
+      <div class="photo-slot2-label">📸 Drain Plug — Before</div>
+      <label class="photo-upload-area2" id="area2-dp-before">
+        <input type="file" accept="image/*" class="photo-input2" data-slot="dp-before" onchange="handlePhoto2(this)">
+        <div class="photo-placeholder2" id="ph2-dp-before"><div class="photo-icon2">📷</div><div class="photo-hint2">Tap to add photo</div></div>
+        <img class="photo-preview2" id="prev2-dp-before" style="display:none;">
+      </label>
+      <button class="photo-clear-btn2 no-print" id="clr2-dp-before" style="display:none;" onclick="clearPhoto2('dp-before')">✕ Remove</button>
+    </div>
+    <div class="photo-slot2">
+      <div class="photo-slot2-label">📸 Drain Plug — After</div>
+      <label class="photo-upload-area2" id="area2-dp-after">
+        <input type="file" accept="image/*" class="photo-input2" data-slot="dp-after" onchange="handlePhoto2(this)">
+        <div class="photo-placeholder2" id="ph2-dp-after"><div class="photo-icon2">📷</div><div class="photo-hint2">Tap to add photo</div></div>
+        <img class="photo-preview2" id="prev2-dp-after" style="display:none;">
+      </label>
+      <button class="photo-clear-btn2 no-print" id="clr2-dp-after" style="display:none;" onclick="clearPhoto2('dp-after')">✕ Remove</button>
+    </div>
+  </div>
 </div>
 
 <div class="annex-page" id="annexWsBefore">
@@ -234,10 +297,6 @@
       // Material rows
       const materialRows = (report.materialRows || []).filter(r => r.desc || r.part || r.price);
 
-      // Signature (passed via sessionStorage from servicereport.html)
-      let sigDataUrl = '';
-      try { sigDataUrl = sessionStorage.getItem('oilright_invoice_sig_' + apptId) || ''; } catch (e) {}
-
       let itemsHtml = '';
       let subtotal = 0;
       let rowNum = 1;
@@ -335,9 +394,14 @@
         <div class="scope-block">
           <h4>Scope of Service — Agreement</h4>
           <div class="scope-text">This service report covers the following services only: <strong>full synthetic oil change, oil filter replacement, and windshield washer fluid top-up.</strong> No other mechanical work was performed, recommended for immediate action, or is implied by this report.</div>
-          <div class="sig-row">
-            <div class="sig-box">${sigDataUrl ? `<img src="${sigDataUrl}" alt="Customer signature">` : '<span class="sig-empty">No signature on file</span>'}</div>
-            <div class="sig-caption">Customer Signature</div>
+          <div class="sig-section">
+            <div class="sig-label">Customer Signature</div>
+            <div class="sig-wrap">
+              <canvas class="sig-canvas" id="sigCanvas"></canvas>
+              <div class="sig-line"></div>
+              <div class="sig-hint" id="sigHint">✏️ Sign here<br><span style="font-size:11px;color:#ddd">Tap to begin</span></div>
+            </div>
+            <button class="sig-clear no-print" onclick="clearSig()">✕ Clear Signature</button>
           </div>
         </div>
 
@@ -356,6 +420,8 @@
 
       document.getElementById('page').innerHTML = html;
       document.getElementById('printBtnWrap').style.display = 'block';
+      document.getElementById('page2').style.display = 'block';
+      setTimeout(initSignature, 0);
 
       invoiceData = {
         refNumber, dateFmt, clientName, clientEmail,
@@ -415,7 +481,7 @@
         </div>
       </div>
 
-      <div style="background:#FFF3E0;border:1px solid #F5B400;border-radius:6px;padding:10px 14px;margin-bottom:20px;font-size:12px;color:#8a5a00;">
+      <div class="no-print" style="background:#FFF3E0;border:1px solid #F5B400;border-radius:6px;padding:10px 14px;margin-bottom:20px;font-size:12px;color:#8a5a00;">
         ⚠ Sample preview — could not load live data (this is normal when opening the file locally instead of via your website).
       </div>
 
@@ -462,12 +528,40 @@
             <td class="num">5</td>
             <td class="num">$0.00</td>
           </tr>
+          <tr>
+            <td class="num">3</td>
+            <td><div class="desc-main">Carquest Blue Oil Filter</div></td>
+            <td>CFI 84047</td>
+            <td class="num">1</td>
+            <td class="num">$0.00</td>
+          </tr>
+          <tr>
+            <td class="num">4</td>
+            <td><div class="desc-main">Cabin Air Filter</div></td>
+            <td>CF11173</td>
+            <td class="num">1</td>
+            <td class="num">$24.99</td>
+          </tr>
+          <tr>
+            <td class="num">5</td>
+            <td><div class="desc-main">Windshield Washer Fluid</div></td>
+            <td></td>
+            <td class="num">1</td>
+            <td class="num">$8.99</td>
+          </tr>
+          <tr>
+            <td class="num">6</td>
+            <td><div class="desc-main">Service Fee</div></td>
+            <td></td>
+            <td class="num">1</td>
+            <td class="num">$15.00</td>
+          </tr>
         </tbody>
       </table>
 
       <div class="totals">
         <div class="totals-box">
-          <div class="totals-row grand"><span>Total Due</span><span>$119.99</span></div>
+          <div class="totals-row grand"><span>Total Due</span><span>$168.97</span></div>
         </div>
       </div>
 
@@ -479,9 +573,14 @@
       <div class="scope-block">
         <h4>Scope of Service — Agreement</h4>
         <div class="scope-text">This service report covers the following services only: <strong>full synthetic oil change, oil filter replacement, and windshield washer fluid top-up.</strong> No other mechanical work was performed, recommended for immediate action, or is implied by this report.</div>
-        <div class="sig-row">
-          <div class="sig-box"><span class="sig-empty">No signature on file</span></div>
-          <div class="sig-caption">Customer Signature</div>
+        <div class="sig-section">
+          <div class="sig-label">Customer Signature</div>
+          <div class="sig-wrap">
+            <canvas class="sig-canvas" id="sigCanvas"></canvas>
+            <div class="sig-line"></div>
+            <div class="sig-hint" id="sigHint">✏️ Sign here<br><span style="font-size:11px;color:#ddd">Tap to begin</span></div>
+          </div>
+          <button class="sig-clear no-print" onclick="clearSig()">✕ Clear Signature</button>
         </div>
       </div>
 
@@ -499,6 +598,8 @@
     `;
     document.getElementById('page').innerHTML = html;
     document.getElementById('printBtnWrap').style.display = 'block';
+    document.getElementById('page2').style.display = 'block';
+    setTimeout(initSignature, 0);
 
     invoiceData = {
       refNumber: '0001',
@@ -522,21 +623,127 @@ Subject: ${subject}
 Hi ${clientFirst},
 
 Thank you for trusting OilRight for your oil change service! Please find your invoice attached (Ref. #${refNumber}) for a total of $${total.toFixed(2)}.
-${nextService ? `\nYour next oil change is due at ${nextService} km.\n` : ''}
-If you enjoyed the service, we'd love it if you could take a moment to leave us a review on Google — it means the world to us and helps other drivers in the Greater Moncton area find a service they can trust!
-⭐ Google Review: https://g.page/r/CdToqMWCnQACEBM/review
-
-And if you know anyone who could use a convenient mobile oil change, don't hesitate to refer us — we'd be happy to take care of their oil change too.
-
-Stay connected with us:
-📷 Instagram: instagram.com/oilrightnb
-👍 Facebook: facebook.com/oilrightnb
-🎵 TikTok: tiktok.com/@oilrightnb
-
-Don't hesitate to reach out if you have any questions.`;
+${nextService ? `\nYour next oil change is due at ${nextService} km.\n` : ''}`;
   }
 
+  // ── PAGE 2: PHOTOS ───────────────────────────────────────────
+  const photoData2 = { 'ws-before': null, 'ws-after': null, 'dp-before': null, 'dp-after': null };
+
+  window.handlePhoto2 = function(input) {
+    const slot = input.dataset.slot;
+    const file = input.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      photoData2[slot] = e.target.result;
+      document.getElementById('ph2-' + slot).style.display = 'none';
+      const prev = document.getElementById('prev2-' + slot);
+      prev.src = e.target.result;
+      prev.style.display = 'block';
+      document.getElementById('clr2-' + slot).style.display = 'inline-block';
+    };
+    reader.readAsDataURL(file);
+  };
+
+  window.clearPhoto2 = function(slot) {
+    photoData2[slot] = null;
+    document.getElementById('ph2-' + slot).style.display = 'flex';
+    const prev = document.getElementById('prev2-' + slot);
+    prev.src = ''; prev.style.display = 'none';
+    document.getElementById('clr2-' + slot).style.display = 'none';
+  };
+
+  // ── PAGE 2: SIGNATURE ────────────────────────────────────────
+  let hasSig2 = false;
+  let sigCanvas, sigCtx, sigHintEl, sigDrawing = false;
+
+  function initSignature() {
+    sigCanvas = document.getElementById('sigCanvas');
+    sigCtx = sigCanvas.getContext('2d');
+    sigHintEl = document.getElementById('sigHint');
+
+    function resizeSig() {
+      const r = sigCanvas.getBoundingClientRect();
+      const dpr = window.devicePixelRatio || 1;
+      const saved = hasSig2 ? sigCanvas.toDataURL() : null;
+      sigCanvas.width = r.width * dpr;
+      sigCanvas.height = r.height * dpr;
+      sigCtx.scale(dpr, dpr);
+      sigCtx.strokeStyle = '#1a1a1a';
+      sigCtx.lineWidth = 2;
+      sigCtx.lineJoin = 'round';
+      sigCtx.lineCap = 'round';
+      if (saved) {
+        const img = new Image();
+        img.onload = () => sigCtx.drawImage(img, 0, 0, r.width, r.height);
+        img.src = saved;
+      }
+    }
+
+    function pos(e) {
+      const r = sigCanvas.getBoundingClientRect();
+      const src = e.touches ? e.touches[0] : e;
+      return { x: src.clientX - r.left, y: src.clientY - r.top };
+    }
+    function start(e) {
+      e.preventDefault(); sigDrawing = true;
+      const p = pos(e); sigCtx.beginPath(); sigCtx.moveTo(p.x, p.y);
+      if (!hasSig2) { sigHintEl.style.display = 'none'; hasSig2 = true; }
+    }
+    function move(e) {
+      if (!sigDrawing) return; e.preventDefault();
+      const p = pos(e);
+      sigCtx.lineTo(p.x, p.y); sigCtx.stroke(); sigCtx.beginPath(); sigCtx.moveTo(p.x, p.y);
+    }
+    function stop() { sigDrawing = false; sigCtx.beginPath(); }
+
+    sigCanvas.addEventListener('pointerdown', start, { passive: false });
+    sigCanvas.addEventListener('pointermove', move, { passive: false });
+    sigCanvas.addEventListener('pointerup', stop);
+    sigCanvas.addEventListener('pointercancel', stop);
+    sigCanvas.addEventListener('touchstart', start, { passive: false });
+    sigCanvas.addEventListener('touchmove', move, { passive: false });
+    sigCanvas.addEventListener('touchend', stop);
+    window.addEventListener('resize', resizeSig);
+    setTimeout(resizeSig, 100);
+  }
+
+  window.clearSig = function() {
+    const r = sigCanvas.getBoundingClientRect();
+    sigCtx.clearRect(0, 0, r.width, r.height);
+    hasSig2 = false; sigHintEl.style.display = '';
+  };
+
   window.startExport = function() {
+    if (!hasSig2) {
+      document.getElementById('page2').scrollIntoView({ behavior: 'smooth', block: 'start' });
+      alert('Please add the customer signature before exporting.');
+      return;
+    }
+
+    // Populate annex pages with page-2 photos — only show pages that have a photo
+    const annexMap2 = {
+      'ws-before': { img: 'annexImgWsBefore', page: 'annexWsBefore' },
+      'ws-after': { img: 'annexImgWsAfter', page: 'annexWsAfter' },
+      'dp-before': { img: 'annexImgDpBefore', page: 'annexDpBefore' },
+      'dp-after': { img: 'annexImgDpAfter', page: 'annexDpAfter' },
+    };
+    Object.entries(annexMap2).forEach(([slot, ids]) => {
+      const imgEl = document.getElementById(ids.img);
+      const pageEl = document.getElementById(ids.page);
+      if (photoData2[slot]) {
+        if (imgEl) imgEl.src = photoData2[slot];
+        pageEl?.classList.add('has-photo');
+      } else {
+        pageEl?.classList.remove('has-photo');
+      }
+    });
+    const refLabel = `Ref. ${invoiceData.refNumber} — ${invoiceData.clientName} — ${invoiceData.dateFmt}`;
+    ['annexRefWsBefore', 'annexRefWsAfter', 'annexRefDpBefore', 'annexRefDpAfter'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.textContent = refLabel;
+    });
+
     const body = buildEmailBody();
     document.getElementById('emailModalText').value = body;
     document.getElementById('emailModal').style.display = 'flex';

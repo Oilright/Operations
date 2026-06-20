@@ -48,7 +48,6 @@
   .req input:not([type="radio"]):not([type="date"]).empty,
   .req input[type="date"].empty { border-bottom-color: #e53935 !important; background: #fff5f5 !important; }
   .req input[type="date"].empty { color: #e53935; }
-  .sig-wrap.req-empty { border-color: #e53935 !important; background: #fff5f5 !important; }
   .chk-grp.req-empty .chk-grp-title { color: #e53935 !important; }
   .pkg-select-wrap.req-empty select { border-color: #e53935 !important; background: #fff5f5 !important; }
   .pay-methods.req-empty .pay-btn { border-color: #e53935 !important; }
@@ -153,16 +152,6 @@
   .pay-btn { width: 20px; height: 20px; border-radius: 4px; border: 2px solid var(--line); background: white; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; flex-shrink: 0; }
   .pay-opt input:checked ~ .pay-btn { background: var(--ok); border-color: var(--ok); }
 
-  /* SIGNATURE */
-  .sig-label { font-size: 10px; font-weight: 700; color: var(--gray); text-transform: uppercase; letter-spacing: 0.4px; margin-bottom: 6px; }
-  .sig-wrap { border: 2px solid var(--line); border-radius: 8px; background: white; overflow: hidden; position: relative; }
-  .sig-canvas { display: block; width: 100%; height: 120px; touch-action: none; cursor: crosshair; }
-  .sig-hint { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: #ccc; font-size: 13px; text-align: center; pointer-events: none; line-height: 1.6; }
-  .sig-line { position: absolute; bottom: 36px; left: 20px; right: 20px; height: 1px; background: var(--line); pointer-events: none; }
-  .sig-bar { display: flex; justify-content: space-between; align-items: center; padding: 6px 12px; background: #f5f5f5; border-top: 1px solid var(--border); }
-  .sig-bar-left { display: flex; align-items: center; gap: 8px; font-size: 11px; color: var(--gray); }
-  .sig-clear { font-size: 11px; font-family: inherit; border: 1px solid var(--warn); border-radius: 4px; padding: 4px 12px; background: white; color: var(--warn); cursor: pointer; }
-
   /* FOOTER */
   .footer { margin-top: 20px; padding-top: 14px; border-top: 1px solid #eee; display: flex; justify-content: space-between; align-items: flex-start; }
   .footer-l { font-size: 10px; color: var(--gray); line-height: 1.7; }
@@ -181,6 +170,13 @@
   .photo-label { font-size: 10px; font-weight: 700; color: var(--gray); text-transform: uppercase; letter-spacing: 0.5px; }
   .photo-upload-area { display: block; border: 2px dashed var(--border); border-radius: 8px; overflow: hidden; cursor: pointer; background: var(--orange-light); min-height: 160px; position: relative; }
   .photo-upload-area:hover { border-color: var(--orange); background: var(--orange); }
+
+  .photo-confirm-area { display: flex; align-items: center; justify-content: center; gap: 10px; border: 2px dashed var(--border); border-radius: 8px; background: var(--orange-light); min-height: 70px; padding: 16px; cursor: pointer; transition: background 0.15s, border-color 0.15s; }
+  .photo-confirm-area:hover { border-color: var(--orange); background: #ffe9b3; }
+  .photo-confirm-check { width: 22px; height: 22px; accent-color: var(--orange); cursor: pointer; flex-shrink: 0; }
+  .photo-confirm-text { font-size: 13px; font-weight: 700; color: var(--dark); }
+  .photo-confirm-area.confirmed { background: #e8f5e9; border-color: var(--ok); border-style: solid; }
+  .photo-confirm-area.confirmed .photo-confirm-text { color: var(--ok); }
   .photo-input { display: none; }
   .photo-placeholder { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 160px; gap: 8px; }
   .photo-icon { font-size: 32px; }
@@ -222,8 +218,7 @@
     * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
     body { background: white; }
     .page { margin: 0; box-shadow: none; padding: 20px 24px; }
-    .fabs, .sig-bar { display: none; }
-    .sig-hint { display: none; }
+    .fabs { display: none; }
     .no-print { display: none !important; }
     .prep-section { display: none !important; }
     input[type="text"], input[type="date"], textarea {
@@ -232,22 +227,7 @@
       word-break: break-all !important;
       height: auto !important;
     }
-
-    /* Photo section removed — photos now live inside Process (no-print) */
-
-
-    /* ANNEX PHOTO PAGES */
-    .annex-page { display: block !important; page-break-before: always; padding: 32px 36px; box-sizing: border-box; display: flex; flex-direction: column; }
-    .annex-header { border-bottom: 3px solid #F5B400; padding-bottom: 12px; margin-bottom: 20px; }
-    .annex-title { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.6px; color: #555; }
-    .annex-label { font-size: 20px; font-weight: 700; color: #1a1a1a; margin-top: 4px; }
-    .annex-photo { flex: 1; display: flex; align-items: center; justify-content: center; }
-    .annex-photo img { max-width: 100%; max-height: 75vh; object-fit: contain; border-radius: 6px; }
-    .annex-footer { border-top: 1px solid #ddd; padding-top: 10px; margin-top: 16px; font-size: 10px; color: #888; display: flex; justify-content: space-between; }
   }
-
-  /* Hide annex pages on screen */
-  .annex-page { display: none; }
 
   @media (max-width: 600px) {
     .page { margin: 8px; padding: 20px 16px; }
@@ -422,16 +402,13 @@
         <div class="prep-details">
           <div class="photo-slot" style="margin-bottom:10px;" id="slot-ws-before-proc">
             <div class="photo-label">📸 Work Area — Before</div>
-            <label class="photo-upload-area" id="area-ws-before-proc">
-              <input type="file" accept="image/*" class="photo-input" data-slot="ws-before-proc" onchange="handlePhoto(this)">
-              <div class="photo-placeholder" id="ph-ws-before-proc">
-                <div class="photo-icon">📷</div>
-                <div class="photo-hint">Tap to add photo</div>
-              </div>
-              <img class="photo-preview" id="prev-ws-before-proc" style="display:none;">
+            <label class="photo-confirm-area" id="area-ws-before-proc">
+              <input type="checkbox" class="photo-confirm-check" data-slot="ws-before-proc" onchange="handlePhotoConfirm(this)">
+              <span class="photo-confirm-text">Confirm photo has been taken</span>
             </label>
-            <button class="photo-clear-btn" id="clr-ws-before-proc" style="display:none;" onclick="clearPhoto('ws-before-proc')">✕ Remove</button>
           </div>
+
+          <div class="reveal-segment" data-unlocked-by="ws-before-proc" style="display:none;">
           <ul class="prep-list">
             <li>Tapis</li>
           </ul>
@@ -442,16 +419,14 @@
           </ul>
           <div class="photo-slot" style="margin-top:10px;" id="slot-dp-before-proc">
             <div class="photo-label">📸 Drain Plug — Before</div>
-            <label class="photo-upload-area" id="area-dp-before-proc">
-              <input type="file" accept="image/*" class="photo-input" data-slot="dp-before-proc" onchange="handlePhoto(this)">
-              <div class="photo-placeholder" id="ph-dp-before-proc">
-                <div class="photo-icon">📷</div>
-                <div class="photo-hint">Tap to add photo</div>
-              </div>
-              <img class="photo-preview" id="prev-dp-before-proc" style="display:none;">
+            <label class="photo-confirm-area" id="area-dp-before-proc">
+              <input type="checkbox" class="photo-confirm-check" data-slot="dp-before-proc" onchange="handlePhotoConfirm(this)">
+              <span class="photo-confirm-text">Confirm photo has been taken</span>
             </label>
-            <button class="photo-clear-btn" id="clr-dp-before-proc" style="display:none;" onclick="clearPhoto('dp-before-proc')">✕ Remove</button>
           </div>
+          </div>
+
+          <div class="reveal-segment" data-unlocked-by="dp-before-proc" style="display:none;">
           <div class="prep-substep">Filtre à huile</div>
           <ul class="prep-list">
             <li>Ratchet + rallonge</li>
@@ -471,11 +446,12 @@
             <li>Manette balayeuse</li>
           </ul>
         </div>
+        </div>
       </div>
 
-      <hr class="prep-divider">
+      <hr class="prep-divider reveal-segment" data-unlocked-by="dp-before-proc" style="display:none;">
 
-      <div class="prep-step">
+      <div class="prep-step reveal-segment" data-unlocked-by="dp-before-proc" style="display:none;">
         <input type="checkbox" class="prep-step-check" id="prep-step-4">
         <label class="prep-step-title" for="prep-step-4">Étape 4 — Crush washer</label>
         <div class="prep-details">
@@ -487,33 +463,31 @@
         </div>
       </div>
 
-      <hr class="prep-divider">
+      <hr class="prep-divider reveal-segment" data-unlocked-by="dp-before-proc" style="display:none;">
 
-      <div class="prep-step">
+      <div class="prep-step reveal-segment" data-unlocked-by="dp-before-proc" style="display:none;">
         <input type="checkbox" class="prep-step-check" id="prep-step-5">
         <label class="prep-step-title" for="prep-step-5">Étape 5 — Remettre Engine Covers / Skid Plate</label>
         <div class="prep-details">
           <div class="photo-slot" style="margin-bottom:10px;" id="slot-dp-after-proc">
             <div class="photo-label">📸 Drain Plug — After</div>
-            <label class="photo-upload-area" id="area-dp-after-proc">
-              <input type="file" accept="image/*" class="photo-input" data-slot="dp-after-proc" onchange="handlePhoto(this)">
-              <div class="photo-placeholder" id="ph-dp-after-proc">
-                <div class="photo-icon">📷</div>
-                <div class="photo-hint">Tap to add photo</div>
-              </div>
-              <img class="photo-preview" id="prev-dp-after-proc" style="display:none;">
+            <label class="photo-confirm-area" id="area-dp-after-proc">
+              <input type="checkbox" class="photo-confirm-check" data-slot="dp-after-proc" onchange="handlePhotoConfirm(this)">
+              <span class="photo-confirm-text">Confirm photo has been taken</span>
             </label>
-            <button class="photo-clear-btn" id="clr-dp-after-proc" style="display:none;" onclick="clearPhoto('dp-after-proc')">✕ Remove</button>
           </div>
+
+          <div class="reveal-segment" data-unlocked-by="dp-after-proc" style="display:none;">
           <ul class="prep-list">
             <li>Remettre Engine Covers / Skid Plate</li>
           </ul>
         </div>
+        </div>
       </div>
 
-      <hr class="prep-divider">
+      <hr class="prep-divider reveal-segment" data-unlocked-by="dp-after-proc" style="display:none;">
 
-      <div class="prep-step">
+      <div class="prep-step reveal-segment" data-unlocked-by="dp-after-proc" style="display:none;">
         <input type="checkbox" class="prep-step-check" id="prep-step-6">
         <label class="prep-step-title" for="prep-step-6">Étape 6 — Préparation remplissage d'huile</label>
         <div class="prep-details">
@@ -530,9 +504,9 @@
         </div>
       </div>
 
-      <hr class="prep-divider">
+      <hr class="prep-divider reveal-segment" data-unlocked-by="dp-after-proc" style="display:none;">
 
-      <div class="prep-step">
+      <div class="prep-step reveal-segment" data-unlocked-by="dp-after-proc" style="display:none;">
         <input type="checkbox" class="prep-step-check" id="prep-step-7">
         <label class="prep-step-title" for="prep-step-7">Étape 7 — Déjacker le char</label>
         <div class="prep-details">
@@ -544,9 +518,9 @@
         </div>
       </div>
 
-      <hr class="prep-divider">
+      <hr class="prep-divider reveal-segment" data-unlocked-by="dp-after-proc" style="display:none;">
 
-      <div class="prep-step">
+      <div class="prep-step reveal-segment" data-unlocked-by="dp-after-proc" style="display:none;">
         <input type="checkbox" class="prep-step-check" id="prep-step-8">
         <label class="prep-step-title" for="prep-step-8">Étape 8 — Retour engine bay + remplissage</label>
         <div class="prep-details">
@@ -559,9 +533,9 @@
         </div>
       </div>
 
-      <hr class="prep-divider">
+      <hr class="prep-divider reveal-segment" data-unlocked-by="dp-after-proc" style="display:none;">
 
-      <div class="prep-step">
+      <div class="prep-step reveal-segment" data-unlocked-by="dp-after-proc" style="display:none;">
         <input type="checkbox" class="prep-step-check" id="prep-step-9">
         <label class="prep-step-title" for="prep-step-9">Étape 9 — Recueillir huile usée</label>
         <div class="prep-details">
@@ -574,9 +548,9 @@
         </div>
       </div>
 
-      <hr class="prep-divider">
+      <hr class="prep-divider reveal-segment" data-unlocked-by="dp-after-proc" style="display:none;">
 
-      <div class="prep-step">
+      <div class="prep-step reveal-segment" data-unlocked-by="dp-after-proc" style="display:none;">
         <input type="checkbox" class="prep-step-check" id="prep-step-10">
         <label class="prep-step-title" for="prep-step-10">Étape 10 — Clean up !</label>
         <div class="prep-details">
@@ -586,34 +560,32 @@
         </div>
       </div>
 
-      <hr class="prep-divider">
+      <hr class="prep-divider reveal-segment" data-unlocked-by="dp-after-proc" style="display:none;">
 
-      <div class="prep-step">
+      <div class="prep-step reveal-segment" data-unlocked-by="dp-after-proc" style="display:none;">
         <input type="checkbox" class="prep-step-check" id="prep-step-11">
         <label class="prep-step-title" for="prep-step-11">Étape 11 — Finaliser engine bay</label>
         <div class="prep-details">
           <div class="photo-slot" style="margin-bottom:10px;" id="slot-ws-after-proc">
             <div class="photo-label">📸 Work Area — After</div>
-            <label class="photo-upload-area" id="area-ws-after-proc">
-              <input type="file" accept="image/*" class="photo-input" data-slot="ws-after-proc" onchange="handlePhoto(this)">
-              <div class="photo-placeholder" id="ph-ws-after-proc">
-                <div class="photo-icon">📷</div>
-                <div class="photo-hint">Tap to add photo</div>
-              </div>
-              <img class="photo-preview" id="prev-ws-after-proc" style="display:none;">
+            <label class="photo-confirm-area" id="area-ws-after-proc">
+              <input type="checkbox" class="photo-confirm-check" data-slot="ws-after-proc" onchange="handlePhotoConfirm(this)">
+              <span class="photo-confirm-text">Confirm photo has been taken</span>
             </label>
-            <button class="photo-clear-btn" id="clr-ws-after-proc" style="display:none;" onclick="clearPhoto('ws-after-proc')">✕ Remove</button>
           </div>
+
+          <div class="reveal-segment" data-unlocked-by="ws-after-proc" style="display:none;">
           <ul class="prep-list">
             <li>Remettre le bouchon d'huile de la voiture</li>
             <li>Ramasser engine bay covers</li>
           </ul>
         </div>
+        </div>
       </div>
 
-      <hr class="prep-divider">
+      <hr class="prep-divider reveal-segment" data-unlocked-by="ws-after-proc" style="display:none;">
 
-      <div class="prep-step">
+      <div class="prep-step reveal-segment" data-unlocked-by="ws-after-proc" style="display:none;">
         <input type="checkbox" class="prep-step-check" id="prep-step-12">
         <label class="prep-step-title" for="prep-step-12">Étape 12 — Windshield washer fluid</label>
         <div class="prep-details">
@@ -624,9 +596,9 @@
         </div>
       </div>
 
-      <hr class="prep-divider">
+      <hr class="prep-divider reveal-segment" data-unlocked-by="ws-after-proc" style="display:none;">
 
-      <div class="prep-step">
+      <div class="prep-step reveal-segment" data-unlocked-by="ws-after-proc" style="display:none;">
         <input type="checkbox" class="prep-step-check" id="prep-step-13">
         <label class="prep-step-title" for="prep-step-13">Étape 13 — Intérieur voiture</label>
         <div class="prep-details">
@@ -640,9 +612,9 @@
         </div>
       </div>
 
-      <hr class="prep-divider">
+      <hr class="prep-divider reveal-segment" data-unlocked-by="ws-after-proc" style="display:none;">
 
-      <div class="prep-step">
+      <div class="prep-step reveal-segment" data-unlocked-by="ws-after-proc" style="display:none;">
         <input type="checkbox" class="prep-step-check" id="prep-step-14">
         <label class="prep-step-title" for="prep-step-14">Étape 14 — $$$$</label>
         <div class="prep-details">
@@ -744,28 +716,6 @@
         </div>
       </div>
 
-      <!-- SCOPE DISCLAIMER -->
-      <div style="border:1.5px solid var(--border);border-radius:8px;padding:12px 16px;margin-bottom:16px;background:#FFFDF5;">
-        <div style="font-size:9.5px;font-weight:700;color:var(--gray);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:6px;">Scope of Service — Agreement</div>
-        <div style="font-size:12px;color:var(--dark);line-height:1.7;">This service report covers the following services only: <strong>full synthetic oil change, oil filter replacement, and windshield washer fluid top-up.</strong> No other mechanical work was performed, recommended for immediate action, or is implied by this report.</div>
-      </div>
-
-      <!-- SIGNATURE -->
-      <div>
-        <div class="sig-label">Client Signature</div>
-        <div class="sig-wrap">
-          <canvas class="sig-canvas" id="sigCanvas"></canvas>
-          <div class="sig-line"></div>
-          <div class="sig-hint" id="sigHint">✏️ Sign here with Apple Pencil<br><span style="font-size:11px;color:#ddd">Tap to begin</span></div>
-          <div class="sig-bar">
-            <div class="sig-bar-left">
-              Thickness: <input type="range" id="penSize" min="1" max="6" value="2" style="width:80px">
-            </div>
-            <button class="sig-clear" onclick="clearSig()">✕ Clear Signature</button>
-          </div>
-        </div>
-      </div>
-
     </div>
   </div>
 
@@ -773,55 +723,6 @@
   <div class="footer">
     <div class="footer-l">OilRight – Mobile Service · Greater Moncton, NB<br>This report confirms the completion of the service described above.</div>
     <div class="footer-r">Thank you for your business!<br><strong style="color:var(--orange)">OilRight</strong></div>
-  </div>
-
-  <!-- ANNEX PHOTO PAGES (print only) -->
-  <div class="annex-page" id="annexDpBefore">
-    <div class="annex-header">
-      <div class="annex-title">Annex — Photo Documentation</div>
-      <div class="annex-label">Drain Plug Area — Before Service</div>
-    </div>
-    <div class="annex-photo"><img id="annexImgDpBefore" src=""></div>
-    <div class="annex-footer">
-      <span id="annexRefDpBefore"></span>
-      <span>OilRight Mobile Oil Changes · Greater Moncton, NB</span>
-    </div>
-  </div>
-
-  <div class="annex-page" id="annexDpAfter">
-    <div class="annex-header">
-      <div class="annex-title">Annex — Photo Documentation</div>
-      <div class="annex-label">Drain Plug Area — After Service</div>
-    </div>
-    <div class="annex-photo"><img id="annexImgDpAfter" src=""></div>
-    <div class="annex-footer">
-      <span id="annexRefDpAfter"></span>
-      <span>OilRight Mobile Oil Changes · Greater Moncton, NB</span>
-    </div>
-  </div>
-
-  <div class="annex-page" id="annexWsBefore">
-    <div class="annex-header">
-      <div class="annex-title">Annex — Photo Documentation</div>
-      <div class="annex-label">Work Area — Before Service</div>
-    </div>
-    <div class="annex-photo"><img id="annexImgWsBefore" src=""></div>
-    <div class="annex-footer">
-      <span id="annexRefWsBefore"></span>
-      <span>OilRight Mobile Oil Changes · Greater Moncton, NB</span>
-    </div>
-  </div>
-
-  <div class="annex-page" id="annexWsAfter">
-    <div class="annex-header">
-      <div class="annex-title">Annex — Photo Documentation</div>
-      <div class="annex-label">Work Area — After Service</div>
-    </div>
-    <div class="annex-photo"><img id="annexImgWsAfter" src=""></div>
-    <div class="annex-footer">
-      <span id="annexRefWsAfter"></span>
-      <span>OilRight Mobile Oil Changes · Greater Moncton, NB</span>
-    </div>
   </div>
 
 </div>
@@ -844,8 +745,8 @@
   // ── URL PARAM ────────────────────────────────────────────────
   const apptId = new URLSearchParams(window.location.search).get('id');
 
-  // ── SIGNATURE STATE (declared early — used by validation) ────
-  let hasSig = false;
+  // ── SIGNATURE STATE — moved to invoice.html, always considered satisfied here ────
+  let hasSig = true;
 
   // ── SAVE STATUS ──────────────────────────────────────────────
   const saveStatus = document.getElementById('saveStatus');
@@ -878,6 +779,7 @@
         if (el) data[id] = el.value;
       });
       data.materialRows = getMaterialRows();
+      data.photoConfirm = { ...photoData };
 
       // Assign ref number based on highest existing refNumber in serviceReports
       const refEl = document.querySelector('.header input[type="text"]');
@@ -975,6 +877,19 @@
       capacityDisplay.style.color = capacityVal ? 'var(--dark)' : 'var(--gray)';
     }
     if (data.materialRows) restoreMaterialRows(data.materialRows);
+    if (data.photoConfirm) {
+      Object.keys(photoData).forEach(slot => {
+        const checked = !!data.photoConfirm[slot];
+        photoData[slot] = checked;
+        const cb = document.querySelector(`.photo-confirm-check[data-slot="${slot}"]`);
+        if (cb) cb.checked = checked;
+        const area = document.getElementById('area-' + slot);
+        if (area) area.classList.toggle('confirmed', checked);
+        document.querySelectorAll(`.reveal-segment[data-unlocked-by="${slot}"]`).forEach(seg => {
+          seg.style.display = checked ? '' : 'none';
+        });
+      });
+    }
   }
 
   // ── PRE-FILL SECTION 1 FROM APPOINTMENT ─────────────────────
@@ -1114,14 +1029,6 @@
     }
   }
 
-  function checkSignature() {
-    const wrap = document.querySelector('.sig-wrap');
-    if (wrap) {
-      if (hasSig) wrap.classList.remove('req-empty');
-      else wrap.classList.add('req-empty');
-    }
-  }
-
   function checkPkgSelect() {
     const sel = document.getElementById('pkgSelect');
     if (sel) {
@@ -1157,8 +1064,6 @@
     checkInspGroups();
     // Payment
     checkPayment();
-    // Signature
-    checkSignature();
     // Package select
     checkPkgSelect();
     // Material info — at least 2 complete rows
@@ -1178,12 +1083,6 @@
   });
   document.getElementById('pkgSelect')?.addEventListener('change', checkPkgSelect);
 
-  // Signature validation hook (called after draw/clear)
-  function updateSigValidation() { checkSignature(); }
-
-  // Run validation AFTER all setup (including hasSig declaration below)
-  // This is called at the bottom of the script after signature is initialized
-
   // ── AUTO-EXPAND TEXTAREAS ────────────────────────────────────
   document.querySelectorAll('.notes-row textarea, .tech-notes').forEach(el => {
     el.addEventListener('input', function() {
@@ -1193,31 +1092,23 @@
   });
 
   // ── PHOTO HANDLING ───────────────────────────────────────────
-  const photoData = { 'ws-before-proc': null, 'dp-before-proc': null, 'dp-after-proc': null, 'ws-after-proc': null };
+  const photoData = { 'ws-before-proc': false, 'dp-before-proc': false, 'dp-after-proc': false, 'ws-after-proc': false };
 
-  window.handlePhoto = function(input) {
-    const slot = input.dataset.slot;
-    const file = input.files[0];
-    if (!file) return;
-    const reader = new FileReader();
-    reader.onload = function(e) {
-      photoData[slot] = e.target.result;
-      document.getElementById('ph-' + slot).style.display = 'none';
-      const prev = document.getElementById('prev-' + slot);
-      prev.src = e.target.result;
-      prev.style.display = 'block';
-      document.getElementById('clr-' + slot).style.display = 'inline-block';
+  window.handlePhotoConfirm = function(checkbox) {
+    const slot = checkbox.dataset.slot;
+    photoData[slot] = checkbox.checked;
+    const area = document.getElementById('area-' + slot);
+    if (checkbox.checked) {
+      area.classList.add('confirmed');
       document.getElementById('photoWarning').style.display = 'none';
-    };
-    reader.readAsDataURL(file);
-  };
-
-  window.clearPhoto = function(slot) {
-    photoData[slot] = null;
-    document.getElementById('ph-' + slot).style.display = 'flex';
-    const prev = document.getElementById('prev-' + slot);
-    prev.src = ''; prev.style.display = 'none';
-    document.getElementById('clr-' + slot).style.display = 'none';
+    } else {
+      area.classList.remove('confirmed');
+    }
+    // Show/hide segments unlocked by this photo
+    document.querySelectorAll(`.reveal-segment[data-unlocked-by="${slot}"]`).forEach(seg => {
+      seg.style.display = checkbox.checked ? '' : 'none';
+    });
+    scheduleSave();
   };
 
   // ── EXPORT PDF ───────────────────────────────────────────────
@@ -1256,7 +1147,7 @@
     // 3. Process photos
     const REQUIRED_PHOTOS_LOCAL = ['ws-before-proc', 'dp-before-proc', 'dp-after-proc', 'ws-after-proc'];
     for (const slot of REQUIRED_PHOTOS_LOCAL) {
-      if (photoData[slot] === null) {
+      if (!photoData[slot]) {
         document.getElementById('prepBody').classList.remove('prep-collapsed');
         const area = document.getElementById('area-' + slot);
         area?.scrollIntoView({ behavior: 'smooth', block: 'center' });
@@ -1315,18 +1206,12 @@
       methods?.scrollIntoView({ behavior: 'smooth', block: 'center' });
       return;
     }
-
-    // 8. Signature
-    if (!hasSig) {
-      document.getElementById('sigCanvas')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      return;
-    }
   }
 
   window.exportPDF = async function() {
     // Check photos
     const REQUIRED_PHOTOS = ['ws-before-proc', 'dp-before-proc', 'dp-after-proc', 'ws-after-proc'];
-    const missingPhotos = REQUIRED_PHOTOS.some(s => photoData[s] === null);
+    const missingPhotos = REQUIRED_PHOTOS.some(s => !photoData[s]);
 
     // Check required inputs
     const missingInputs = REQUIRED_INPUTS.some(id => {
@@ -1399,24 +1284,6 @@
       await set(ref(db, 'serviceReports/' + apptId + '/materialRows'), getMaterialRows());
     } catch (e) {
       console.error('Error saving invoice data:', e);
-    }
-
-    // Pass photos + signature to invoice.html via sessionStorage (not saved to Firebase)
-    try {
-      const photosForInvoice = {
-        'ws-before-proc': photoData['ws-before-proc'],
-        'dp-before-proc': photoData['dp-before-proc'],
-        'dp-after-proc': photoData['dp-after-proc'],
-        'ws-after-proc': photoData['ws-after-proc']
-      };
-      sessionStorage.setItem('oilright_invoice_photos_' + apptId, JSON.stringify(photosForInvoice));
-
-      const sigCanvas = document.getElementById('sigCanvas');
-      if (sigCanvas && hasSig) {
-        sessionStorage.setItem('oilright_invoice_sig_' + apptId, sigCanvas.toDataURL());
-      }
-    } catch (e) {
-      console.error('Error storing photos/signature for invoice:', e);
     }
 
     window.location.href = 'invoice.html?id=' + encodeURIComponent(apptId);
@@ -1577,15 +1444,6 @@
 
   document.getElementById('materialRows').appendChild(createMaterialRow());
 
-  // ── EMAIL MODAL ──────────────────────────────────────────────
-  window.closeEmailModal = function() {
-    const modal = document.getElementById('emailModal');
-    if (modal) modal.style.display = 'none';
-    const originalTitle = document.title;
-    window.print();
-    setTimeout(() => { document.title = originalTitle; }, 2000);
-  };
-
   // ── PARTNER PAYMENT TOGGLE ───────────────────────────────────
   window.updatePartnerPayment = function() {
     const partnerCollects = document.getElementById('partnerCollectsPayment')?.checked;
@@ -1629,65 +1487,6 @@
     checkPkgSelect();
   };
 
-  // ── SIGNATURE ────────────────────────────────────────────────
-  const canvas = document.getElementById('sigCanvas');
-  const ctx = canvas.getContext('2d');
-  const hint = document.getElementById('sigHint');
-  let drawing = false;
-
-  function resize() {
-    const r = canvas.getBoundingClientRect();
-    const dpr = window.devicePixelRatio || 1;
-    const saved = hasSig ? canvas.toDataURL() : null;
-    canvas.width = r.width * dpr;
-    canvas.height = r.height * dpr;
-    ctx.scale(dpr, dpr);
-    ctx.strokeStyle = '#1a1a1a';
-    ctx.lineJoin = 'round';
-    ctx.lineCap = 'round';
-    if (saved) {
-      const img = new Image();
-      img.onload = () => ctx.drawImage(img, 0, 0, r.width, r.height);
-      img.src = saved;
-    }
-  }
-
-  function pos(e) {
-    const r = canvas.getBoundingClientRect();
-    const src = e.touches ? e.touches[0] : e;
-    return { x: src.clientX - r.left, y: src.clientY - r.top };
-  }
-
-  function start(e) {
-    e.preventDefault(); drawing = true;
-    const p = pos(e); ctx.beginPath(); ctx.moveTo(p.x, p.y);
-    if (!hasSig) { hint.style.display = 'none'; hasSig = true; updateSigValidation(); }
-  }
-  function move(e) {
-    if (!drawing) return; e.preventDefault();
-    const p = pos(e);
-    ctx.lineWidth = document.getElementById('penSize').value;
-    ctx.lineTo(p.x, p.y); ctx.stroke(); ctx.beginPath(); ctx.moveTo(p.x, p.y);
-  }
-  function stop() { drawing = false; ctx.beginPath(); }
-
-  window.clearSig = function() {
-    const r = canvas.getBoundingClientRect();
-    ctx.clearRect(0, 0, r.width, r.height);
-    hasSig = false; hint.style.display = '';
-    updateSigValidation();
-  };
-
-  canvas.addEventListener('pointerdown', start, { passive: false });
-  canvas.addEventListener('pointermove', move, { passive: false });
-  canvas.addEventListener('pointerup', stop);
-  canvas.addEventListener('pointercancel', stop);
-  canvas.addEventListener('touchstart', start, { passive: false });
-  canvas.addEventListener('touchmove', move, { passive: false });
-  canvas.addEventListener('touchend', stop);
-  window.addEventListener('resize', resize);
-  setTimeout(resize, 100);
-
   // ── CLEAR ALL ────────────────────────────────────────────────
   window.clearAll = function() {
     if (!confirm('Clear the entire form?')) return;
@@ -1695,28 +1494,17 @@
     document.querySelectorAll('input[type="radio"]').forEach(el => el.checked = false);
     document.querySelectorAll('.notes-row textarea, .tech-notes').forEach(el => { el.value = ''; el.style.height = 'auto'; });
     document.getElementById('pkgSelect').value = ''; window.showPackage('');
-    window.clearSig();
-    Object.keys(photoData).forEach(slot => window.clearPhoto(slot));
+    document.querySelectorAll('.photo-confirm-check').forEach(cb => {
+      cb.checked = false;
+      photoData[cb.dataset.slot] = false;
+      document.getElementById('area-' + cb.dataset.slot)?.classList.remove('confirmed');
+    });
+    document.querySelectorAll('.reveal-segment').forEach(seg => { seg.style.display = 'none'; });
     document.getElementById('photoWarning').style.display = 'none';
     restoreMaterialRows([]);
     setTimeout(runAllValidation, 50);
   };
 </script>
-<!-- EMAIL MODAL -->
-<div id="emailModal" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.6);z-index:9999;align-items:center;justify-content:center;padding:20px;box-sizing:border-box;">
-  <div style="background:white;border-radius:12px;width:100%;max-width:600px;overflow:hidden;box-shadow:0 8px 40px rgba(0,0,0,0.3);">
-    <div style="background:#1a1a1a;padding:14px 18px;display:flex;align-items:center;justify-content:space-between;">
-      <div>
-        <div style="color:#F5B400;font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;">📧 Email Ready</div>
-        <div style="color:#888;font-size:11px;margin-top:2px;">Long-press → Select All → Copy, then close</div>
-      </div>
-      <button onclick="closeEmailModal()" style="background:var(--orange,#F5B400);color:#1a1a1a;border:none;border-radius:8px;padding:10px 20px;font-size:13px;font-weight:700;font-family:inherit;cursor:pointer;">Close & Export PDF</button>
-    </div>
-    <div style="padding:16px;">
-      <textarea id="emailModalText" readonly style="width:100%;height:320px;border:1.5px solid #ddd;border-radius:8px;padding:12px;font-size:13px;font-family:-apple-system,'Helvetica Neue',Arial,sans-serif;line-height:1.6;color:#1a1a1a;background:#fafafa;resize:none;outline:none;"></textarea>
-    </div>
-  </div>
-</div>
 
 </body>
 </html>
