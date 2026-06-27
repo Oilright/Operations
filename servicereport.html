@@ -365,7 +365,9 @@
           <div class="prep-substep">Partie 1 — Voiture client</div>
           <ul class="prep-list">
             <li>Mettre les gants</li>
+            <li>Prendre scott</li>
             <li>Ouvrir le hood</li>
+            <li>Vérifier niveau huile actuelle</li>
             <li>Apporter le bouchon moteur d'huile</li>
           </ul>
           <div class="prep-substep">Partie 2 — Valise OilRight</div>
@@ -577,7 +579,6 @@
           <div class="reveal-segment" data-unlocked-by="ws-after-proc" style="display:none;">
           <ul class="prep-list">
             <li>Remettre le bouchon d'huile de la voiture</li>
-            <li>Ramasser engine bay covers</li>
           </ul>
         </div>
         </div>
@@ -591,7 +592,6 @@
         <div class="prep-details">
           <ul class="prep-list">
             <li>Top-up</li>
-            <li>Ferme le hood</li>
           </ul>
         </div>
       </div>
@@ -616,7 +616,21 @@
 
       <div class="prep-step reveal-segment" data-unlocked-by="ws-after-proc" style="display:none;">
         <input type="checkbox" class="prep-step-check" id="prep-step-14">
-        <label class="prep-step-title" for="prep-step-14">Étape 14 — $$$$</label>
+        <label class="prep-step-title" for="prep-step-14">Étape 14 — Ramassage final</label>
+        <div class="prep-details">
+          <ul class="prep-list">
+            <li><label style="display:flex;align-items:flex-start;gap:8px;cursor:pointer;font-weight:700;"><input type="checkbox" id="oilLevelRecheckConfirm" onchange="handleOilLevelRecheck(this)" style="margin-top:2px;width:16px;height:16px;flex-shrink:0;accent-color:var(--orange);">Vérifier niveau d'huile après avoir parti la voiture une couple de minutes</label></li>
+            <li>Ramasser engine bay covers</li>
+            <li>Ferme le hood</li>
+          </ul>
+        </div>
+      </div>
+
+      <hr class="prep-divider reveal-segment" data-unlocked-by="ws-after-proc" style="display:none;">
+
+      <div class="prep-step reveal-segment" data-unlocked-by="ws-after-proc" style="display:none;">
+        <input type="checkbox" class="prep-step-check" id="prep-step-15">
+        <label class="prep-step-title" for="prep-step-15">Étape 15 — $$$$</label>
         <div class="prep-details">
           <ul class="prep-list">
             <li>Redonne les clefs et accepte ton paiement</li>
@@ -630,7 +644,7 @@
 
 
   <!-- 5. PACKAGE & PAYMENT -->
-  <div class="section">
+  <div class="section" id="packagePaymentSection" style="display:none;">
     <div class="sec-hdr"><span class="sec-num">5</span><span class="sec-title">Package &amp; Payment</span></div>
     <div class="sec-body">
 
@@ -780,6 +794,7 @@
       });
       data.materialRows = getMaterialRows();
       data.photoConfirm = { ...photoData };
+      data.oilLevelRecheck = document.getElementById('oilLevelRecheckConfirm')?.checked || false;
 
       // Assign ref number using refCounter (incremented once, persists even if reports are deleted)
       const refEl = document.querySelector('.header input[type="text"]');
@@ -884,6 +899,12 @@
           seg.style.display = checked ? '' : 'none';
         });
       });
+    }
+    if (data.oilLevelRecheck) {
+      const cb = document.getElementById('oilLevelRecheckConfirm');
+      if (cb) cb.checked = true;
+      const section = document.getElementById('packagePaymentSection');
+      if (section) section.style.display = '';
     }
   }
 
@@ -1106,6 +1127,12 @@
     scheduleSave();
   };
 
+  window.handleOilLevelRecheck = function(checkbox) {
+    const section = document.getElementById('packagePaymentSection');
+    if (section) section.style.display = checkbox.checked ? '' : 'none';
+    scheduleSave();
+  };
+
   // ── EXPORT PDF ───────────────────────────────────────────────
   function clearFillIndicators() {
     document.querySelectorAll('.fill-this-field').forEach(el => el.classList.remove('fill-this-field'));
@@ -1149,6 +1176,16 @@
         document.getElementById('photoWarning').style.display = 'block';
         return;
       }
+    }
+
+    // 3b. Oil level recheck confirmation (unlocks Package & Payment)
+    const oilRecheckCb = document.getElementById('oilLevelRecheckConfirm');
+    if (oilRecheckCb && !oilRecheckCb.checked) {
+      document.getElementById('prepBody').classList.remove('prep-collapsed');
+      oilRecheckCb.closest('label').classList.add('fill-this-field');
+      oilRecheckCb.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      setTimeout(() => clearFillIndicators(), 3200);
+      return;
     }
 
     // 4. Package selection
@@ -1508,6 +1545,8 @@
       document.getElementById('area-' + cb.dataset.slot)?.classList.remove('confirmed');
     });
     document.querySelectorAll('.reveal-segment').forEach(seg => { seg.style.display = 'none'; });
+    document.getElementById('oilLevelRecheckConfirm').checked = false;
+    document.getElementById('packagePaymentSection').style.display = 'none';
     document.getElementById('photoWarning').style.display = 'none';
     restoreMaterialRows([]);
     setTimeout(runAllValidation, 50);
