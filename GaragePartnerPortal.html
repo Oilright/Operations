@@ -1758,7 +1758,7 @@
                 serviceType: 'Service Type',
                 onSiteService: 'On Site Service',
                 mobileService: 'Mobile Service',
-                mobileServiceDesc: 'You pick a time window you know you\'re available — we come to your home or workplace. About 48 hours before, you\'ll get a text with your exact arrival time. For example, if your window is 8 AM to 12 PM, we might text you to confirm our technician will arrive at 9:45 AM. We do need a $40 non-refundable deposit right now to lock in your spot — it goes toward your service but is non-refundable if you cancel or modify within 48 hours or aren\'t there when we arrive. On the day, just have your vehicle accessible and we take care of the rest!',
+                mobileServiceDesc: 'You pick a time window you know you\'re available — we come to your home or workplace. About 48 hours before, you\'ll get a text with your exact arrival time. For example, if your window is 8 AM to 12 PM, we might text you to confirm our technician will arrive at 9:45 AM. We do need a $40 non-refundable deposit right now to lock in your spot — it goes toward your service but is non-refundable if you cancel or modify within 48 hours or aren\'t there when we arrive. On the day, just have your vehicle accessible. Please make sure you\'re there to hand over your keys, or if you won\'t be there in person, let us know in advance where we can find them.',
 
                 // Address Fields
                 streetAddress: 'Street Address',
@@ -1906,7 +1906,7 @@
                 serviceType: 'Type de service',
                 onSiteService: 'Service sur place',
                 mobileService: 'Service mobile',
-                mobileServiceDesc: 'Vous choisissez une plage horaire où vous êtes disponible — on se déplace chez vous ou à votre lieu de travail. Environ 48 heures avant, vous recevrez un texto avec votre heure d\'arrivée exacte. Par exemple, si votre plage est de 8h à 12h, on pourrait vous texter pour confirmer que notre technicien arrivera à 9h45. On a besoin d\'un dépôt de 40$ non remboursable maintenant pour réserver votre place — il est appliqué à votre service, mais non remboursable si vous annulez ou modifiez dans les 48 heures ou si vous n\'êtes pas là à notre arrivée. Le jour du service, assurez-vous que votre véhicule est accessible et on s\'occupe du reste!',
+                mobileServiceDesc: 'Vous choisissez une plage horaire où vous êtes disponible — on se déplace chez vous ou à votre lieu de travail. Environ 48 heures avant, vous recevrez un texto avec votre heure d\'arrivée exacte. Par exemple, si votre plage est de 8h à 12h, on pourrait vous texter pour confirmer que notre technicien arrivera à 9h45. On a besoin d\'un dépôt de 40$ non remboursable maintenant pour réserver votre place — il est appliqué à votre service, mais non remboursable si vous annulez ou modifiez dans les 48 heures ou si vous n\'êtes pas là à notre arrivée. Le jour du service, assurez-vous que votre véhicule est accessible. Assurez-vous d\'être présent pour nous remettre les clés, ou si vous ne serez pas là en personne, dites-nous à l\'avance où nous pourrons les trouver.',
 
                 // Address Fields
                 streetAddress: 'Adresse',
@@ -51967,19 +51967,6 @@
             const vehicle = apt.vehicle ? `${apt.vehicle.year} ${apt.vehicle.make} ${apt.vehicle.model}` : '';
             const firstName = apt.customerName ? apt.customerName.split(' ')[0] : apt.customerName;
 
-            let timeBlock = '';
-            if (isMobile) {
-                timeBlock = `Time: Between ${startTime} and ${endTime}
-
-About 48 hours before your appointment, you'll get a text with your exact arrival time. For example, if your window is 8 AM to 12 PM, we might text you to confirm our technician will arrive at 9:45 AM.
-
-The $40 you just paid goes toward your service but is non-refundable if you cancel or modify within 48 hours or aren't there when we arrive.
-
-On the day, just have your vehicle accessible and we'll take care of the rest!`;
-            } else {
-                timeBlock = `Please make sure your car is dropped off at the garage before ${startTime} on the day of your appointment.`;
-            }
-
             let addressBlock = '';
             if (isMobile && apt.address) {
                 addressBlock = `Address: ${apt.address.street}, ${apt.address.city}, ${apt.address.postal}
@@ -51992,16 +51979,39 @@ On the day, just have your vehicle accessible and we'll take care of the rest!`;
 Notes: ${apt.notes.trim()}`;
             }
 
-            const body = `Hello ${firstName},
+            let body = '';
+            if (isMobile) {
+                body = `Hello ${firstName},
+
+Thank you for booking an oil change with OilRight!
+
+This is a confirmation of your oil change appointment.
+
+Date: ${dateFormatted}
+Time: Between ${startTime} and ${endTime}
+
+${addressBlock}Vehicle: ${vehicle}${notesBlock}
+
+About 48 hours before your appointment, you'll get a text with your exact arrival time. For example, if your window is 8 AM to 12 PM, we might text you to confirm our technician will arrive at 9:45 AM.
+
+The $40 you just paid goes toward your service but is non-refundable if you cancel or modify within 48 hours or aren't there when we arrive.
+
+On the day, just have your vehicle accessible. Please make sure you're there to hand over your keys, or if you won't be there in person, let us know in advance where we can find them.
+
+See you then!`;
+            } else {
+                const timeBlock = `Please make sure your car is dropped off at the garage before ${startTime} on the day of your appointment.`;
+                body = `Hello ${firstName},
 
 This is a confirmation of your oil change appointment.
 
 Date: ${dateFormatted}
 ${timeBlock}
 
-${addressBlock}Vehicle: ${vehicle}${notesBlock}
+Vehicle: ${vehicle}${notesBlock}
 
 See you then!`;
+            }
 
             return `To: ${apt.customerEmail || ''}
 Subject: Appointment Confirmation – Oil Change
@@ -52096,6 +52106,7 @@ ${body}`;
 
             wrapper.appendChild(leftBtn);
             wrapper.appendChild(rightBtn);
+            wrapper._updateCarousel = updateCarousel;
             return wrapper;
         }
 
@@ -52144,6 +52155,9 @@ ${body}`;
                         const expanded = expandable.classList.contains('open');
                         expandable.classList.toggle('open', !expanded);
                         seeBtn.textContent = expanded ? 'See appointments' : 'Hide';
+                        if (!expanded && carousel._updateCarousel) {
+                            setTimeout(() => carousel._updateCarousel(), 360);
+                        }
                     };
                     header.appendChild(seeBtn);
                     slotDiv.appendChild(header);
