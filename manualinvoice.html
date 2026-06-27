@@ -338,6 +338,7 @@
 
 <script>
   function esc(s) { return (s || '').toString().replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+  function parsePrice(s) { return parseFloat((s || '').toString().replace(',', '.')) || 0; }
 
   let invoiceData = {};
 
@@ -404,7 +405,7 @@
     const nextKm = document.getElementById('f-next-service').value.trim();
 
     const pkgName = document.getElementById('f-pkg').value;
-    const pkgPrice = parseFloat(document.getElementById('f-pkg-price').value) || 0;
+    const pkgPrice = parsePrice(document.getElementById('f-pkg-price').value);
 
     const payMethod = document.querySelector('input[name="f-pay"]:checked')?.value || '—';
 
@@ -426,7 +427,7 @@
     }
 
     materialRows.forEach(r => {
-      const price = parseFloat(r.price) || 0;
+      const price = parsePrice(r.price);
       const qty = r.qty || '1';
       itemsHtml += `<tr>
         <td class="num">${rowNum++}</td>

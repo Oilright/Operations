@@ -251,6 +251,7 @@
   const PAY_LABELS = { cash: 'Cash', etransfer: 'E-Transfer', card: 'Credit / Debit Card' };
 
   function esc(s) { return (s || '').toString().replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+  function parsePrice(s) { return parseFloat((s || '').toString().replace(',', '.')) || 0; }
 
   let invoiceData = {};
 
@@ -286,10 +287,10 @@
       const pkgVal = report.pkgSelectValue || '';
       let pkgName = PKG_NAMES[pkgVal] || 'Oil Change Service';
       let pkgPrice = 0;
-      if (pkgVal === '0') pkgPrice = parseFloat(report.serviceFeePrice) || 0;
-      else if (pkgVal === '1') pkgPrice = parseFloat(report.pkg1Price) || 0;
-      else if (pkgVal === '2') pkgPrice = parseFloat(report.pkg2Price) || 0;
-      else if (pkgVal === '3') pkgPrice = parseFloat(report.partnerPrice) || 0;
+      if (pkgVal === '0') pkgPrice = parsePrice(report.serviceFeePrice);
+      else if (pkgVal === '1') pkgPrice = parsePrice(report.pkg1Price);
+      else if (pkgVal === '2') pkgPrice = parsePrice(report.pkg2Price);
+      else if (pkgVal === '3') pkgPrice = parsePrice(report.partnerPrice);
 
       // Payment method
       const payMethod = PAY_LABELS[report.payMethod] || '—';
@@ -314,7 +315,7 @@
       }
 
       materialRows.forEach(r => {
-        const price = parseFloat(r.price) || 0;
+        const price = parsePrice(r.price);
         const qty = r.qty || '1';
         itemsHtml += `<tr>
           <td class="num">${rowNum++}</td>
