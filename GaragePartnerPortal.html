@@ -52050,19 +52050,20 @@ ${body}`;
             const track = document.createElement('div');
             track.className = 'carousel-track';
             track.style.cssText = 'display:flex; gap:12px; transition:transform 0.35s cubic-bezier(0.4,0,0.2,1); will-change:transform;';
+            const visible = window.innerWidth <= 768 ? 1 : 2;
+
             apts.forEach(apt => {
                 const card = createAppointmentCard(apt, isPartnerView);
-                card.style.flex = window.innerWidth <= 768 ? '0 0 100%' : '0 0 calc(50% - 6px)';
+                card.style.flex = visible === 1 ? '0 0 100%' : '0 0 calc(50% - 6px)';
                 card.style.minWidth = '0';
                 track.appendChild(card);
             });
             wrapper.appendChild(track);
 
-            // Only need arrows if more than 2 cards
-            if (apts.length <= 2) return wrapper;
+            // Only need arrows if more cards than what's visible at once
+            if (apts.length <= visible) return wrapper;
 
             let currentIndex = 0;
-            const visible = window.innerWidth <= 768 ? 1 : 2;
             let animating = false;
 
             const leftBtn = document.createElement('button');
@@ -52100,6 +52101,22 @@ ${body}`;
                 updateCarousel();
                 setTimeout(() => { animating = false; }, 370);
             };
+
+            // Touch swipe support for mobile
+            let touchStartX = 0;
+            track.addEventListener('touchstart', (e) => {
+                touchStartX = e.touches[0].clientX;
+            }, { passive: true });
+            track.addEventListener('touchend', (e) => {
+                const touchEndX = e.changedTouches[0].clientX;
+                const diff = touchStartX - touchEndX;
+                if (Math.abs(diff) < 40) return; // ignore small swipes
+                if (diff > 0) {
+                    rightBtn.onclick();
+                } else {
+                    leftBtn.onclick();
+                }
+            }, { passive: true });
 
             // Update on first render after DOM insertion
             setTimeout(() => updateCarousel(), 0);
