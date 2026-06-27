@@ -751,15 +751,30 @@ ${nextService ? `\nYour next oil change is due at ${nextService} km.\n` : ''}`;
   };
 
   window.copyEmail = function() {
-    const body = document.getElementById('emailModalText').value;
-    navigator.clipboard.writeText(body).then(() => {
-      const btn = document.getElementById('emailBtn');
+    const textarea = document.getElementById('emailModalText');
+    textarea.focus();
+    textarea.select();
+    textarea.setSelectionRange(0, textarea.value.length);
+    let success = false;
+    try {
+      success = document.execCommand('copy');
+    } catch (e) {
+      success = false;
+    }
+    const btn = document.getElementById('emailBtn');
+    if (success) {
       const original = btn.textContent;
       btn.textContent = '✓ Copied!';
       setTimeout(() => { btn.textContent = original; }, 2000);
-    }).catch(() => {
-      alert('Could not copy automatically. Please copy manually:\n\n' + body);
-    });
+    } else {
+      navigator.clipboard.writeText(textarea.value).then(() => {
+        const original = btn.textContent;
+        btn.textContent = '✓ Copied!';
+        setTimeout(() => { btn.textContent = original; }, 2000);
+      }).catch(() => {
+        alert('Could not copy automatically. Please select the text manually and copy.');
+      });
+    }
   };
 
   window.continueToPrint = function() {
