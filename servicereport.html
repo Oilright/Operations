@@ -342,9 +342,8 @@
             <th style="text-align:left;padding:6px 8px;color:var(--gray);font-size:11px;text-transform:uppercase;letter-spacing:0.4px;width:40%;">Description</th>
             <th style="text-align:left;padding:6px 8px;color:var(--gray);font-size:11px;text-transform:uppercase;letter-spacing:0.4px;width:25%;">Part #</th>
             <th style="text-align:left;padding:6px 8px;color:var(--gray);font-size:11px;text-transform:uppercase;letter-spacing:0.4px;width:10%;">Qty</th>
-            <th style="text-align:left;padding:6px 8px;color:var(--gray);font-size:11px;text-transform:uppercase;letter-spacing:0.4px;width:13%;">Before Tax</th>
-            <th style="text-align:left;padding:6px 8px;color:var(--gray);font-size:11px;text-transform:uppercase;letter-spacing:0.4px;width:13%;">Price</th>
-            <th style="width:9%;"></th>
+            <th style="text-align:left;padding:6px 8px;color:var(--gray);font-size:11px;text-transform:uppercase;letter-spacing:0.4px;width:15%;">Price</th>
+            <th style="width:10%;"></th>
           </tr>
         </thead>
         <tbody id="materialRows"></tbody>
@@ -1449,18 +1448,10 @@
       <td style="padding:4px 6px;"><input type="text" placeholder="info huile première rangée — info pas en gras" autocomplete="off" style="width:100%;border:none;border-bottom:1px solid var(--line);background:transparent;font-size:13px;font-family:inherit;color:var(--dark);padding:3px 2px;outline:none;font-weight:400;" value="${data.desc || ''}"></td>
       <td style="padding:4px 6px;"><input type="text" placeholder="info en gras" autocomplete="off" style="width:100%;border:none;border-bottom:1px solid var(--line);background:transparent;font-size:13px;font-family:inherit;color:var(--dark);padding:3px 2px;outline:none;font-weight:700;" value="${data.part || ''}"></td>
       <td style="padding:4px 6px;"><input type="text" placeholder="1" autocomplete="off" style="width:100%;border:none;border-bottom:1px solid var(--line);background:transparent;font-size:13px;font-family:inherit;color:var(--dark);padding:3px 2px;outline:none;" value="${data.qty || ''}"></td>
-      <td style="padding:4px 6px;"><input type="text" class="before-tax-input" placeholder="$0.00" autocomplete="off" style="width:100%;border:none;border-bottom:1px solid var(--line);background:transparent;font-size:13px;font-family:inherit;color:var(--dark);padding:3px 2px;outline:none;" value="${data.beforeTax || ''}"></td>
-      <td style="padding:4px 6px;"><input type="text" class="price-input" placeholder="$0.00" autocomplete="off" readonly style="width:100%;border:none;border-bottom:1px solid var(--line);background:#f5f5f5;font-size:13px;font-family:inherit;color:var(--dark);padding:3px 2px;outline:none;cursor:not-allowed;" value="${data.price || ''}"></td>
+      <td style="padding:4px 6px;"><input type="text" placeholder="$0.00" autocomplete="off" style="width:100%;border:none;border-bottom:1px solid var(--line);background:transparent;font-size:13px;font-family:inherit;color:var(--dark);padding:3px 2px;outline:none;" value="${data.price || ''}"></td>
       <td style="padding:4px 6px;text-align:center;"><button type="button" onclick="removeMaterialRow(this)" style="background:none;border:none;color:#ccc;font-size:16px;cursor:pointer;line-height:1;">✕</button></td>
     `;
-    const beforeTaxInput = tr.querySelector('.before-tax-input');
-    const priceInput = tr.querySelector('.price-input');
-    beforeTaxInput.addEventListener('input', () => {
-      const val = parseFloat(beforeTaxInput.value.replace(',', '.'));
-      priceInput.value = isNaN(val) ? '' : (val * 1.15).toFixed(2);
-      scheduleSave(); checkAddNewRow(); syncMatDesc();
-    });
-    tr.querySelectorAll('input:not(.before-tax-input)').forEach(input => {
+    tr.querySelectorAll('input').forEach(input => {
       input.addEventListener('input', () => { scheduleSave(); checkAddNewRow(); syncMatDesc(); });
     });
     return tr;
@@ -1484,8 +1475,8 @@
     const rows = [];
     document.querySelectorAll('#materialRows tr').forEach(tr => {
       const inputs = tr.querySelectorAll('input');
-      const row = { desc: inputs[0]?.value || '', part: inputs[1]?.value || '', qty: inputs[2]?.value || '', beforeTax: inputs[3]?.value || '', price: inputs[4]?.value || '' };
-      if (row.desc || row.part || row.qty || row.beforeTax || row.price) rows.push(row);
+      const row = { desc: inputs[0]?.value || '', part: inputs[1]?.value || '', qty: inputs[2]?.value || '', price: inputs[3]?.value || '' };
+      if (row.desc || row.part || row.qty || row.price) rows.push(row);
     });
     return rows;
   }

@@ -443,6 +443,9 @@
       itemsHtml = `<tr><td colspan="5" style="text-align:center;color:var(--gray);padding:20px;">No items on this invoice.</td></tr>`;
     }
 
+    const tax = subtotal * 0.15;
+    const total = subtotal + tax;
+
     const html = `
       <div class="header">
         <div class="header-left">
@@ -490,7 +493,9 @@
 
       <div class="totals">
         <div class="totals-box">
-          <div class="totals-row grand"><span>Total Due</span><span>$${subtotal.toFixed(2)}</span></div>
+          <div class="totals-row"><span>Subtotal</span><span>$${subtotal.toFixed(2)}</span></div>
+          <div class="totals-row"><span>Tax</span><span>$${tax.toFixed(2)}</span></div>
+          <div class="totals-row grand"><span>Total Due</span><span>$${total.toFixed(2)}</span></div>
         </div>
       </div>
 
@@ -536,7 +541,7 @@
     invoiceData = {
       refNumber, dateFmt, clientName, clientEmail,
       clientFirst: clientName.split(' ')[0] || clientName,
-      total: subtotal,
+      total: total,
       nextService: nextKm
     };
 
