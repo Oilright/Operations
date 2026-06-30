@@ -428,7 +428,8 @@
         refNumber, dateFmt, clientName, clientEmail,
         clientFirst: clientName.split(' ')[0] || clientName,
         total: total,
-        nextService: report.oilNext || ''
+        nextService: report.oilNext || '',
+        vehicle: vehicle
       };
 
       // Populate annex photo pages from sessionStorage (set by servicereport.html)
@@ -606,15 +607,16 @@
       clientEmail: 'client@example.com',
       clientFirst: 'Sample',
       total: 194.32,
-      nextService: '93,400'
+      nextService: '93,400',
+      vehicle: '2020 Honda Civic'
     };
   }
 
   loadInvoice();
 
   function buildEmailBody() {
-    const { refNumber, dateFmt, clientName, clientEmail, clientFirst, total, nextService } = invoiceData;
-    const subject = `Your OilRight Invoice — Ref. #${refNumber} · ${dateFmt}`;
+    const { refNumber, dateFmt, clientName, clientEmail, clientFirst, total, nextService, vehicle } = invoiceData;
+    const subject = `Your OilRight Invoice — Ref. #${refNumber} · ${vehicle} · ${dateFmt}`;
     return `To: ${clientEmail}
 Subject: ${subject}
 

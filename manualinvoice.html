@@ -542,7 +542,8 @@
       refNumber, dateFmt, clientName, clientEmail,
       clientFirst: clientName.split(' ')[0] || clientName,
       total: total,
-      nextService: nextKm
+      nextService: nextKm,
+      vehicle: vehicle
     };
 
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -557,8 +558,8 @@
   };
 
   function buildEmailBody() {
-    const { refNumber, dateFmt, clientName, clientEmail, clientFirst, total, nextService } = invoiceData;
-    const subject = `Your OilRight Invoice — Ref. #${refNumber} · ${dateFmt}`;
+    const { refNumber, dateFmt, clientName, clientEmail, clientFirst, total, nextService, vehicle } = invoiceData;
+    const subject = `Your OilRight Invoice — Ref. #${refNumber} · ${vehicle} · ${dateFmt}`;
     return `To: ${clientEmail}
 Subject: ${subject}
 
