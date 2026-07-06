@@ -17,7 +17,7 @@
   body { font-family: -apple-system, 'Helvetica Neue', Arial, sans-serif; background: #f0f0f0; color: var(--dark); margin: 0; padding: 24px 16px; font-size: 14px; }
   .page { max-width: 760px; margin: 0 auto; background: white; border-radius: 10px; box-shadow: 0 2px 16px rgba(0,0,0,0.08); padding: 36px 40px; }
 
-  .header { display: flex; align-items: flex-start; justify-content: space-between; border-bottom: 3px solid var(--orange); padding-bottom: 14px; margin-bottom: 18px; }
+  .header { display: flex; align-items: flex-end; justify-content: space-between; border-bottom: 3px solid var(--orange); padding-bottom: 14px; margin-bottom: 18px; }
   .header-left { display: flex; align-items: center; gap: 12px; }
   .brand-name { font-size: 24px; font-weight: 700; color: var(--orange); }
   .brand-tagline { font-size: 11px; color: var(--gray); margin-top: 2px; }
@@ -339,12 +339,16 @@
           <div class="header-left">
             <div>
               <img src="OilRight_Logo.svg" alt="OilRight" style="height:80px;display:block;">
-                          </div>
+              <div style="font-size:11px;color:var(--gray);margin-top:6px;line-height:1.7;">
+                oilrightmobileoilchanges@gmail.com<br>
+                (581) 901-2224
+              </div>
+            </div>
           </div>
           <div>
             <div class="doc-title">INVOICE</div>
             <div class="doc-sub">Service Invoice</div>
-            <div class="doc-ref">Ref. # <strong>${esc(refNumber)}</strong><br>${esc(dateFmt)}</div>
+            <div class="doc-ref">Ref. # <strong>${esc(refNumber)}</strong><br>${esc(dateFmt)}<br><span style="font-size:11px;">TPS/TVH# : 777966177RT0001</span></div>
           </div>
         </div>
 
@@ -390,6 +394,7 @@
         <div class="payment-block">
           <h4>Payment Method</h4>
           <div>${esc(payMethod)}</div>
+          ${payMethod === 'E-Transfer' ? `<div style="margin-top:6px;font-size:11px;color:var(--gray);line-height:1.7;">Send to: (581) 983-5455 or oilrightmobileoilchanges@gmail.com &nbsp;·&nbsp; Q: Service received &nbsp;/&nbsp; A: <strong style="color:var(--dark);">oilright</strong></div>` : ''}
         </div>
 
         <div class="scope-block">
@@ -469,12 +474,16 @@
         <div class="header-left">
           <div>
             <img src="OilRight_Logo.svg" alt="OilRight" style="height:80px;display:block;">
-                      </div>
+            <div style="font-size:11px;color:var(--gray);margin-top:6px;line-height:1.7;">
+              oilrightmobileoilchanges@gmail.com<br>
+              (581) 901-2224
+            </div>
+          </div>
         </div>
         <div>
           <div class="doc-title">INVOICE</div>
           <div class="doc-sub">Service Invoice</div>
-          <div class="doc-ref">Ref. # <strong>${refNumber}</strong><br>${dateFmt}</div>
+          <div class="doc-ref">Ref. # <strong>${refNumber}</strong><br>${dateFmt}<br><span style="font-size:11px;">TPS/TVH# : 777966177RT0001</span></div>
         </div>
       </div>
 
@@ -567,6 +576,7 @@
       <div class="payment-block">
         <h4>Payment Method</h4>
         <div>E-Transfer</div>
+        <div style="margin-top:6px;font-size:11px;color:var(--gray);line-height:1.7;">Send to: (581) 983-5455 or oilrightmobileoilchanges@gmail.com &nbsp;·&nbsp; Q: Service received &nbsp;/&nbsp; A: <strong style="color:var(--dark);">oilright</strong></div>
       </div>
 
       <div class="scope-block">
