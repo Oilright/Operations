@@ -1441,11 +1441,22 @@
     }
   }
 
-  function createMaterialRow(data = {}) {
+  function createMaterialRow(data = {}, isFirst = false) {
     const tr = document.createElement('tr');
     tr.style.borderBottom = '1px solid var(--border)';
+    const descCell = isFirst
+      ? `<td style="padding:4px 6px;">
+          <select onchange="this.nextElementSibling.value = this.value === '' ? this.nextElementSibling.value : this.value; this.value=''; scheduleSave(); checkAddNewRow(); syncMatDesc();" style="width:100%;border:none;border-bottom:1px solid var(--orange);background:transparent;font-size:11px;font-family:inherit;color:var(--gray);padding:2px 0;outline:none;margin-bottom:3px;">
+            <option value="">— Quick fill —</option>
+            <option value="KS FULL SYNT SAE 0W-20">KS FULL SYNT SAE 0W-20</option>
+            <option value="KS FULL SYNT SAE 5W-30">KS FULL SYNT SAE 5W-30</option>
+            <option value="KS FULL SYNT SAE 5W-20">KS FULL SYNT SAE 5W-20</option>
+          </select>
+          <input type="text" placeholder="info huile première rangée — info pas en gras" autocomplete="off" style="width:100%;border:none;border-bottom:1px solid var(--line);background:transparent;font-size:13px;font-family:inherit;color:var(--dark);padding:3px 2px;outline:none;font-weight:400;" value="${data.desc || ''}">
+        </td>`
+      : `<td style="padding:4px 6px;"><input type="text" placeholder="Description" autocomplete="off" style="width:100%;border:none;border-bottom:1px solid var(--line);background:transparent;font-size:13px;font-family:inherit;color:var(--dark);padding:3px 2px;outline:none;font-weight:400;" value="${data.desc || ''}"></td>`;
     tr.innerHTML = `
-      <td style="padding:4px 6px;"><input type="text" placeholder="info huile première rangée — info pas en gras" autocomplete="off" style="width:100%;border:none;border-bottom:1px solid var(--line);background:transparent;font-size:13px;font-family:inherit;color:var(--dark);padding:3px 2px;outline:none;font-weight:400;" value="${data.desc || ''}"></td>
+      ${descCell}
       <td style="padding:4px 6px;"><input type="text" placeholder="info en gras" autocomplete="off" style="width:100%;border:none;border-bottom:1px solid var(--line);background:transparent;font-size:13px;font-family:inherit;color:var(--dark);padding:3px 2px;outline:none;font-weight:700;" value="${data.part || ''}"></td>
       <td style="padding:4px 6px;"><input type="text" placeholder="1" autocomplete="off" style="width:100%;border:none;border-bottom:1px solid var(--line);background:transparent;font-size:13px;font-family:inherit;color:var(--dark);padding:3px 2px;outline:none;" value="${data.qty || ''}"></td>
       <td style="padding:4px 6px;"><input type="text" placeholder="$0.00" autocomplete="off" style="width:100%;border:none;border-bottom:1px solid var(--line);background:transparent;font-size:13px;font-family:inherit;color:var(--dark);padding:3px 2px;outline:none;" value="${data.price || ''}"></td>
@@ -1484,12 +1495,14 @@
   function restoreMaterialRows(rows) {
     const tbody = document.getElementById('materialRows');
     tbody.innerHTML = '';
-    if (rows && rows.length) rows.forEach(r => tbody.appendChild(createMaterialRow(r)));
-    tbody.appendChild(createMaterialRow());
+    if (rows && rows.length) {
+      rows.forEach((r, i) => tbody.appendChild(createMaterialRow(r, i === 0)));
+    }
+    tbody.appendChild(createMaterialRow({}));
     syncMatDesc();
   }
 
-  document.getElementById('materialRows').appendChild(createMaterialRow());
+  document.getElementById('materialRows').appendChild(createMaterialRow({}, true));
 
   // ── PARTNER PAYMENT TOGGLE ───────────────────────────────────
   window.updatePartnerPayment = function() {
