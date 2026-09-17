@@ -50911,14 +50911,24 @@
             notesField.placeholder = t('notesPlaceholder');
 
             try {
-                const response = await fetch('https://vpic.nhtsa.dot.gov/api/vehicles/GetMakesForVehicleType/car?format=json');
-                const data = await response.json();
-                
+                const vehicleTypes = ['car', 'multipurpose passenger vehicle (mpv)', 'truck'];
+                const responses = await Promise.all(
+                    vehicleTypes.map(vType => fetch(`https://vpic.nhtsa.dot.gov/api/vehicles/GetMakesForVehicleType/${encodeURIComponent(vType)}?format=json`).then(r => r.json()))
+                );
+                const makeMap = new Map();
+                responses.forEach(data => {
+                    data.Results.forEach(make => {
+                        const key = make.MakeName.toUpperCase();
+                        if (!makeMap.has(key)) makeMap.set(key, make.MakeName);
+                    });
+                });
+                const sortedMakes = Array.from(makeMap.values()).sort((a, b) => a.localeCompare(b));
+
                 makeSelect.innerHTML = '<option value="">' + t('selectMake') + '</option>';
-                data.Results.sort((a, b) => a.MakeName.localeCompare(b.MakeName)).forEach(make => {
+                sortedMakes.forEach(makeName => {
                     const option = document.createElement('option');
-                    option.value = make.MakeName;
-                    option.textContent = make.MakeName;
+                    option.value = makeName;
+                    option.textContent = makeName;
                     makeSelect.appendChild(option);
                 });
                 makeSelect.disabled = false;
@@ -52704,12 +52714,22 @@ ${body}`;
             notesField.placeholder = t('notesPlaceholder') || 'Any special instructions or information...';
 
             try {
-                const response = await fetch('https://vpic.nhtsa.dot.gov/api/vehicles/GetMakesForVehicleType/car?format=json');
-                const data = await response.json();
-                
+                const vehicleTypes = ['car', 'multipurpose passenger vehicle (mpv)', 'truck'];
+                const responses = await Promise.all(
+                    vehicleTypes.map(vType => fetch(`https://vpic.nhtsa.dot.gov/api/vehicles/GetMakesForVehicleType/${encodeURIComponent(vType)}?format=json`).then(r => r.json()))
+                );
+                const makeMap = new Map();
+                responses.forEach(data => {
+                    data.Results.forEach(make => {
+                        const key = make.MakeName.toUpperCase();
+                        if (!makeMap.has(key)) makeMap.set(key, make.MakeName);
+                    });
+                });
+                const sortedMakes = Array.from(makeMap.values()).sort((a, b) => a.localeCompare(b));
+
                 makeSelect.innerHTML = '<option value="">' + t('selectMake') + '</option>';
-                data.Results.sort((a, b) => a.MakeName.localeCompare(b.MakeName)).forEach(make => {
-                    makeSelect.innerHTML += `<option value="${make.MakeName}">${make.MakeName}</option>`;
+                sortedMakes.forEach(makeName => {
+                    makeSelect.innerHTML += `<option value="${makeName}">${makeName}</option>`;
                 });
                 makeSelect.disabled = false;
             } catch (error) {
@@ -53169,12 +53189,22 @@ ${body}`;
             notesField.placeholder = t('notesPlaceholder') || 'Any special instructions or information...';
 
             try {
-                const response = await fetch('https://vpic.nhtsa.dot.gov/api/vehicles/GetMakesForVehicleType/car?format=json');
-                const data = await response.json();
-                
+                const vehicleTypes = ['car', 'multipurpose passenger vehicle (mpv)', 'truck'];
+                const responses = await Promise.all(
+                    vehicleTypes.map(vType => fetch(`https://vpic.nhtsa.dot.gov/api/vehicles/GetMakesForVehicleType/${encodeURIComponent(vType)}?format=json`).then(r => r.json()))
+                );
+                const makeMap = new Map();
+                responses.forEach(data => {
+                    data.Results.forEach(make => {
+                        const key = make.MakeName.toUpperCase();
+                        if (!makeMap.has(key)) makeMap.set(key, make.MakeName);
+                    });
+                });
+                const sortedMakes = Array.from(makeMap.values()).sort((a, b) => a.localeCompare(b));
+
                 makeSelect.innerHTML = '<option value="">' + t('selectMake') + '</option>';
-                data.Results.sort((a, b) => a.MakeName.localeCompare(b.MakeName)).forEach(make => {
-                    makeSelect.innerHTML += `<option value="${make.MakeName}">${make.MakeName}</option>`;
+                sortedMakes.forEach(makeName => {
+                    makeSelect.innerHTML += `<option value="${makeName}">${makeName}</option>`;
                 });
                 makeSelect.disabled = false;
             } catch (error) {
